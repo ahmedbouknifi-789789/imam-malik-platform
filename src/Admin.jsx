@@ -19,9 +19,12 @@ export default function Admin({ setPage }) {
         👨‍🎓 إدارة الطلاب
       </button>
 
-      <button className="btn">
-        👨‍🏫 إدارة الأساتذة
-      </button>
+      <button
+  className="btn"
+  onClick={() => setPage("teacher")}
+>
+  👨‍🏫 إدارة الأساتذة
+</button>
 
       <button className="btn">
         📖 إدارة الحلقات
