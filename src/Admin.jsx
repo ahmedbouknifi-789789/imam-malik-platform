@@ -3,52 +3,45 @@ export default function Admin({ setPage }) {
     <div className="card">
       <h2>🛠️ لوحة تحكم الإدارة</h2>
 
-      <p>مرحبًا بك في لوحة الإدارة، اختر القسم الذي تريد إدارته.</p>
+      <p>مرحبًا بك في منصة جمعية الإمام مالك الثقافية.</p>
 
-      <button
-        className="btn"
-        onClick={() => setPage("students")}
-      >
-        📚 إدارة الطلاب
+      <hr />
+
+      <h3>📊 الإحصائيات</h3>
+
+      <p>👨‍🎓 عدد الطلاب: 0</p>
+      <p>👨‍🏫 عدد الأساتذة: 0</p>
+      <p>📖 عدد الحلقات: 0</p>
+
+      <hr />
+
+      <button className="btn" onClick={() => setPage("students")}>
+        👨‍🎓 إدارة الطلاب
       </button>
 
-      <button
-        className="btn"
-        onClick={() => alert("سيتم تطوير إدارة الأساتذة قريبًا")}
-      >
+      <button className="btn">
         👨‍🏫 إدارة الأساتذة
       </button>
 
-      <button
-        className="btn"
-        onClick={() => alert("سيتم تطوير إدارة الحلقات قريبًا")}
-      >
+      <button className="btn">
         📖 إدارة الحلقات
       </button>
 
-      <button
-        className="btn"
-        onClick={() => alert("سيتم تطوير نتائج الحفظ قريبًا")}
-      >
+      <button className="btn">
         📝 نتائج الحفظ
       </button>
 
-      <button
-        className="btn"
-        onClick={() => alert("سيتم تطوير الحضور والغياب قريبًا")}
-      >
+      <button className="btn">
         📅 الحضور والغياب
       </button>
 
-      <button
-        className="btn"
-        onClick={() => alert("سيتم تطوير الإعلانات قريبًا")}
-      >
+      <button className="btn">
         📢 الإعلانات
       </button>
 
       <button
         className="btn"
+        style={{ background: "#b91c1c" }}
         onClick={() => setPage("login")}
       >
         🚪 تسجيل الخروج
