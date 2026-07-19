@@ -1,0 +1,3 @@
+import logo from "./assets/logo.png";
+
+<img src={logo} alt="شعار جمعية الإمام مالك" />
