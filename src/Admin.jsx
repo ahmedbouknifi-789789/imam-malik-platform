@@ -1,4 +1,4 @@
-export default function Admin({ setPage }) {
+export default function Admin({ setPage, students }) {
   return (
     <div className="card">
       <h2>🛠️ لوحة تحكم الإدارة</h2>
@@ -9,34 +9,46 @@ export default function Admin({ setPage }) {
 
       <h3>📊 الإحصائيات</h3>
 
-      <p>👨‍🎓 عدد الطلاب: 0</p>
-      <p>👨‍🏫 عدد الأساتذة: 0</p>
-      <p>📖 عدد الحلقات: 0</p>
+      <p>👨‍🎓 عدد الطلاب: {students.length}</p>
+      <p>👨‍🏫 عدد الأساتذة: قريبًا</p>
+      <p>📖 عدد الحلقات: قريبًا</p>
 
       <hr />
 
-      <button className="btn" onClick={() => setPage("students")}>
+      <button
+        className="btn"
+        onClick={() => setPage("students")}
+      >
         👨‍🎓 إدارة الطلاب
       </button>
 
       <button
-  className="btn"
-  onClick={() => setPage("teacher")}
->
-  👨‍🏫 إدارة الأساتذة
-</button>
-
-      <button className="btn">
-        📖 إدارة الحلقات
-      </button>
-
-      <button className="btn">
+        className="btn"
+        onClick={() => setPage("memorization")}
+      >
         📝 نتائج الحفظ
       </button>
 
-      <button className="btn">
+      <button
+        className="btn"
+        onClick={() => setPage("attendance")}
+      >
         📅 الحضور والغياب
       </button>
+
+      <button
+        className="btn"
+        onClick={() => setPage("teacher")}
+      >
+        👨‍🏫 إدارة الأساتذة
+      </button>
+
+      <button
+  className="btn"
+  onClick={() => setPage("halaqas")}
+>
+  📖 إدارة الحلقات
+</button>
 
       <button className="btn">
         📢 الإعلانات

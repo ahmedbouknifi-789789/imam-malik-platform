@@ -5,6 +5,7 @@ export default function Students({
   students,
   deleteStudent,
   editStudent,
+  openStudentRecord,
 }) {
   const [search, setSearch] = useState("");
 
@@ -48,6 +49,7 @@ export default function Students({
       >
         <thead>
           <tr>
+            <th>الصورة</th>
             <th>الاسم</th>
             <th>الحلقة</th>
             <th>المستوى</th>
@@ -60,17 +62,42 @@ export default function Students({
         <tbody>
           {filteredStudents.length === 0 ? (
             <tr>
-              <td colSpan="6">لا يوجد طلاب</td>
+              <td colSpan="7">لا يوجد طلاب</td>
             </tr>
           ) : (
             filteredStudents.map((student) => (
               <tr key={student.id}>
+                <td>
+                  {student.photo ? (
+                    <img
+                      src={student.photo}
+                      alt={student.name}
+                      width="60"
+                      height="60"
+                      style={{
+                        borderRadius: "50%",
+                        objectFit: "cover",
+                      }}
+                    />
+                  ) : (
+                    "📷"
+                  )}
+                </td>
+
                 <td>{student.name}</td>
                 <td>{student.halaqa}</td>
                 <td>{student.level}</td>
                 <td>{student.parent}</td>
                 <td>{student.phone}</td>
+
                 <td>
+                  <button
+                    className="btn"
+                    onClick={() => openStudentRecord(student)}
+                  >
+                    📖 سجل الحفظ
+                  </button>
+
                   <button
                     className="btn"
                     onClick={() => editStudent(student)}

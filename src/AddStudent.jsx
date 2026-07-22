@@ -1,7 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-export default function AddStudent({ setPage, addStudent }) {
+export default function AddStudent({
+  setPage,
+  addStudent,
+  editingStudent,
+  updateStudent,
+}) {
   const [student, setStudent] = useState({
+    photo: "",
     name: "",
     number: "",
     birth: "",
@@ -13,6 +19,12 @@ export default function AddStudent({ setPage, addStudent }) {
     date: "",
     notes: "",
   });
+
+  useEffect(() => {
+    if (editingStudent) {
+      setStudent(editingStudent);
+    }
+  }, [editingStudent]);
 
   const handleChange = (e) => {
     setStudent({
@@ -29,14 +41,29 @@ export default function AddStudent({ setPage, addStudent }) {
       return;
     }
 
-    addStudent(student);
+    if (editingStudent) {
+      updateStudent(student);
+    } else {
+      addStudent(student);
+    }
   };
 
   return (
     <div className="card">
-      <h2>➕ إضافة طالب جديد</h2>
+      <h2>
+        {editingStudent ? "✏️ تعديل بيانات الطالب" : "➕ إضافة طالب جديد"}
+      </h2>
 
       <form onSubmit={handleSubmit}>
+
+        <input
+          type="text"
+          name="photo"
+          placeholder="رابط صورة الطالب"
+          value={student.photo}
+          onChange={handleChange}
+        />
+
         <input
           type="text"
           name="name"
@@ -121,7 +148,7 @@ export default function AddStudent({ setPage, addStudent }) {
         <br />
 
         <button type="submit" className="btn">
-          💾 حفظ الطالب
+          {editingStudent ? "💾 حفظ التعديلات" : "💾 حفظ الطالب"}
         </button>
 
         <button
@@ -131,6 +158,7 @@ export default function AddStudent({ setPage, addStudent }) {
         >
           ⬅️ رجوع
         </button>
+
       </form>
     </div>
   );

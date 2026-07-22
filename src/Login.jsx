@@ -1,37 +1,44 @@
 export default function Login({ setPage }) {
-  return (
-    <div className="card">
-      <h2>مرحبًا بك في منصة جمعية الإمام مالك الثقافية</h2>
+return (
+<div className="card">
+<h2>📖 منصة جمعية الإمام مالك الثقافية</h2>
 
-      <p>اختر نوع الحساب للدخول إلى المنصة:</p>
+<p>اختر نوع الحساب:</p>  
 
-      <button
-        className="btn"
-        onClick={() => setPage("student")}
-      >
-        👨‍🎓 دخول الطالب
-      </button>
+  <button  
+    className="btn"  
+   onClick={() => setPage("studentLogin")}  
+  >  
+    👨‍🎓 الطالب  
+  </button>  
 
-      <button
-        className="btn"
-        onClick={() => setPage("parent")}
-      >
-        👨‍👩‍👦 دخول ولي الأمر
-      </button>
+  <br /><br />  
 
-      <button
-        className="btn"
-        onClick={() => setPage("teacher")}
-      >
-        👨‍🏫 دخول الأستاذ
-      </button>
+  <button  
+    className="btn"  
+    onClick={() => setPage("parentLogin")}  
+  >  
+    👨‍👩‍👦 ولي الأمر  
+  </button>  
 
-      <button
-        className="btn"
-        onClick={() => setPage("admin")}
-      >
-        🛠️ دخول الإدارة
-      </button>
-    </div>
-  );
+  <br /><br />  
+
+  <button  
+    className="btn"  
+    onClick={() => setPage("teacher")}  
+  >  
+    👨‍🏫 الأستاذ  
+  </button>  
+
+  <br /><br />  
+
+  <button  
+    className="btn"  
+    onClick={() => setPage("adminLogin")}  
+  >  
+    🛠️ الإدارة  
+  </button>  
+</div>
+
+);
 }

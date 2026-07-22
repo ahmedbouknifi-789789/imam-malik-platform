@@ -2,22 +2,23 @@ import { useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "./Firebase";
 
-export default function Teacher({ setPage }) {
+export default function AdminLogin({ setPage }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const login = async () => {
-  try {
-    await signInWithEmailAndPassword(auth, email, password);
-    setPage("teacherPanel");
-  } catch (err) {
-    alert("البريد الإلكتروني أو كلمة المرور غير صحيحة");
+  async function login() {
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+
+      setPage("admin");
+    } catch (error) {
+      alert("البريد الإلكتروني أو كلمة المرور غير صحيحة");
+    }
   }
-};
 
   return (
     <div className="card">
-      <h2>دخول الأستاذ</h2>
+      <h2>🛠️ دخول الإدارة</h2>
 
       <input
         type="email"
@@ -43,8 +44,11 @@ export default function Teacher({ setPage }) {
 
       <br /><br />
 
-      <button className="btn" onClick={() => setPage("login")}>
-        رجوع
+      <button
+        className="btn"
+        onClick={() => setPage("login")}
+      >
+        ⬅️ رجوع
       </button>
     </div>
   );
