@@ -1,61 +1,88 @@
 import { useState } from "react";
 import { collection, getDocs } from "firebase/firestore";
-import { db } from "./Firebase";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { db, auth } from "./Firebase";
 
 export default function StudentLogin({ setPage, setSelectedStudent }) {
-const [number, setNumber] = useState("");
+  const [number, setNumber] = useState("");
+  const [password, setPassword] = useState("");
 
-async function loginStudent() {
-const snapshot = await getDocs(collection(db, "students"));
+  async function loginStudent() {
+    try {
+      const snapshot = await getDocs(collection(db, "students"));
 
-let found = null;  
+      let found = null;
 
-snapshot.forEach((doc) => {  
-  const student = { id: doc.id, ...doc.data() };  
+      snapshot.forEach((doc) => {
+        const student = {
+          id: doc.id,
+          ...doc.data(),
+        };
 
-  if (student.number === number) {  
-    found = student;  
-  }  
-});  
+        if (student.number === number) {
+          found = student;
+        }
+      });
 
-if (found) {
-  console.log(found);
-  setSelectedStudent(found);
-  setPage("student");
-} else {
-  console.log("الرقم المدخل:", number);
+      if (!found) {
+        alert("رقم التسجيل غير صحيح");
+        return;
+      }
 
-  snapshot.forEach((doc) => {
-    console.log(doc.data());
-  });
-
-  alert("رقم التسجيل غير صحيح");
-}
-
-}
-
-return (
-
-<div className="card">  
-<h2 style={{ color: "red" }}> ادخل رقم الطالب</h2> 
- <input
-    type="text"  
-    placeholder="رقم التسجيل"  
-    value={number}  
-    onChange={(e) => setNumber(e.target.value)}  
-  />  
-
-  <br />  
-  <br />  
-
-  <button className="btn" onClick={loginStudent}>  
-    دخول  
-  </button>  
-
-  <button className="btn" onClick={() => setPage("login")}>  
-    رجوع  
-  </button>  
-</div>
-
+      await signInWithEmailAndPassword(
+  auth,
+  found.email,
+  password
 );
+
+      setSelectedStudent(found);
+      setPage("student");
+    } catch (error) {
+      alert("كلمة المرور أو رقم التسجيل غير صحيح");
+    }
+  }
+
+  return (
+    <div className="card">
+      <h2>👨‍🎓 دخول الطالب</h2>
+
+      <input
+        type="text"
+        placeholder="رقم التسجيل"
+        value={number}
+        onChange={(e) => setNumber(e.target.value)}
+      />
+
+      <br /><br />
+
+      <input
+        type="password"
+        placeholder="كلمة المرور"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+      />
+
+      <br /><br />
+
+      <button className="btn" onClick={loginStudent}>
+        دخول
+      </button>
+<br />
+<br />
+
+<button
+  className="btn"
+  style={{ background: "#2563eb" }}
+  onClick={() => setPage("forgotPassword")}
+>
+  🔒 نسيت كلمة المرور؟
+</button>
+      <button
+        className="btn"
+        onClick={() => setPage("login")}
+      >
+        رجوع
+      </button>
+    </div>
+  );
 }

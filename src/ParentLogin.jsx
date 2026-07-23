@@ -43,6 +43,16 @@ export default function ParentLogin({ setPage, setSelectedStudent }) {
       <button className="btn" onClick={loginParent}>
         دخول
       </button>
+<br />
+<br />
+
+<button
+  className="btn"
+  style={{ background: "#2563eb" }}
+  onClick={() => setPage("forgotPassword")}
+>
+  🔒 نسيت كلمة المرور؟
+</button>
 
       <button
         className="btn"

@@ -57,4 +57,11 @@ body {
 
 .btn:hover {
   background: #1b5e20;
+
+}
+.logo {
+  width: 220px;
+  height: auto;
+  display: block;
+  margin: 20px auto;
 }

@@ -22,6 +22,20 @@ export default function Admin({ setPage, students }) {
         👨‍🎓 إدارة الطلاب
       </button>
 
+<button
+  className="btn"
+  onClick={() => setPage("registrationRequests")}
+>
+  📥 طلبات التسجيل
+</button>
+
+<button
+  className="btn"
+  onClick={() => setPage("createAccounts")}
+>
+  👤 إنشاء حسابات الطلاب
+</button>
+
       <button
         className="btn"
         onClick={() => setPage("memorization")}
@@ -37,11 +51,11 @@ export default function Admin({ setPage, students }) {
       </button>
 
       <button
-        className="btn"
-        onClick={() => setPage("teacher")}
-      >
-        👨‍🏫 إدارة الأساتذة
-      </button>
+  className="btn"
+  onClick={() => setPage("teachers")}
+>
+  👨‍🏫 إدارة الأساتذة
+</button>
 
       <button
   className="btn"

@@ -29,6 +29,10 @@ import AdminLogin from "./AdminLogin";
 import StudentLogin from "./StudentLogin";
 import ParentLogin from "./ParentLogin";
 import StudentHistory from "./StudentHistory";
+import StudentRegister from "./StudentRegister";
+import RegistrationRequests from "./RegistrationRequests";
+import ForgotPassword from "./ForgotPassword";
+import CreateAccounts from "./CreateAccounts";
 import "./App.css";
 
 export default function App() {
@@ -217,7 +221,11 @@ const [selectedStudent, setSelectedStudent] = useState(null);
       {page === "login" && (
         <Login setPage={setPage} />
       )}
-
+     {page === "studentRegister" && (
+  <StudentRegister
+    setPage={setPage}
+  />
+)}
 
       {page === "studentLogin" && (
   <StudentLogin
@@ -263,6 +271,10 @@ const [selectedStudent, setSelectedStudent] = useState(null);
           students={students}
         />
       )}
+      
+     {page === "registrationRequests" && (
+  <RegistrationRequests setPage={setPage} />
+)}
 
       {page === "students" && (
         <Students
@@ -342,6 +354,15 @@ const [selectedStudent, setSelectedStudent] = useState(null);
     setPage={setPage}
     student={selectedStudent}
   />
+)}
+
+{page === "forgotPassword" && (
+  <ForgotPassword
+    setPage={setPage}
+  />
+)}
+{page === "createAccounts" && (
+  <CreateAccounts setPage={setPage} />
 )}
 
       {page === "studentRecord" && (

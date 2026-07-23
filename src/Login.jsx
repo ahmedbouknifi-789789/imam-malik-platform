@@ -1,6 +1,8 @@
+import logo from "./assets/malik.PNG";
 export default function Login({ setPage }) {
 return (
 <div className="card">
+ <img src={logo} alt="شعار الجمعية" className="logo" />
 <h2>📖 منصة جمعية الإمام مالك الثقافية</h2>
 
 <p>اختر نوع الحساب:</p>  
@@ -13,7 +15,12 @@ return (
   </button>  
 
   <br /><br />  
-
+<button
+  className="btn"
+  onClick={() => setPage("studentRegister")}
+>
+  📝 تسجيل طالب جديد
+</button>
   <button  
     className="btn"  
     onClick={() => setPage("parentLogin")}  
