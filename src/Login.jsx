@@ -1,4 +1,4 @@
-import logo from "./assets/malik.PNG";
+import logo from "./assets/Malik.PNG";
 
 export default function Login({ setPage }) {
   return (
