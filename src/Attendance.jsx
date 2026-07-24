@@ -107,7 +107,7 @@ export default function Attendance({ setPage, students }) {
 
       <button
         className="btn"
-        onClick={() => setPage("admin")}
+        onClick={() => setPage("teacherPanel")}
       >
         ⬅️ الرجوع
       </button>

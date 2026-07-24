@@ -173,7 +173,7 @@ export default function Memorization({ setPage, students }) {
 
       <button
         className="btn"
-        onClick={() => setPage("admin")}
+        onClick={() => setPage("teacherPanel")}
       >
         ⬅️ الرجوع
       </button>

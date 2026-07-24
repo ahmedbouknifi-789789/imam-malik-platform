@@ -1,67 +1,85 @@
 body {
   margin: 0;
-  background: #f5f7f5;
+  background: #eef4ef;
   font-family: Tahoma, Arial, sans-serif;
   direction: rtl;
 }
 
 .header {
-  background: #1b5e20;
+  background: linear-gradient(135deg,#1b5e20,#2e7d32);
   color: white;
-  padding: 15px 25px;
-  box-shadow: 0 2px 8px rgba(0,0,0,.2);
+  text-align: center;
+  padding: 15px;
 }
 
-.logo-box {
-  display: flex;
-  align-items: center;
-  gap: 15px;
+.header h1{
+  margin:0;
+  font-size:28px;
 }
 
-.logo {
-  width: 70px;
-  height: 70px;
-  object-fit: contain;
+.login-container,
+.card{
+  max-width:420px;
+  margin:35px auto;
+  background:#fff;
+  padding:30px;
+  border-radius:20px;
+  box-shadow:0 8px 25px rgba(0,0,0,.15);
+  text-align:center;
 }
 
-.header h1 {
-  margin: 0;
-  font-size: 28px;
+.logo{
+  width:140px;
+  display:block;
+  margin:0 auto 20px;
 }
 
-.header p {
-  margin: 5px 0 0;
-  font-size: 15px;
-  color: #d9f7d9;
+h1,h2{
+  color:#1b5e20;
+  margin-bottom:10px;
 }
 
-.app {
-  padding: 20px;
+.subtitle{
+  color:#777;
+  margin-bottom:25px;
 }
 
-.card {
-  background: white;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 2px 10px rgba(0,0,0,.1);
+.btn{
+  width:100%;
+  padding:14px;
+  margin:8px 0;
+  border:none;
+  border-radius:12px;
+  background:#2e7d32;
+  color:white;
+  font-size:18px;
+  font-weight:bold;
+  cursor:pointer;
+  transition:.3s;
 }
 
-.btn {
-  background: #2e7d32;
-  color: white;
-  border: none;
-  padding: 10px 18px;
-  border-radius: 8px;
-  cursor: pointer;
+.btn:hover{
+  background:#1b5e20;
 }
 
-.btn:hover {
-  background: #1b5e20;
-
+.admin-btn{
+  background:#8d6e00;
 }
-.logo {
-  width: 220px;
-  height: auto;
-  display: block;
-  margin: 20px auto;
+
+.admin-btn:hover{
+  background:#6d5200;
+}
+
+.link-btn{
+  background:none;
+  border:none;
+  color:#1b5e20;
+  margin-top:15px;
+  cursor:pointer;
+  font-size:16px;
+  font-weight:bold;
+}
+
+.link-btn:hover{
+  text-decoration:underline;
 }

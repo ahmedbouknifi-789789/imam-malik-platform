@@ -1,51 +1,59 @@
 import logo from "./assets/malik.PNG";
+
 export default function Login({ setPage }) {
-return (
-<div className="card">
- <img src={logo} alt="شعار الجمعية" className="logo" />
-<h2>📖 منصة جمعية الإمام مالك الثقافية</h2>
+  return (
+    <div className="login-container">
 
-<p>اختر نوع الحساب:</p>  
+      <img src={logo} alt="شعار الجمعية" className="logo" />
 
-  <button  
-    className="btn"  
-   onClick={() => setPage("studentLogin")}  
-  >  
-    👨‍🎓 الطالب  
-  </button>  
+      <h1>منصة جمعية الإمام مالك الثقافية</h1>
 
-  <br /><br />  
-<button
-  className="btn"
-  onClick={() => setPage("studentRegister")}
->
-  📝 تسجيل طالب جديد
-</button>
-  <button  
-    className="btn"  
-    onClick={() => setPage("parentLogin")}  
-  >  
-    👨‍👩‍👦 ولي الأمر  
-  </button>  
+      <p className="subtitle">
+        نظام إدارة الحلقات القرآنية
+      </p>
 
-  <br /><br />  
+      <button
+        className="btn"
+        onClick={() => setPage("studentLogin")}
+      >
+        👨‍🎓 دخول الطالب
+      </button>
 
-  <button  
-    className="btn"  
-    onClick={() => setPage("teacher")}  
-  >  
-    👨‍🏫 الأستاذ  
-  </button>  
+      <button
+        className="btn"
+        onClick={() => setPage("studentRegister")}
+      >
+        📝 تسجيل طالب جديد
+      </button>
 
-  <br /><br />  
+      <button
+        className="btn"
+        onClick={() => setPage("parentLogin")}
+      >
+        👨‍👩‍👦 دخول ولي الأمر
+      </button>
 
-  <button  
-    className="btn"  
-    onClick={() => setPage("adminLogin")}  
-  >  
-    🛠️ الإدارة  
-  </button>  
-</div>
+      <button
+        className="btn"
+        onClick={() => setPage("teacher")}
+      >
+        👨‍🏫 دخول الأستاذ
+      </button>
 
-);
+      <button
+        className="btn admin-btn"
+        onClick={() => setPage("adminLogin")}
+      >
+        🛡️ دخول الإدارة
+      </button>
+
+      <button
+        className="link-btn"
+        onClick={() => setPage("forgotPassword")}
+      >
+        🔑 نسيت كلمة المرور؟
+      </button>
+
+    </div>
+  );
 }

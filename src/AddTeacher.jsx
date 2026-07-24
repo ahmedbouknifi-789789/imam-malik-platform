@@ -105,7 +105,7 @@ export default function AddTeacher({
         <button
           type="button"
           className="btn"
-          onClick={() => setPage("teacher")}
+          onClick={() => setPage("teachers")}
         >
           ⬅️ رجوع
         </button>

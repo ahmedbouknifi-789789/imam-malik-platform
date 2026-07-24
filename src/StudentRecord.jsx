@@ -58,7 +58,7 @@ export default function StudentRecord({ setPage, student }) {
 
       <button
         className="btn"
-        onClick={() => setPage("students")}
+        onClick={() => setPage("teacherPanel")}
       >
         ⬅️ الرجوع
       </button>
