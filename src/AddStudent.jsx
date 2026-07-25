@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import logo from "./assets/malik.PNG";
 
 export default function AddStudent({
   setPage,
@@ -14,15 +15,32 @@ export default function AddStudent({
     gender: "",
     parent: "",
     phone: "",
+    parentEmail: "",
     halaqa: "",
     level: "",
     date: "",
     notes: "",
+    halaqaType: "",
   });
 
   useEffect(() => {
     if (editingStudent) {
-      setStudent(editingStudent);
+      setStudent({
+        photo: "",
+        name: "",
+        number: "",
+        birth: "",
+        gender: "",
+        parent: "",
+        phone: "",
+        parentEmail: "",
+        halaqa: "",
+        level: "",
+        date: "",
+        notes: "",
+        halaqaType: "",
+        ...editingStudent,
+      });
     }
   }, [editingStudent]);
 
@@ -49,20 +67,37 @@ export default function AddStudent({
   };
 
   return (
-    <div className="card">
-      <h2>
-        {editingStudent ? "✏️ تعديل بيانات الطالب" : "➕ إضافة طالب جديد"}
-      </h2>
+    <div className="card student-form">
+
+      {/* رأس الاستمارة */}
+      <div className="print-header">
+
+        <img
+          src={logo}
+          alt="شعار الجمعية"
+          className="print-logo"
+        />
+
+        <h2>
+          جمعية الإمام مالك الثقافية
+        </h2>
+
+        <h3>
+          استمارة تسجيل طالب
+        </h3>
+
+        <p>
+          نظام إدارة الحلقات القرآنية
+        </p>
+
+      </div>
 
       <form onSubmit={handleSubmit}>
 
-        <input
-          type="text"
-          name="photo"
-          placeholder="رابط صورة الطالب"
-          value={student.photo}
-          onChange={handleChange}
-        />
+        {/* معلومات الطالب */}
+        <h3 className="section-title">
+          👨‍🎓 أولاً: معلومات الطالب
+        </h3>
 
         <input
           type="text"
@@ -76,7 +111,7 @@ export default function AddStudent({
         <input
           type="text"
           name="number"
-          placeholder="رقم التسجيل"
+          placeholder="رقم الطالب / رقم التسجيل"
           value={student.number}
           onChange={handleChange}
         />
@@ -98,6 +133,11 @@ export default function AddStudent({
           <option value="أنثى">أنثى</option>
         </select>
 
+        {/* معلومات ولي الأمر */}
+        <h3 className="section-title">
+          👨‍👩‍👦 ثانياً: معلومات ولي الأمر
+        </h3>
+
         <input
           type="text"
           name="parent"
@@ -107,17 +147,30 @@ export default function AddStudent({
         />
 
         <input
-          type="text"
+          type="tel"
           name="phone"
-          placeholder="رقم الهاتف"
+          placeholder="رقم هاتف ولي الأمر"
           value={student.phone}
           onChange={handleChange}
         />
 
         <input
+          type="email"
+          name="parentEmail"
+          placeholder="البريد الإلكتروني لولي الأمر"
+          value={student.parentEmail}
+          onChange={handleChange}
+        />
+
+        {/* معلومات الحلقة */}
+        <h3 className="section-title">
+          📖 ثالثاً: معلومات الحلقة
+        </h3>
+
+        <input
           type="text"
           name="halaqa"
-          placeholder="الحلقة"
+          placeholder="اسم الحلقة"
           value={student.halaqa}
           onChange={handleChange}
         />
@@ -130,6 +183,30 @@ export default function AddStudent({
           onChange={handleChange}
         />
 
+        <select
+          name="halaqaType"
+          value={student.halaqaType}
+          onChange={handleChange}
+          required
+        >
+          <option value="">
+            اختر نوع الحلقة
+          </option>
+
+          <option value="حضوري">
+            🏫 حضوري
+          </option>
+
+          <option value="عن بعد">
+            💻 عن بعد
+          </option>
+        </select>
+
+        {/* تاريخ التسجيل */}
+        <h3 className="section-title">
+          📅 رابعاً: تاريخ التسجيل
+        </h3>
+
         <input
           type="date"
           name="date"
@@ -137,29 +214,87 @@ export default function AddStudent({
           onChange={handleChange}
         />
 
+        {/* الملاحظات */}
+        <h3 className="section-title">
+          📝 خامساً: ملاحظات
+        </h3>
+
         <textarea
           name="notes"
           placeholder="ملاحظات"
           value={student.notes}
           onChange={handleChange}
+          rows="4"
         />
 
-        <br />
+        {/* التعهد */}
+        <div className="declaration">
+
+          <h3>
+            📜 تعهد ولي الأمر
+          </h3>
+
+          <p>
+            أتعهد بمتابعة ابني/ابنتي والحرص على الحضور
+            والالتزام بنظام الحلقة، وأتحمل مسؤولية صحة
+            المعلومات المقدمة في هذه الاستمارة.
+          </p>
+
+        </div>
+
         <br />
 
-        <button type="submit" className="btn">
-          {editingStudent ? "💾 حفظ التعديلات" : "💾 حفظ الطالب"}
-        </button>
+        {/* الأزرار */}
+        <div className="no-print">
 
-        <button
-          type="button"
-          className="btn"
-          onClick={() => setPage("students")}
-        >
-          ⬅️ رجوع
-        </button>
+          <button
+            type="submit"
+            className="btn"
+          >
+            {editingStudent
+              ? "💾 حفظ التعديلات"
+              : "💾 حفظ الطالب"}
+          </button>
+
+          <button
+            type="button"
+            className="btn print-btn"
+            onClick={() => window.print()}
+          >
+            🖨️ طباعة الاستمارة
+          </button>
+
+          <button
+            type="button"
+            className="btn"
+            onClick={() => setPage("students")}
+          >
+            ⬅️ العودة
+          </button>
+
+        </div>
+
+        {/* التوقيعات */}
+        <div className="signatures">
+
+          <div>
+            توقيع ولي الأمر:
+            <br />
+            <br />
+            ......................
+          </div>
+
+          <div>
+            توقيع الإدارة:
+            <br />
+            <br />
+            ......................
+          </div>
+
+        </div>
 
       </form>
+
     </div>
   );
 }

@@ -153,28 +153,30 @@ const [selectedStudent, setSelectedStudent] = useState(null);
     setEditingHalaqa(halaqa);
     setPage("addHalaqa");
   }
-  async function updateStudent(updatedStudent) {
-    const studentRef = doc(db, "students", updatedStudent.id);
 
-    await updateDoc(studentRef, {
-      name: updatedStudent.name,
-      number: updatedStudent.number,
-      birth: updatedStudent.birth,
-      gender: updatedStudent.gender,
-      parent: updatedStudent.parent,
-      phone: updatedStudent.phone,
-      halaqa: updatedStudent.halaqa,
-      level: updatedStudent.level,
-      date: updatedStudent.date,
-      notes: updatedStudent.notes,
-      photo: updatedStudent.photo,
-    });
+ async function updateStudent(updatedStudent) {
+  const studentRef = doc(db, "students", updatedStudent.id);
 
-    loadStudents();
-    setEditingStudent(null);
-    setPage("students");
-  }
+  await updateDoc(studentRef, {
+    name: updatedStudent.name,
+    number: updatedStudent.number,
+    birth: updatedStudent.birth,
+    gender: updatedStudent.gender,
+    parent: updatedStudent.parent,
+    phone: updatedStudent.phone,
+    parentEmail: updatedStudent.parentEmail,
+    halaqa: updatedStudent.halaqa,
+    level: updatedStudent.level,
+    date: updatedStudent.date,
+    notes: updatedStudent.notes,
+    photo: updatedStudent.photo,
+    halaqaType: updatedStudent.halaqaType,
+  });
 
+  loadStudents();
+  setEditingStudent(null);
+  setPage("students");
+}
   async function updateTeacher(updatedTeacher) {
     const teacherRef = doc(db, "teachers", updatedTeacher.id);
 

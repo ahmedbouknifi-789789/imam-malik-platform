@@ -6,80 +6,82 @@ body {
 }
 
 .header {
-  background: linear-gradient(135deg,#1b5e20,#2e7d32);
-  color: white;
+  background: linear-gradient(135deg, #1b5e20, #2e7d32);
+  color: #f5c542;
   text-align: center;
-  padding: 15px;
+  padding: 8px 10px;
 }
 
-.header h1{
-  margin:0;
-  font-size:28px;
+.header h1 {
+  margin: 0;
+  font-size: 24px;
+  color: #f5c542;
 }
 
 .login-container,
-.card{
-  max-width:420px;
-  margin:35px auto;
-  background:#fff;
-  padding:30px;
-  border-radius:20px;
-  box-shadow:0 8px 25px rgba(0,0,0,.15);
-  text-align:center;
+.card {
+  max-width: 420px;
+  margin: 35px auto;
+  background: #fff;
+  padding: 30px;
+  border-radius: 20px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  text-align: center;
 }
 
-.logo{
-  width:140px;
-  display:block;
-  margin:0 auto 20px;
+.logo {
+  width: 140px;
+  display: block;
+  margin: 0 auto 20px;
 }
 
-h1,h2{
-  color:#1b5e20;
-  margin-bottom:10px;
+h1,
+h2 {
+  color: #1b5e20;
+  margin-bottom: 10px;
 }
 
-.subtitle{
-  color:#777;
-  margin-bottom:25px;
+.subtitle {
+  color: #777;
+  margin-bottom: 25px;
 }
 
-.btn{
-  width:100%;
-  padding:14px;
-  margin:8px 0;
-  border:none;
-  border-radius:12px;
-  background:#2e7d32;
-  color:white;
-  font-size:18px;
-  font-weight:bold;
-  cursor:pointer;
-  transition:.3s;
+.btn {
+  width: 100%;
+  padding: 14px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 12px;
+  background: #2e7d32;
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
 }
 
-.btn:hover{
-  background:#1b5e20;
+.btn:hover {
+  background: #1b5e20;
 }
 
-.admin-btn{
-  background:#8d6e00;
+.admin-btn {
+  background: #8d6e00;
 }
 
-.admin-btn:hover{
-  background:#6d5200;
+.admin-btn:hover {
+  background: #6d5200;
 }
 
-.link-btn{
-  background:none;
-  border:none;
-  color:#1b5e20;
-  margin-top:15px;
-  cursor:pointer;
-  font-size:16px;
-  font-weight:bold;
+.link-btn {
+  background: none;
+  border: none;
+  color: #1b5e20;
+  margin-top: 15px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
 }
 
-.link-btn:hover{
-  text-decoration:underline;
+.link-btn:hover {
+  text-decoration: underline;
 }

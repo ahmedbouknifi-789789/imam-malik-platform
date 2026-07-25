@@ -12,7 +12,9 @@ export default function Student({ setPage, student }) {
   }, [student]);
 
   async function loadRecord() {
-    const snapshot = await getDocs(collection(db, "memorization"));
+    const snapshot = await getDocs(
+      collection(db, "memorization")
+    );
 
     let lastRecord = null;
 
@@ -60,33 +62,94 @@ export default function Student({ setPage, student }) {
         />
       )}
 
-      <p><strong>الاسم:</strong> {student.name}</p>
-      <p><strong>رقم التسجيل:</strong> {student.number}</p>
-      <p><strong>الحلقة:</strong> {student.halaqa}</p>
-      <p><strong>المستوى:</strong> {student.level}</p>
-      <p><strong>ولي الأمر:</strong> {student.parent}</p>
-      <p><strong>الهاتف:</strong> {student.phone}</p>
+      <p>
+        <strong>الاسم:</strong> {student.name}
+      </p>
+
+      <p>
+        <strong>رقم التسجيل:</strong> {student.number}
+      </p>
+
+      <p>
+        <strong>الحلقة:</strong> {student.halaqa}
+      </p>
+
+      <p>
+        <strong>نوع الحلقة:</strong>{" "}
+        {student.halaqaType || "غير محدد"}
+      </p>
+
+      {/* يظهر رابط الدخول فقط للطلاب عن بعد */}
+      {student.halaqaType === "عن بعد" && (
+        <a
+          href="https://meet.google.com/ksq-dbwh-izx"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="btn"
+          style={{
+            display: "block",
+            textDecoration: "none",
+            boxSizing: "border-box",
+          }}
+        >
+          💻 دخول الحلقة عن بعد
+        </a>
+      )}
+
+      <p>
+        <strong>المستوى:</strong> {student.level}
+      </p>
+
+      <p>
+        <strong>ولي الأمر:</strong> {student.parent}
+      </p>
+
+      <p>
+        <strong>الهاتف:</strong> {student.phone}
+      </p>
 
       <hr />
 
       <h3>📖 آخر محفوظ</h3>
 
-      <p><strong>السورة:</strong> {record?.surah || "لا يوجد"}</p>
-      <p><strong>الصفحة:</strong> {record?.page || "لا يوجد"}</p>
-      <p><strong>الحفظ الجديد:</strong> {record?.new || "لا يوجد"}</p>
-      <p><strong>المراجعة:</strong> {record?.review || "لا يوجد"}</p>
-      <p><strong>التقييم:</strong> {record?.rate || "لا يوجد"}</p>
-      <p><strong>الملاحظات:</strong> {record?.notes || "لا توجد"}</p>
+      <p>
+        <strong>السورة:</strong>{" "}
+        {record?.surah || "لا يوجد"}
+      </p>
+
+      <p>
+        <strong>الصفحة:</strong>{" "}
+        {record?.page || "لا يوجد"}
+      </p>
+
+      <p>
+        <strong>الحفظ الجديد:</strong>{" "}
+        {record?.new || "لا يوجد"}
+      </p>
+
+      <p>
+        <strong>المراجعة:</strong>{" "}
+        {record?.review || "لا يوجد"}
+      </p>
+
+      <p>
+        <strong>التقييم:</strong>{" "}
+        {record?.rate || "لا يوجد"}
+      </p>
+
+      <p>
+        <strong>الملاحظات:</strong>{" "}
+        {record?.notes || "لا توجد"}
+      </p>
+
       <button
-  className="btn"
-  onClick={() => setPage("studentHistory")}
->
-  📚 سجل الحفظ الكامل
-</button>
+        className="btn"
+        onClick={() => setPage("studentHistory")}
+      >
+        📚 سجل الحفظ الكامل
+      </button>
 
-<br />
-<br />
-
+      <br />
       <br />
 
       <button

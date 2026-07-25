@@ -9,9 +9,11 @@ export default function StudentRegister({ setPage }) {
     gender: "",
     parent: "",
     phone: "",
+    parentEmail: "",
     halaqa: "",
     level: "",
     notes: "",
+    halaqaType: "",
   });
 
   function handleChange(e) {
@@ -31,7 +33,9 @@ export default function StudentRegister({ setPage }) {
         createdAt: new Date(),
       });
 
-      alert("✅ تم إرسال طلب التسجيل بنجاح، وسيتم مراجعته من طرف الإدارة.");
+      alert(
+        "✅ تم إرسال طلب التسجيل بنجاح، وسيتم مراجعته من طرف الإدارة."
+      );
 
       setPage("login");
     } catch (error) {
@@ -41,10 +45,30 @@ export default function StudentRegister({ setPage }) {
   }
 
   return (
-    <div className="card">
-      <h2>📝 تسجيل طالب جديد</h2>
+    <div className="card student-register">
+
+      {/* رأس الاستمارة */}
+      <div className="registration-header">
+
+        <h2>📝 جمعية الإمام مالك الثقافية</h2>
+
+        <h3>
+          استمارة تسجيل طالب جديد
+        </h3>
+
+        <p>
+          نظام إدارة الحلقات القرآنية
+        </p>
+
+      </div>
 
       <form onSubmit={handleSubmit}>
+
+        {/* معلومات الطالب */}
+
+        <h3 className="section-title">
+          👨‍🎓 معلومات الطالب
+        </h3>
 
         <input
           type="text"
@@ -69,10 +93,24 @@ export default function StudentRegister({ setPage }) {
           onChange={handleChange}
           required
         >
-          <option value="">اختر الجنس</option>
-          <option value="ذكر">ذكر</option>
-          <option value="أنثى">أنثى</option>
+          <option value="">
+            اختر الجنس
+          </option>
+
+          <option value="ذكر">
+            ذكر
+          </option>
+
+          <option value="أنثى">
+            أنثى
+          </option>
         </select>
+
+        {/* معلومات ولي الأمر */}
+
+        <h3 className="section-title">
+          👨‍👩‍👦 معلومات ولي الأمر
+        </h3>
 
         <input
           type="text"
@@ -86,11 +124,26 @@ export default function StudentRegister({ setPage }) {
         <input
           type="tel"
           name="phone"
-          placeholder="رقم الهاتف"
+          placeholder="رقم هاتف ولي الأمر"
           value={student.phone}
           onChange={handleChange}
           required
         />
+
+        <input
+          type="email"
+          name="parentEmail"
+          placeholder="البريد الإلكتروني لولي الأمر"
+          value={student.parentEmail}
+          onChange={handleChange}
+          required
+        />
+
+        {/* معلومات الحلقة */}
+
+        <h3 className="section-title">
+          📖 معلومات الحلقة
+        </h3>
 
         <input
           type="text"
@@ -108,26 +161,111 @@ export default function StudentRegister({ setPage }) {
           onChange={handleChange}
         />
 
+        {/* الملاحظات */}
+
+        <h3 className="section-title">
+          📝 ملاحظات
+        </h3>
+
         <textarea
           name="notes"
           placeholder="ملاحظات"
           value={student.notes}
           onChange={handleChange}
+          rows="4"
         />
 
-        <button className="btn" type="submit">
-          📨 إرسال الطلب
-        </button>
+        {/* نوع الحلقة في آخر الصفحة */}
 
-        <button
-          type="button"
-          className="btn"
-          onClick={() => setPage("login")}
+        <h3 className="section-title">
+          🏫 نوع الحلقة
+        </h3>
+
+        <select
+          name="halaqaType"
+          value={student.halaqaType}
+          onChange={handleChange}
+          required
         >
-          ⬅ العودة
-        </button>
+          <option value="">
+            اختر نوع الحلقة
+          </option>
+
+          <option value="حضوري">
+            🏫 حضوري
+          </option>
+
+          <option value="عن بعد">
+            💻 عن بعد
+          </option>
+        </select>
+
+        {/* التعهد */}
+
+        <div className="declaration">
+          <h3>
+            📜 تعهد ولي الأمر
+          </h3>
+
+          <p>
+            أتعهد بصحة المعلومات المقدمة في هذه الاستمارة،
+            والحرص على متابعة الطالب والالتزام بنظام الحلقة.
+          </p>
+        </div>
+
+        <br />
+
+        {/* الأزرار */}
+
+        <div className="no-print">
+
+          <button
+            className="btn"
+            type="submit"
+          >
+            📨 إرسال الطلب
+          </button>
+
+          <button
+            type="button"
+            className="btn"
+            onClick={() => window.print()}
+          >
+            🖨️ طباعة الاستمارة
+          </button>
+
+          <button
+            type="button"
+            className="btn"
+            onClick={() => setPage("login")}
+          >
+            ⬅ العودة
+          </button>
+
+        </div>
+
+        {/* التوقيعات */}
+
+        <div className="signatures">
+
+          <div>
+            توقيع ولي الأمر:
+            <br />
+            <br />
+            ......................
+          </div>
+
+          <div>
+            توقيع الإدارة:
+            <br />
+            <br />
+            ......................
+          </div>
+
+        </div>
 
       </form>
+
     </div>
   );
 }
