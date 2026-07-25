@@ -6,6 +6,7 @@ export default function AddStudent({
   addStudent,
   editingStudent,
   updateStudent,
+  halaqas,
 }) {
   const [student, setStudent] = useState({
     photo: "",
@@ -69,32 +70,20 @@ export default function AddStudent({
   return (
     <div className="card student-form">
 
-      {/* رأس الاستمارة */}
       <div className="print-header">
-
         <img
           src={logo}
           alt="شعار الجمعية"
           className="print-logo"
         />
 
-        <h2>
-          جمعية الإمام مالك الثقافية
-        </h2>
-
-        <h3>
-          استمارة تسجيل طالب
-        </h3>
-
-        <p>
-          نظام إدارة الحلقات القرآنية
-        </p>
-
+        <h2>جمعية الإمام مالك الثقافية</h2>
+        <h3>استمارة تسجيل طالب</h3>
+        <p>نظام إدارة الحلقات القرآنية</p>
       </div>
 
       <form onSubmit={handleSubmit}>
 
-        {/* معلومات الطالب */}
         <h3 className="section-title">
           👨‍🎓 أولاً: معلومات الطالب
         </h3>
@@ -133,7 +122,6 @@ export default function AddStudent({
           <option value="أنثى">أنثى</option>
         </select>
 
-        {/* معلومات ولي الأمر */}
         <h3 className="section-title">
           👨‍👩‍👦 ثانياً: معلومات ولي الأمر
         </h3>
@@ -162,18 +150,27 @@ export default function AddStudent({
           onChange={handleChange}
         />
 
-        {/* معلومات الحلقة */}
         <h3 className="section-title">
           📖 ثالثاً: معلومات الحلقة
         </h3>
 
-        <input
-          type="text"
+        <select
           name="halaqa"
-          placeholder="اسم الحلقة"
           value={student.halaqa}
           onChange={handleChange}
-        />
+          required
+        >
+          <option value="">اختر الحلقة</option>
+
+          {halaqas.map((halaqa) => (
+            <option
+              key={halaqa.id}
+              value={halaqa.name}
+            >
+              {halaqa.name}
+            </option>
+          ))}
+        </select>
 
         <input
           type="text"
@@ -189,20 +186,11 @@ export default function AddStudent({
           onChange={handleChange}
           required
         >
-          <option value="">
-            اختر نوع الحلقة
-          </option>
-
-          <option value="حضوري">
-            🏫 حضوري
-          </option>
-
-          <option value="عن بعد">
-            💻 عن بعد
-          </option>
+          <option value="">اختر نوع الحلقة</option>
+          <option value="حضوري">🏫 حضوري</option>
+          <option value="عن بعد">💻 عن بعد</option>
         </select>
 
-        {/* تاريخ التسجيل */}
         <h3 className="section-title">
           📅 رابعاً: تاريخ التسجيل
         </h3>
@@ -214,7 +202,6 @@ export default function AddStudent({
           onChange={handleChange}
         />
 
-        {/* الملاحظات */}
         <h3 className="section-title">
           📝 خامساً: ملاحظات
         </h3>
@@ -227,24 +214,18 @@ export default function AddStudent({
           rows="4"
         />
 
-        {/* التعهد */}
         <div className="declaration">
-
-          <h3>
-            📜 تعهد ولي الأمر
-          </h3>
+          <h3>📜 تعهد ولي الأمر</h3>
 
           <p>
             أتعهد بمتابعة ابني/ابنتي والحرص على الحضور
             والالتزام بنظام الحلقة، وأتحمل مسؤولية صحة
             المعلومات المقدمة في هذه الاستمارة.
           </p>
-
         </div>
 
         <br />
 
-        {/* الأزرار */}
         <div className="no-print">
 
           <button
@@ -274,23 +255,18 @@ export default function AddStudent({
 
         </div>
 
-        {/* التوقيعات */}
         <div className="signatures">
-
           <div>
             توقيع ولي الأمر:
-            <br />
-            <br />
+            <br /><br />
             ......................
           </div>
 
           <div>
             توقيع الإدارة:
-            <br />
-            <br />
+            <br /><br />
             ......................
           </div>
-
         </div>
 
       </form>

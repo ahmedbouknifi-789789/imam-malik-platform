@@ -35,7 +35,7 @@ export default function Login({ setPage }) {
 
       <button
         className="btn"
-        onClick={() => setPage("teacher")}
+        onClick={() => setPage("teacherLogin")}
       >
         👨‍🏫 دخول الأستاذ
       </button>

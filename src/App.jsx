@@ -33,20 +33,25 @@ import StudentRegister from "./StudentRegister";
 import RegistrationRequests from "./RegistrationRequests";
 import ForgotPassword from "./ForgotPassword";
 import CreateAccounts from "./CreateAccounts";
+import HalaqaStudents from "./HalaqaStudents";
+import TeacherLogin from "./TeacherLogin";
+import CreateTeacherAccounts from "./CreateTeacherAccounts";
 import "./App.css";
 
 export default function App() {
   const [page, setPage] = useState("login");
 const [selectedStudent, setSelectedStudent] = useState(null);
-  const [students, setStudents] = useState([]);
-  const [teachers, setTeachers] = useState([]);
-  const [halaqas, setHalaqas] = useState([]);
+const [loggedTeacher, setLoggedTeacher] = useState(null);
 
-  const [editingStudent, setEditingStudent] = useState(null);
-  const [editingTeacher, setEditingTeacher] = useState(null);
-  const [editingHalaqa, setEditingHalaqa] = useState(null);
+const [students, setStudents] = useState([]);
+const [teachers, setTeachers] = useState([]);
+const [halaqas, setHalaqas] = useState([]);
 
+const [selectedHalaqa, setSelectedHalaqa] = useState(null);
 
+const [editingStudent, setEditingStudent] = useState(null);
+const [editingTeacher, setEditingTeacher] = useState(null);
+const [editingHalaqa, setEditingHalaqa] = useState(null);
 
   useEffect(() => {
     loadStudents();
@@ -210,10 +215,14 @@ const [selectedStudent, setSelectedStudent] = useState(null);
   }
 
   function openStudentRecord(student) {
-    setSelectedStudent(student);
-    setPage("studentRecord");
-  }
+  setSelectedStudent(student);
+  setPage("studentRecord");
+}
 
+function openHalaqaStudents(halaqa) {
+  setSelectedHalaqa(halaqa);
+  setPage("halaqaStudents");
+}
   return (
     <div className="app">
       <header className="header">
@@ -251,11 +260,18 @@ const [selectedStudent, setSelectedStudent] = useState(null);
     student={selectedStudent}
   />
 )}
-      {page === "teacher" && (
-        <Teacher setPage={setPage} />
-      )}
-      {page === "teacherPanel" && (
-  <TeacherPanel setPage={setPage} />
+   
+{page === "teacherLogin" && (
+  <TeacherLogin
+    setPage={setPage}
+    setLoggedTeacher={setLoggedTeacher}
+  />
+)}
+{page === "teacherPanel" && (
+  <TeacherPanel
+    setPage={setPage}
+    loggedTeacher={loggedTeacher}
+  />
 )}
 
       {page === "teachers" && (
@@ -268,11 +284,13 @@ const [selectedStudent, setSelectedStudent] = useState(null);
       )}
 
       {page === "admin" && (
-        <Admin
-          setPage={setPage}
-          students={students}
-        />
-      )}
+  <Admin
+    setPage={setPage}
+    students={students}
+    teachers={teachers}
+    halaqas={halaqas}
+  />
+)}
       
      {page === "registrationRequests" && (
   <RegistrationRequests setPage={setPage} />
@@ -288,22 +306,32 @@ const [selectedStudent, setSelectedStudent] = useState(null);
         />
       )}
       {page === "halaqas" && (
-        <Halaqas
-          setPage={setPage}
-          halaqas={halaqas}
-          editHalaqa={editHalaqa}
-          deleteHalaqa={deleteHalaqa}
-        />
-      )}
+  <Halaqas
+    setPage={setPage}
+    halaqas={halaqas}
+    students={students}
+    editHalaqa={editHalaqa}
+    deleteHalaqa={deleteHalaqa}
+    openHalaqaStudents={openHalaqaStudents}
+  />
+)}
+{page === "halaqaStudents" && (
+  <HalaqaStudents
+    setPage={setPage}
+    selectedHalaqa={selectedHalaqa}
+    students={students}
+  />
+)}
 
       {page === "addStudent" && (
-        <AddStudent
-          setPage={setPage}
-          addStudent={addStudent}
-          editingStudent={editingStudent}
-          updateStudent={updateStudent}
-        />
-      )}
+  <AddStudent
+    setPage={setPage}
+    addStudent={addStudent}
+    editingStudent={editingStudent}
+    updateStudent={updateStudent}
+    halaqas={halaqas}
+  />
+)}
 
       {page === "addTeacher" && (
         <AddTeacher
@@ -314,6 +342,11 @@ const [selectedStudent, setSelectedStudent] = useState(null);
         />
       )}
 
+{page === "createTeacherAccounts" && (
+  <CreateTeacherAccounts
+    setPage={setPage}
+  />
+)}
       {page === "addHalaqa" && (
         <AddHalaqa
           setPage={setPage}
@@ -325,11 +358,12 @@ const [selectedStudent, setSelectedStudent] = useState(null);
       )}
 
       {page === "memorization" && (
-        <Memorization
-          setPage={setPage}
-          students={students}
-        />
-      )}
+  <Memorization
+    setPage={setPage}
+    students={students}
+    loggedTeacher={loggedTeacher}
+  />
+)}
       {page === "notes" && (
   <Notes
     setPage={setPage}
@@ -345,11 +379,12 @@ const [selectedStudent, setSelectedStudent] = useState(null);
 )}
 
       {page === "attendance" && (
-        <Attendance
-          setPage={setPage}
-          students={students}
-        />
-      )}
+  <Attendance
+    setPage={setPage}
+    students={students}
+    loggedTeacher={loggedTeacher}
+  />
+)}
 
 {page === "studentHistory" && (
   <StudentHistory

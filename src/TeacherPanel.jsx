@@ -6,7 +6,10 @@ import {
 } from "firebase/auth";
 import { auth } from "./Firebase";
 
-export default function TeacherPanel({ setPage }) {
+export default function TeacherPanel({
+  setPage,
+  loggedTeacher,
+}) {
   const [showPasswordForm, setShowPasswordForm] = useState(false);
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -38,20 +41,29 @@ export default function TeacherPanel({ setPage }) {
       setShowPasswordForm(false);
 
     } catch (error) {
-      console.error(error);
-      alert("❌ كلمة المرور الحالية غير صحيحة أو حدث خطأ");
+      console.log(error);
+      alert("❌ كلمة المرور الحالية غير صحيحة");
     }
   }
 
   return (
     <div className="card">
+
       <h2>👨‍🏫 لوحة الأستاذ</h2>
+
+      <hr />
+
+      <p><strong>الاسم:</strong> {loggedTeacher?.name}</p>
+
+      <p><strong>الحلقة:</strong> {loggedTeacher?.halaqa}</p>
+
+      <hr />
 
       <button
         className="btn"
         onClick={() => setPage("attendance")}
       >
-        📋 تسجيل الحضور
+        📋 حضور طلاب الحلقة
       </button>
 
       <br /><br />
@@ -60,7 +72,7 @@ export default function TeacherPanel({ setPage }) {
         className="btn"
         onClick={() => setPage("memorization")}
       >
-        📖 إدخال الحفظ
+        📖 حفظ طلاب الحلقة
       </button>
 
       <br /><br />
@@ -69,7 +81,7 @@ export default function TeacherPanel({ setPage }) {
         className="btn"
         onClick={() => setPage("notes")}
       >
-        📝 ملاحظات الطلاب
+        📝 ملاحظات طلاب الحلقة
       </button>
 
       <br /><br />
@@ -82,6 +94,7 @@ export default function TeacherPanel({ setPage }) {
       </button>
 
       {showPasswordForm && (
+
         <form onSubmit={changePassword}>
 
           <br />
@@ -101,8 +114,8 @@ export default function TeacherPanel({ setPage }) {
             placeholder="كلمة المرور الجديدة"
             value={newPassword}
             onChange={(e) => setNewPassword(e.target.value)}
-            minLength="6"
             required
+            minLength={6}
           />
 
           <br /><br />
@@ -111,21 +124,22 @@ export default function TeacherPanel({ setPage }) {
             type="submit"
             className="btn"
           >
-            💾 حفظ كلمة المرور
+            💾 حفظ
           </button>
 
         </form>
+
       )}
 
       <br /><br />
 
       <button
-        className="btn"
-        onClick={() => setPage("login")}
-      >
-        🚪 تسجيل الخروج
-      </button>
+  className="btn"
+  onClick={() => setPage("login")}
+>
+  🚪 تسجيل الخروج
+</button>
 
-    </div>
-  );
+</div>
+);
 }

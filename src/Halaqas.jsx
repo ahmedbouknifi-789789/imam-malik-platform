@@ -3,8 +3,10 @@ import { useState } from "react";
 export default function Halaqas({
   setPage,
   halaqas,
+  students,
   editHalaqa,
   deleteHalaqa,
+  openHalaqaStudents,
 }) {
   const [search, setSearch] = useState("");
 
@@ -14,17 +16,17 @@ export default function Halaqas({
 
   return (
     <div className="card">
-  <h2>📖 إدارة الحلقات</h2>
+      <h2>📖 إدارة الحلقات</h2>
 
-  <button
-    className="btn"
-    onClick={() => setPage("addHalaqa")}
-  >
-    ➕ إضافة حلقة
-  </button>
+      <button
+        className="btn"
+        onClick={() => setPage("addHalaqa")}
+      >
+        ➕ إضافة حلقة
+      </button>
 
-  <br />
-  <br />
+      <br />
+      <br />
 
       <input
         type="text"
@@ -65,7 +67,14 @@ export default function Halaqas({
               <tr key={halaqa.id}>
                 <td>{halaqa.name}</td>
                 <td>{halaqa.teacher}</td>
-                <td>{halaqa.students || 0}</td>
+
+                <td>
+                  {
+                    students.filter(
+                      (student) => student.halaqa === halaqa.name
+                    ).length
+                  }
+                </td>
 
                 <td>
                   <button
@@ -73,6 +82,13 @@ export default function Halaqas({
                     onClick={() => editHalaqa(halaqa)}
                   >
                     ✏️ تعديل
+                  </button>
+
+                  <button
+                    className="btn"
+                    onClick={() => openHalaqaStudents(halaqa)}
+                  >
+                    👨‍🎓 الطلاب
                   </button>
 
                   <button

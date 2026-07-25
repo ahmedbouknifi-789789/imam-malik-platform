@@ -1,4 +1,10 @@
-export default function Admin({ setPage, students }) {
+export default function Admin({
+  setPage,
+  students,
+  teachers,
+  halaqas,
+}) {
+
   return (
     <div className="card">
       <h2>🛠️ لوحة تحكم الإدارة</h2>
@@ -9,10 +15,9 @@ export default function Admin({ setPage, students }) {
 
       <h3>📊 الإحصائيات</h3>
 
-      <p>👨‍🎓 عدد الطلاب: {students.length}</p>
-      <p>👨‍🏫 عدد الأساتذة: قريبًا</p>
-      <p>📖 عدد الحلقات: قريبًا</p>
-
+<p>👨‍🎓 عدد الطلاب: {students.length}</p>
+<p>👨‍🏫 عدد الأساتذة: {teachers.length}</p>
+<p>📖 عدد الحلقات: {halaqas.length}</p>
       <hr />
 
       <button
@@ -22,19 +27,26 @@ export default function Admin({ setPage, students }) {
         👨‍🎓 إدارة الطلاب
       </button>
 
-<button
-  className="btn"
-  onClick={() => setPage("registrationRequests")}
->
-  📥 طلبات التسجيل
-</button>
+      <button
+        className="btn"
+        onClick={() => setPage("registrationRequests")}
+      >
+        📥 طلبات التسجيل
+      </button>
 
-<button
-  className="btn"
-  onClick={() => setPage("createAccounts")}
->
-  👤 إنشاء حسابات الطلاب
-</button>
+      <button
+        className="btn"
+        onClick={() => setPage("createAccounts")}
+      >
+        👤 إنشاء حسابات الطلاب
+      </button>
+
+      <button
+        className="btn"
+        onClick={() => setPage("createTeacherAccounts")}
+      >
+        👨‍🏫 إنشاء حسابات الأساتذة
+      </button>
 
       <button
         className="btn"
@@ -51,18 +63,18 @@ export default function Admin({ setPage, students }) {
       </button>
 
       <button
-  className="btn"
-  onClick={() => setPage("teachers")}
->
-  👨‍🏫 إدارة الأساتذة
-</button>
+        className="btn"
+        onClick={() => setPage("teachers")}
+      >
+        👨‍🏫 إدارة الأساتذة
+      </button>
 
       <button
-  className="btn"
-  onClick={() => setPage("halaqas")}
->
-  📖 إدارة الحلقات
-</button>
+        className="btn"
+        onClick={() => setPage("halaqas")}
+      >
+        📖 إدارة الحلقات
+      </button>
 
       <button className="btn">
         📢 الإعلانات

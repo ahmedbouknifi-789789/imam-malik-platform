@@ -6,7 +6,11 @@ import {
 } from "firebase/firestore";
 import { db } from "./Firebase";
 
-export default function Attendance({ setPage, students }) {
+export default function Attendance({
+  setPage,
+  students,
+  loggedTeacher,
+}) {
   const [attendance, setAttendance] = useState({});
 
   useEffect(() => {
@@ -21,7 +25,6 @@ export default function Attendance({ setPage, students }) {
 
       querySnapshot.forEach((doc) => {
         const item = doc.data();
-
         data[item.studentId] = item.status;
       });
 
@@ -38,6 +41,13 @@ export default function Attendance({ setPage, students }) {
     }));
   };
 
+  const visibleStudents = loggedTeacher
+    ? students.filter(
+        (student) =>
+          student.halaqa === loggedTeacher.halaqa
+      )
+    : students;
+
   async function saveAttendance() {
     try {
       for (const studentId in attendance) {
@@ -50,6 +60,7 @@ export default function Attendance({ setPage, students }) {
 
       alert("✅ تم حفظ الحضور");
       loadAttendance();
+
     } catch (error) {
       console.error(error);
       alert("❌ حدث خطأ أثناء الحفظ");
@@ -59,6 +70,12 @@ export default function Attendance({ setPage, students }) {
   return (
     <div className="card">
       <h2>📅 الحضور والغياب</h2>
+
+      {loggedTeacher && (
+        <p>
+          <strong>الحلقة:</strong> {loggedTeacher.halaqa}
+        </p>
+      )}
 
       <table
         border="1"
@@ -76,7 +93,7 @@ export default function Attendance({ setPage, students }) {
         </thead>
 
         <tbody>
-          {students.map((student) => (
+          {visibleStudents.map((student) => (
             <tr key={student.id}>
               <td>{student.name}</td>
 
@@ -98,6 +115,7 @@ export default function Attendance({ setPage, students }) {
       </table>
 
       <br />
+
       <button
         className="btn"
         onClick={saveAttendance}
@@ -107,7 +125,11 @@ export default function Attendance({ setPage, students }) {
 
       <button
         className="btn"
-        onClick={() => setPage("teacherPanel")}
+        onClick={() =>
+          setPage(
+            loggedTeacher ? "teacherPanel" : "admin"
+          )
+        }
       >
         ⬅️ الرجوع
       </button>

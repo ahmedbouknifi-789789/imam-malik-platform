@@ -6,7 +6,11 @@ import {
 } from "firebase/firestore";
 import { db } from "./Firebase";
 
-export default function Memorization({ setPage, students }) {
+export default function Memorization({
+  setPage,
+  students,
+  loggedTeacher,
+}) {
   const [records, setRecords] = useState({});
 
   useEffect(() => {
@@ -48,15 +52,22 @@ export default function Memorization({ setPage, students }) {
     }));
   };
 
+  const visibleStudents = loggedTeacher
+    ? students.filter(
+        (student) =>
+          student.halaqa === loggedTeacher.halaqa
+      )
+    : students;
+
   async function saveResults() {
     try {
       for (const studentId in records) {
         await addDoc(collection(db, "memorization"), {
-  studentId,
-  date: new Date().toLocaleDateString("fr-CA"),
-  time: new Date().toLocaleTimeString(),
-  ...records[studentId],
-});
+          studentId,
+          date: new Date().toLocaleDateString("fr-CA"),
+          time: new Date().toLocaleTimeString(),
+          ...records[studentId],
+        });
       }
 
       alert("✅ تم حفظ النتائج بنجاح");
@@ -92,7 +103,7 @@ export default function Memorization({ setPage, students }) {
         </thead>
 
         <tbody>
-          {students.map((student) => (
+          {visibleStudents.map((student) => (
             <tr key={student.id}>
               <td>{student.name}</td>
 
@@ -173,7 +184,9 @@ export default function Memorization({ setPage, students }) {
 
       <button
         className="btn"
-        onClick={() => setPage("teacherPanel")}
+        onClick={() =>
+          setPage(loggedTeacher ? "teacherPanel" : "admin")
+        }
       >
         ⬅️ الرجوع
       </button>
