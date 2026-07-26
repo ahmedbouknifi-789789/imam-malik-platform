@@ -85,3 +85,651 @@ h2 {
 .link-btn:hover {
   text-decoration: underline;
 }
+/* رأس استمارة التسجيل */
+
+.print-header {
+  text-align: center;
+  border-bottom: 2px solid #1b5e20;
+  padding-bottom: 15px;
+  margin-bottom: 20px;
+}
+
+.print-logo {
+  width: 90px;
+  margin: 0 auto 10px;
+  display: block;
+}
+
+.print-header h2 {
+  color: #1b5e20;
+  margin: 5px 0;
+}
+
+.print-header h3 {
+  color: #333;
+  margin: 5px 0;
+}
+
+.print-header p {
+  color: #666;
+  margin: 5px 0;
+}
+
+.section-title {
+  color: #1b5e20;
+  text-align: right;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 8px;
+  margin-top: 25px;
+}
+
+.declaration {
+  border: 1px solid #999;
+  padding: 15px;
+  margin-top: 25px;
+  text-align: right;
+  border-radius: 8px;
+}
+
+.declaration h3 {
+  margin-top: 0;
+  color: #1b5e20;
+}
+
+.declaration p {
+  line-height: 2;
+}
+
+.signatures {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 45px;
+  text-align: center;
+  line-height: 1.8;
+}
+
+
+/* إعدادات الطباعة */
+
+@media print {
+
+  body {
+    background: white;
+  }
+
+  .header {
+    display: none;
+  }
+
+  .student-form {
+    max-width: 100%;
+    margin: 0;
+    padding: 20px;
+    box-shadow: none;
+    border: 1px solid #000;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  input,
+  select,
+  textarea {
+    border: 1px solid #555 !important;
+    color: #000 !important;
+    background: white !important;
+  }
+
+  .section-title {
+    color: #000;
+    border-bottom: 1px solid #000;
+  }
+
+  .print-header {
+    border-bottom: 2px solid #000;
+  }
+
+  .print-header h2,
+  .print-header h3,
+  .print-header p {
+    color: #000;
+  }
+
+  .declaration {
+    border: 1px solid #000;
+  }
+
+  .declaration h3 {
+    color: #000;
+  }
+
+  .signatures {
+    display: flex;
+  }
+
+}
+.student-dashboard {
+  max-width: 600px;
+  margin: auto;
+  padding: 15px;
+  direction: rtl;
+}
+
+.student-header {
+  background: linear-gradient(135deg, #315bdc, #5b7bea);
+  color: white;
+  border-radius: 25px;
+  padding: 30px 20px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.student-avatar {
+  width: 100px;
+  height: 100px;
+  margin: auto;
+  border-radius: 50%;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 55px;
+  overflow: hidden;
+}
+
+.student-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.student-header h2 {
+  color: white;
+  margin-bottom: 5px;
+}
+
+.student-header p {
+  margin: 0;
+  opacity: .9;
+}
+
+.student-info-card,
+.last-result-card,
+.notifications-card,
+.online-card {
+  background: white;
+  border-radius: 20px;
+  padding: 20px;
+  margin-bottom: 18px;
+  box-shadow: 0 5px 18px rgba(0,0,0,.08);
+}
+
+.student-info-card h3,
+.last-result-card h3,
+.notifications-card h3,
+.online-card h3 {
+  color: #315bdc;
+  margin-top: 0;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.stat-card {
+  padding: 18px;
+  border-radius: 18px;
+  text-align: center;
+}
+
+.stat-card span {
+  font-size: 30px;
+}
+
+.stat-card h3 {
+  font-size: 32px;
+  margin: 5px 0;
+}
+
+.stat-card p {
+  margin: 0;
+}
+
+.blue {
+  background: #e4ebff;
+  color: #315bdc;
+}
+
+.green {
+  background: #e2f7eb;
+  color: #16834a;
+}
+
+.orange {
+  background: #fff0d7;
+  color: #c97900;
+}
+
+.red {
+  background: #ffe5e5;
+  color: #c62828;
+}
+
+.online-card {
+  background: linear-gradient(135deg, #e2f4ff, #d3eaff);
+  text-align: center;
+}
+
+.online-btn {
+  display: block;
+  background: #287be8;
+  color: white;
+  padding: 14px;
+  border-radius: 14px;
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: bold;
+  margin-top: 15px;
+}
+
+.result-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 13px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.result-row strong {
+  color: #315bdc;
+}
+
+.result-date {
+  margin-top: 15px;
+  color: #777;
+}
+
+.notification-item {
+  background: #f3f6ff;
+  padding: 14px;
+  border-radius: 14px;
+  margin-bottom: 10px;
+}
+
+.notification-item strong {
+  color: #315bdc;
+}
+
+.notification-item p {
+  margin: 8px 0;
+}
+
+.notification-item small {
+  color: #777;
+}
+
+.logout-btn {
+  background: #b3261e;
+}
+
+.logout-btn:hover {
+  background: #8d1d18;
+}
+/* ================= صفحة الطالب ================= */
+
+.student-dashboard {
+  max-width: 900px;
+  margin: 20px auto;
+  padding: 15px;
+  direction: rtl;
+}
+
+/* الرأس */
+
+.student-header {
+  background: linear-gradient(135deg, #1976d2, #42a5f5);
+  color: white;
+  padding: 30px 20px;
+  border-radius: 25px;
+  text-align: center;
+  margin-bottom: 20px;
+  box-shadow: 0 8px 20px rgba(0,0,0,.15);
+}
+
+.student-avatar {
+  width: 100px;
+  height: 100px;
+  background: white;
+  border-radius: 50%;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 55px;
+  overflow: hidden;
+}
+
+.student-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.student-header h2 {
+  color: white;
+  margin: 15px 0 5px;
+}
+
+.student-header p {
+  margin: 0;
+  font-size: 17px;
+}
+
+/* معلومات الطالب */
+
+.student-info-card {
+  background: white;
+  border-radius: 20px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 5px 15px rgba(0,0,0,.1);
+}
+
+.student-info-card h3 {
+  color: #1976d2;
+  margin-top: 0;
+}
+
+.student-info-card p {
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+/* الإحصائيات */
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.stat-card {
+  padding: 20px 10px;
+  border-radius: 18px;
+  text-align: center;
+  background: white;
+  box-shadow: 0 5px 15px rgba(0,0,0,.1);
+}
+
+.stat-card span {
+  font-size: 35px;
+}
+
+.stat-card h3 {
+  font-size: 30px;
+  margin: 8px 0;
+}
+
+.stat-card p {
+  margin: 0;
+  color: #777;
+}
+
+.stat-card.blue {
+  background: #e3f2fd;
+  color: #1565c0;
+}
+
+.stat-card.green {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.stat-card.orange {
+  background: #fff3e0;
+  color: #ef6c00;
+}
+
+.stat-card.red {
+  background: #ffebee;
+  color: #c62828;
+}
+
+/* الحلقة عن بعد */
+
+.online-card {
+  background: linear-gradient(135deg, #6a1b9a, #ab47bc);
+  color: white;
+  padding: 25px;
+  border-radius: 22px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.online-card h3 {
+  font-size: 25px;
+  margin: 10px 0;
+}
+
+.online-icon {
+  font-size: 45px;
+}
+
+.online-btn {
+  display: block;
+  background: white;
+  color: #6a1b9a;
+  padding: 14px;
+  border-radius: 12px;
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: bold;
+  margin-top: 15px;
+}
+
+/* آخر نتيجة */
+
+.last-result-card,
+.notifications-card {
+  background: white;
+  border-radius: 20px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 5px 15px rgba(0,0,0,.1);
+}
+
+.last-result-card h3,
+.notifications-card h3 {
+  color: #1976d2;
+}
+
+.result-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 14px 5px;
+  border-bottom: 1px solid #eee;
+}
+
+.result-row strong {
+  color: #1976d2;
+}
+
+.result-date {
+  margin-top: 15px;
+  color: #777;
+}
+
+/* الإشعارات */
+
+.notification-item {
+  background: #f5f9ff;
+  border-right: 5px solid #1976d2;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+.notification-item strong {
+  color: #1976d2;
+}
+
+.notification-item p {
+  margin: 8px 0;
+}
+
+.notification-item small {
+  color: #777;
+}
+
+.empty-message {
+  text-align: center;
+  color: #888;
+  padding: 20px;
+}
+
+/* تسجيل الخروج */
+
+.logout-btn {
+  background: #c62828;
+}
+
+.logout-btn:hover {
+  background: #8e0000;
+}
+
+/* الهاتف */
+
+@media (max-width: 700px) {
+
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .student-dashboard {
+    padding: 10px;
+  }
+
+  .student-header {
+    padding: 25px 15px;
+  }
+
+  .result-row {
+    flex-direction: column;
+    gap: 5px;
+  }
+
+}
+
+@media (max-width: 400px) {
+
+  .stats-grid {
+    gap: 8px;
+  }
+
+  .stat-card {
+    padding: 15px 5px;
+  }
+
+  .stat-card h3 {
+    font-size: 25px;
+  }
+
+}
+/* ================= النقاط ================= */
+
+.points-card {
+  background: linear-gradient(135deg, #fff8e1, #ffe082);
+  border-radius: 22px;
+  padding: 25px;
+  text-align: center;
+  margin-bottom: 20px;
+  box-shadow: 0 5px 15px rgba(0,0,0,.12);
+}
+
+.points-icon {
+  font-size: 50px;
+}
+
+.points-card h3 {
+  font-size: 32px;
+  color: #8d6e00;
+  margin: 10px 0;
+}
+
+.points-card p {
+  margin: 5px;
+  color: #665500;
+}
+
+.student-level {
+  display: inline-block;
+  background: white;
+  color: #8d6e00;
+  padding: 10px 20px;
+  border-radius: 20px;
+  font-weight: bold;
+  margin: 10px 0;
+}
+
+/* شريط التقدم */
+
+.progress-container {
+  height: 14px;
+  background: rgba(255,255,255,.7);
+  border-radius: 20px;
+  overflow: hidden;
+  margin: 15px 0;
+}
+
+.progress-bar {
+  height: 100%;
+  background: #8d6e00;
+  border-radius: 20px;
+  transition: width .5s ease;
+}
+
+/* ================= الإنجازات ================= */
+
+.achievements-card {
+  background: white;
+  border-radius: 20px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 5px 15px rgba(0,0,0,.1);
+}
+
+.achievements-card h3 {
+  color: #8d6e00;
+  margin-top: 0;
+}
+
+.achievements-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.achievement-item {
+  background: #fff8e1;
+  border: 1px solid #ffe082;
+  color: #8d6e00;
+  padding: 12px 15px;
+  border-radius: 15px;
+  font-weight: bold;
+}
+
+@media (max-width: 600px) {
+
+  .achievements-list {
+    flex-direction: column;
+  }
+
+  .achievement-item {
+    text-align: center;
+  }
+
+}

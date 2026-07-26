@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore";
+import { collection, getDocs } from "firebase/firestore";
 import { auth, db } from "./Firebase";
 
 export default function TeacherLogin({
@@ -14,44 +14,33 @@ export default function TeacherLogin({
     e.preventDefault();
 
     try {
-      const userCredential =
-        await signInWithEmailAndPassword(
-          auth,
-          email,
-          password
-        );
+      await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
 
-      const uid = userCredential.user.uid;
+      const snapshot = await getDocs(
+        collection(db, "teachers")
+      );
 
-      // البحث عن الحساب
-      const accountRef = doc(db, "teacherAccounts", uid);
-      const accountSnap = await getDoc(accountRef);
+      let teacher = null;
 
-      if (!accountSnap.exists()) {
+      snapshot.forEach((teacherDoc) => {
+        const data = teacherDoc.data();
+
+        if (data.email === email) {
+          teacher = {
+            id: teacherDoc.id,
+            ...data,
+          };
+        }
+      });
+
+      if (!teacher) {
         alert("هذا الحساب غير مربوط بأي أستاذ.");
         return;
       }
-
-      const account = accountSnap.data();
-
-      // جلب بيانات الأستاذ
-      const teacherRef = doc(
-        db,
-        "teachers",
-        account.teacherId
-      );
-
-      const teacherSnap = await getDoc(teacherRef);
-
-      if (!teacherSnap.exists()) {
-        alert("تعذر العثور على بيانات الأستاذ.");
-        return;
-      }
-
-      const teacher = {
-        id: teacherSnap.id,
-        ...teacherSnap.data(),
-      };
 
       setLoggedTeacher(teacher);
 
@@ -95,6 +84,18 @@ export default function TeacherLogin({
 
         <button className="btn" type="submit">
           تسجيل الدخول
+        </button>
+
+        <br />
+        <br />
+
+        <button
+          className="btn"
+          style={{ background: "#2563eb" }}
+          type="button"
+          onClick={() => setPage("forgotTeacherPassword")}
+        >
+          🔑 نسيت كلمة المرور؟
         </button>
 
         <br />

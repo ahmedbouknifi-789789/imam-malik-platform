@@ -7,12 +7,12 @@ import {
   doc,
   updateDoc,
 } from "firebase/firestore";
+
 import { db } from "./Firebase";
 
 import Login from "./Login";
 import Student from "./Student";
 import Parent from "./Parent";
-import Teacher from "./Teacher";
 import Teachers from "./Teachers";
 import AddTeacher from "./AddTeacher";
 import Admin from "./Admin";
@@ -36,22 +36,54 @@ import CreateAccounts from "./CreateAccounts";
 import HalaqaStudents from "./HalaqaStudents";
 import TeacherLogin from "./TeacherLogin";
 import CreateTeacherAccounts from "./CreateTeacherAccounts";
+import Notifications from "./Notifications";
+
 import "./App.css";
 
 export default function App() {
+  // =========================
+  // الصفحات
+  // =========================
+
   const [page, setPage] = useState("login");
-const [selectedStudent, setSelectedStudent] = useState(null);
-const [loggedTeacher, setLoggedTeacher] = useState(null);
 
-const [students, setStudents] = useState([]);
-const [teachers, setTeachers] = useState([]);
-const [halaqas, setHalaqas] = useState([]);
+  // =========================
+  // الطالب والأستاذ
+  // =========================
 
-const [selectedHalaqa, setSelectedHalaqa] = useState(null);
+  const [selectedStudent, setSelectedStudent] =
+    useState(null);
 
-const [editingStudent, setEditingStudent] = useState(null);
-const [editingTeacher, setEditingTeacher] = useState(null);
-const [editingHalaqa, setEditingHalaqa] = useState(null);
+  const [loggedTeacher, setLoggedTeacher] =
+    useState(null);
+
+  // =========================
+  // البيانات
+  // =========================
+
+  const [students, setStudents] = useState([]);
+  const [teachers, setTeachers] = useState([]);
+  const [halaqas, setHalaqas] = useState([]);
+
+  const [selectedHalaqa, setSelectedHalaqa] =
+    useState(null);
+
+  // =========================
+  // التعديل
+  // =========================
+
+  const [editingStudent, setEditingStudent] =
+    useState(null);
+
+  const [editingTeacher, setEditingTeacher] =
+    useState(null);
+
+  const [editingHalaqa, setEditingHalaqa] =
+    useState(null);
+
+  // =========================
+  // تحميل البيانات
+  // =========================
 
   useEffect(() => {
     loadStudents();
@@ -59,220 +91,427 @@ const [editingHalaqa, setEditingHalaqa] = useState(null);
     loadHalaqas();
   }, []);
 
+  // =========================
+  // تحميل الطلاب
+  // =========================
+
   async function loadStudents() {
-    const querySnapshot = await getDocs(collection(db, "students"));
+    try {
+      const querySnapshot = await getDocs(
+        collection(db, "students")
+      );
 
-    const list = [];
+      const list = [];
 
-    querySnapshot.forEach((docItem) => {
-      list.push({
-        id: docItem.id,
-        ...docItem.data(),
+      querySnapshot.forEach((docItem) => {
+        list.push({
+          id: docItem.id,
+          ...docItem.data(),
+        });
       });
-    });
 
-    setStudents(list);
+      setStudents(list);
+    } catch (error) {
+      console.log("خطأ في تحميل الطلاب:", error);
+    }
   }
+
+  // =========================
+  // تحميل الأساتذة
+  // =========================
 
   async function loadTeachers() {
-    const querySnapshot = await getDocs(collection(db, "teachers"));
+    try {
+      const querySnapshot = await getDocs(
+        collection(db, "teachers")
+      );
 
-    const list = [];
+      const list = [];
 
-    querySnapshot.forEach((docItem) => {
-      list.push({
-        id: docItem.id,
-        ...docItem.data(),
+      querySnapshot.forEach((docItem) => {
+        list.push({
+          id: docItem.id,
+          ...docItem.data(),
+        });
       });
-    });
 
-    setTeachers(list);
+      setTeachers(list);
+    } catch (error) {
+      console.log("خطأ في تحميل الأساتذة:", error);
+    }
   }
+
+  // =========================
+  // تحميل الحلقات
+  // =========================
 
   async function loadHalaqas() {
-    const querySnapshot = await getDocs(collection(db, "halaqas"));
+    try {
+      const querySnapshot = await getDocs(
+        collection(db, "halaqas")
+      );
 
-    const list = [];
+      const list = [];
 
-    querySnapshot.forEach((docItem) => {
-      list.push({
-        id: docItem.id,
-        ...docItem.data(),
+      querySnapshot.forEach((docItem) => {
+        list.push({
+          id: docItem.id,
+          ...docItem.data(),
+        });
       });
-    });
 
-    setHalaqas(list);
+      setHalaqas(list);
+    } catch (error) {
+      console.log("خطأ في تحميل الحلقات:", error);
+    }
   }
+
+  // =========================
+  // إضافة طالب
+  // =========================
 
   async function addStudent(student) {
-  const registrationNumber =
-    "S" + Date.now().toString().slice(-8);
+    try {
+      const registrationNumber =
+        "S" + Date.now().toString().slice(-8);
 
-  await addDoc(collection(db, "students"), {
-    ...student,
-    number: registrationNumber,
-  });
+      await addDoc(collection(db, "students"), {
+        ...student,
+        number: registrationNumber,
+      });
 
-  loadStudents();
-  setPage("students");
-}
+      await loadStudents();
+
+      setPage("students");
+    } catch (error) {
+      console.log(error);
+      alert("حدث خطأ أثناء إضافة الطالب");
+    }
+  }
+
+  // =========================
+  // إضافة أستاذ
+  // =========================
 
   async function addTeacher(teacher) {
-    await addDoc(collection(db, "teachers"), teacher);
-    loadTeachers();
-    setPage("teachers");
+    try {
+      await addDoc(
+        collection(db, "teachers"),
+        teacher
+      );
+
+      await loadTeachers();
+
+      setPage("teachers");
+    } catch (error) {
+      console.log(error);
+      alert("حدث خطأ أثناء إضافة الأستاذ");
+    }
   }
+
+  // =========================
+  // إضافة حلقة
+  // =========================
 
   async function addHalaqa(halaqa) {
-    await addDoc(collection(db, "halaqas"), halaqa);
-    loadHalaqas();
-    setPage("halaqas");
+    try {
+      await addDoc(
+        collection(db, "halaqas"),
+        halaqa
+      );
+
+      await loadHalaqas();
+
+      setPage("halaqas");
+    } catch (error) {
+      console.log(error);
+      alert("حدث خطأ أثناء إضافة الحلقة");
+    }
   }
+
+  // =========================
+  // حذف طالب
+  // =========================
 
   async function deleteStudent(id) {
-    await deleteDoc(doc(db, "students", id));
-    loadStudents();
+    try {
+      await deleteDoc(
+        doc(db, "students", id)
+      );
+
+      await loadStudents();
+    } catch (error) {
+      console.log(error);
+    }
   }
+
+  // =========================
+  // حذف أستاذ
+  // =========================
 
   async function deleteTeacher(id) {
-    await deleteDoc(doc(db, "teachers", id));
-    loadTeachers();
+    try {
+      await deleteDoc(
+        doc(db, "teachers", id)
+      );
+
+      await loadTeachers();
+    } catch (error) {
+      console.log(error);
+    }
   }
 
+  // =========================
+  // حذف حلقة
+  // =========================
+
   async function deleteHalaqa(id) {
-    await deleteDoc(doc(db, "halaqas", id));
-    loadHalaqas();
+    try {
+      await deleteDoc(
+        doc(db, "halaqas", id)
+      );
+
+      await loadHalaqas();
+    } catch (error) {
+      console.log(error);
+    }
   }
+
+  // =========================
+  // تعديل طالب
+  // =========================
 
   function editStudent(student) {
     setEditingStudent(student);
     setPage("addStudent");
   }
 
+  // =========================
+  // تعديل أستاذ
+  // =========================
+
   function editTeacher(teacher) {
     setEditingTeacher(teacher);
     setPage("addTeacher");
   }
+
+  // =========================
+  // تعديل حلقة
+  // =========================
 
   function editHalaqa(halaqa) {
     setEditingHalaqa(halaqa);
     setPage("addHalaqa");
   }
 
- async function updateStudent(updatedStudent) {
-  const studentRef = doc(db, "students", updatedStudent.id);
+  // =========================
+  // تحديث الطالب
+  // =========================
 
-  await updateDoc(studentRef, {
-    name: updatedStudent.name,
-    number: updatedStudent.number,
-    birth: updatedStudent.birth,
-    gender: updatedStudent.gender,
-    parent: updatedStudent.parent,
-    phone: updatedStudent.phone,
-    parentEmail: updatedStudent.parentEmail,
-    halaqa: updatedStudent.halaqa,
-    level: updatedStudent.level,
-    date: updatedStudent.date,
-    notes: updatedStudent.notes,
-    photo: updatedStudent.photo,
-    halaqaType: updatedStudent.halaqaType,
-  });
+  async function updateStudent(updatedStudent) {
+    try {
+      const studentRef = doc(
+        db,
+        "students",
+        updatedStudent.id
+      );
 
-  loadStudents();
-  setEditingStudent(null);
-  setPage("students");
-}
-  async function updateTeacher(updatedTeacher) {
-    const teacherRef = doc(db, "teachers", updatedTeacher.id);
+      await updateDoc(studentRef, {
+        name: updatedStudent.name,
+        number: updatedStudent.number,
+        birth: updatedStudent.birth,
+        gender: updatedStudent.gender,
+        parent: updatedStudent.parent,
+        phone: updatedStudent.phone,
+        parentEmail: updatedStudent.parentEmail,
+        halaqa: updatedStudent.halaqa,
+        level: updatedStudent.level,
+        date: updatedStudent.date,
+        notes: updatedStudent.notes,
+        photo: updatedStudent.photo,
+        halaqaType: updatedStudent.halaqaType,
+      });
 
-    await updateDoc(teacherRef, {
-      name: updatedTeacher.name,
-      phone: updatedTeacher.phone,
-      email: updatedTeacher.email,
-      halaqa: updatedTeacher.halaqa,
-      date: updatedTeacher.date,
-      notes: updatedTeacher.notes,
-    });
+      await loadStudents();
 
-    loadTeachers();
-    setEditingTeacher(null);
-    setPage("teachers");
+      setEditingStudent(null);
+
+      setPage("students");
+    } catch (error) {
+      console.log(error);
+      alert("حدث خطأ أثناء تحديث الطالب");
+    }
   }
+
+  // =========================
+  // تحديث الأستاذ
+  // =========================
+
+  async function updateTeacher(updatedTeacher) {
+    try {
+      const teacherRef = doc(
+        db,
+        "teachers",
+        updatedTeacher.id
+      );
+
+      await updateDoc(teacherRef, {
+        name: updatedTeacher.name,
+        phone: updatedTeacher.phone,
+        email: updatedTeacher.email,
+        halaqa: updatedTeacher.halaqa,
+        date: updatedTeacher.date,
+        notes: updatedTeacher.notes,
+      });
+
+      await loadTeachers();
+
+      setEditingTeacher(null);
+
+      setPage("teachers");
+    } catch (error) {
+      console.log(error);
+      alert("حدث خطأ أثناء تحديث الأستاذ");
+    }
+  }
+
+  // =========================
+  // تحديث الحلقة
+  // =========================
 
   async function updateHalaqa(updatedHalaqa) {
-    const halaqaRef = doc(db, "halaqas", updatedHalaqa.id);
+    try {
+      const halaqaRef = doc(
+        db,
+        "halaqas",
+        updatedHalaqa.id
+      );
 
-    await updateDoc(halaqaRef, {
-      name: updatedHalaqa.name,
-      teacher: updatedHalaqa.teacher,
-      students: updatedHalaqa.students,
-      notes: updatedHalaqa.notes,
-    });
+      await updateDoc(halaqaRef, {
+        name: updatedHalaqa.name,
+        teacher: updatedHalaqa.teacher,
+        students: updatedHalaqa.students,
+        notes: updatedHalaqa.notes,
+      });
 
-    loadHalaqas();
-    setEditingHalaqa(null);
-    setPage("halaqas");
+      await loadHalaqas();
+
+      setEditingHalaqa(null);
+
+      setPage("halaqas");
+    } catch (error) {
+      console.log(error);
+      alert("حدث خطأ أثناء تحديث الحلقة");
+    }
   }
 
-  function openStudentRecord(student) {
-  setSelectedStudent(student);
-  setPage("studentRecord");
-}
+  // =========================
+  // فتح سجل الطالب
+  // =========================
 
-function openHalaqaStudents(halaqa) {
-  setSelectedHalaqa(halaqa);
-  setPage("halaqaStudents");
-}
+  function openStudentRecord(student) {
+    setSelectedStudent(student);
+
+    setPage("studentRecord");
+  }
+
+  // =========================
+  // فتح طلاب الحلقة
+  // =========================
+
+  function openHalaqaStudents(halaqa) {
+    setSelectedHalaqa(halaqa);
+
+    setPage("halaqaStudents");
+  }
+
+  // =========================
+  // واجهة التطبيق
+  // =========================
+
   return (
     <div className="app">
+
+      {/* رأس التطبيق */}
+
       <header className="header">
-        <h1>📖 منصة جمعية الإمام مالك الثقافية</h1>
+        <h1>
+          📖 منصة جمعية الإمام مالك الثقافية
+        </h1>
       </header>
+
+      {/* تسجيل الدخول */}
 
       {page === "login" && (
         <Login setPage={setPage} />
       )}
-     {page === "studentRegister" && (
-  <StudentRegister
-    setPage={setPage}
-  />
-)}
+
+      {/* تسجيل طالب جديد */}
+
+      {page === "studentRegister" && (
+        <StudentRegister
+          setPage={setPage}
+        />
+      )}
+
+      {/* دخول الطالب */}
 
       {page === "studentLogin" && (
-  <StudentLogin
-    setPage={setPage}
-    setSelectedStudent={setSelectedStudent}
-  />
-)}
+        <StudentLogin
+          setPage={setPage}
+          setSelectedStudent={
+            setSelectedStudent
+          }
+        />
+      )}
 
-{page === "student" && (
-  <Student
-    setPage={setPage}
-    student={selectedStudent}
-  />
-)}
-{page === "adminLogin" && (
-  <AdminLogin setPage={setPage} />
-)}
+      {/* صفحة الطالب */}
+
+      {page === "student" && (
+        <Student
+          setPage={setPage}
+          student={selectedStudent}
+        />
+      )}
+
+      {/* دخول الإدارة */}
+
+      {page === "adminLogin" && (
+        <AdminLogin
+          setPage={setPage}
+        />
+      )}
+
+      {/* صفحة ولي الأمر */}
+
       {page === "parent" && (
-  <Parent
-    setPage={setPage}
-    student={selectedStudent}
-  />
-)}
-   
-{page === "teacherLogin" && (
-  <TeacherLogin
-    setPage={setPage}
-    setLoggedTeacher={setLoggedTeacher}
-  />
-)}
-{page === "teacherPanel" && (
-  <TeacherPanel
-    setPage={setPage}
-    loggedTeacher={loggedTeacher}
-  />
-)}
+        <Parent
+          setPage={setPage}
+          student={selectedStudent}
+        />
+      )}
+
+      {/* دخول الأستاذ */}
+
+      {page === "teacherLogin" && (
+        <TeacherLogin
+          setPage={setPage}
+          setLoggedTeacher={
+            setLoggedTeacher
+          }
+        />
+      )}
+
+      {/* لوحة الأستاذ */}
+
+      {page === "teacherPanel" && (
+        <TeacherPanel
+          setPage={setPage}
+          loggedTeacher={loggedTeacher}
+        />
+      )}
+
+      {/* الأساتذة */}
 
       {page === "teachers" && (
         <Teachers
@@ -283,18 +522,26 @@ function openHalaqaStudents(halaqa) {
         />
       )}
 
+      {/* الإدارة */}
+
       {page === "admin" && (
-  <Admin
-    setPage={setPage}
-    students={students}
-    teachers={teachers}
-    halaqas={halaqas}
-  />
-)}
-      
-     {page === "registrationRequests" && (
-  <RegistrationRequests setPage={setPage} />
-)}
+        <Admin
+          setPage={setPage}
+          students={students}
+          teachers={teachers}
+          halaqas={halaqas}
+        />
+      )}
+
+      {/* طلبات التسجيل */}
+
+      {page === "registrationRequests" && (
+        <RegistrationRequests
+          setPage={setPage}
+        />
+      )}
+
+      {/* الطلاب */}
 
       {page === "students" && (
         <Students
@@ -302,105 +549,171 @@ function openHalaqaStudents(halaqa) {
           students={students}
           deleteStudent={deleteStudent}
           editStudent={editStudent}
-          openStudentRecord={openStudentRecord}
+          openStudentRecord={
+            openStudentRecord
+          }
         />
       )}
+
+      {/* الحلقات */}
+
       {page === "halaqas" && (
-  <Halaqas
-    setPage={setPage}
-    halaqas={halaqas}
-    students={students}
-    editHalaqa={editHalaqa}
-    deleteHalaqa={deleteHalaqa}
-    openHalaqaStudents={openHalaqaStudents}
-  />
-)}
-{page === "halaqaStudents" && (
-  <HalaqaStudents
-    setPage={setPage}
-    selectedHalaqa={selectedHalaqa}
-    students={students}
-  />
-)}
+        <Halaqas
+          setPage={setPage}
+          halaqas={halaqas}
+          students={students}
+          editHalaqa={editHalaqa}
+          deleteHalaqa={deleteHalaqa}
+          openHalaqaStudents={
+            openHalaqaStudents
+          }
+        />
+      )}
+
+      {/* طلاب الحلقة */}
+
+      {page === "halaqaStudents" && (
+        <HalaqaStudents
+          setPage={setPage}
+          selectedHalaqa={
+            selectedHalaqa
+          }
+          students={students}
+        />
+      )}
+
+      {/* إضافة أو تعديل طالب */}
 
       {page === "addStudent" && (
-  <AddStudent
-    setPage={setPage}
-    addStudent={addStudent}
-    editingStudent={editingStudent}
-    updateStudent={updateStudent}
-    halaqas={halaqas}
-  />
-)}
+        <AddStudent
+          setPage={setPage}
+          addStudent={addStudent}
+          editingStudent={
+            editingStudent
+          }
+          updateStudent={
+            updateStudent
+          }
+          halaqas={halaqas}
+        />
+      )}
+
+      {/* إضافة أو تعديل أستاذ */}
 
       {page === "addTeacher" && (
         <AddTeacher
           setPage={setPage}
           addTeacher={addTeacher}
-          editingTeacher={editingTeacher}
-          updateTeacher={updateTeacher}
+          editingTeacher={
+            editingTeacher
+          }
+          updateTeacher={
+            updateTeacher
+          }
         />
       )}
 
-{page === "createTeacherAccounts" && (
-  <CreateTeacherAccounts
-    setPage={setPage}
-  />
-)}
+      {/* إنشاء حسابات الأساتذة */}
+
+      {page === "createTeacherAccounts" && (
+        <CreateTeacherAccounts
+          setPage={setPage}
+        />
+      )}
+
+      {/* إضافة أو تعديل حلقة */}
+
       {page === "addHalaqa" && (
         <AddHalaqa
           setPage={setPage}
           addHalaqa={addHalaqa}
-          editingHalaqa={editingHalaqa}
-          updateHalaqa={updateHalaqa}
+          editingHalaqa={
+            editingHalaqa
+          }
+          updateHalaqa={
+            updateHalaqa
+          }
           teachers={teachers}
         />
       )}
 
-      {page === "memorization" && (
-  <Memorization
-    setPage={setPage}
-    students={students}
-    loggedTeacher={loggedTeacher}
-  />
-)}
-      {page === "notes" && (
-  <Notes
-    setPage={setPage}
-    students={students}
-  />
-)}
+      {/* الحفظ */}
 
-{page === "parentLogin" && (
-  <ParentLogin
-    setPage={setPage}
-    setSelectedStudent={setSelectedStudent}
-  />
-)}
+      {page === "memorization" && (
+        <Memorization
+          setPage={setPage}
+          students={students}
+          loggedTeacher={loggedTeacher}
+        />
+      )}
+
+      {/* الملاحظات */}
+
+      {page === "notes" && (
+        <Notes
+          setPage={setPage}
+          students={students}
+        />
+      )}
+
+      {/* دخول ولي الأمر */}
+
+      {page === "parentLogin" && (
+        <ParentLogin
+          setPage={setPage}
+          setSelectedStudent={
+            setSelectedStudent
+          }
+        />
+      )}
+
+      {/* الحضور */}
 
       {page === "attendance" && (
-  <Attendance
-    setPage={setPage}
-    students={students}
-    loggedTeacher={loggedTeacher}
-  />
-)}
+        <Attendance
+          setPage={setPage}
+          students={students}
+          loggedTeacher={
+            loggedTeacher
+          }
+        />
+      )}
 
-{page === "studentHistory" && (
-  <StudentHistory
-    setPage={setPage}
-    student={selectedStudent}
-  />
-)}
+      {/* سجل الطالب */}
 
-{page === "forgotPassword" && (
-  <ForgotPassword
-    setPage={setPage}
-  />
-)}
-{page === "createAccounts" && (
-  <CreateAccounts setPage={setPage} />
-)}
+      {page === "studentHistory" && (
+        <StudentHistory
+          setPage={setPage}
+          student={selectedStudent}
+        />
+      )}
+
+      {/* نسيت كلمة المرور */}
+
+      {page === "forgotPassword" && (
+        <ForgotPassword
+          setPage={setPage}
+        />
+      )}
+
+      {/* إنشاء الحسابات */}
+
+      {page === "createAccounts" && (
+        <CreateAccounts
+          setPage={setPage}
+        />
+      )}
+
+      {/* الإشعارات */}
+
+      {page === "notifications" && (
+        <Notifications
+          setPage={setPage}
+          student={selectedStudent}
+        />
+      )}
+
+      {/* سجل الطالب */}
 
       {page === "studentRecord" && (
         <StudentRecord
@@ -408,6 +721,7 @@ function openHalaqaStudents(halaqa) {
           student={selectedStudent}
         />
       )}
+
     </div>
   );
 }

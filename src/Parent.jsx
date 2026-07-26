@@ -66,23 +66,32 @@ export default function Parent({ setPage, student }) {
 
       <br />
 
-      
-       <button
-  className="btn"
-  onClick={() => setPage("studentHistory")}
->
-  📚 سجل الحفظ الكامل
-</button>
+      <button
+        className="btn"
+        onClick={() => setPage("studentHistory")}
+      >
+        📚 سجل الحفظ الكامل
+      </button>
 
-<br />
-<br />
+      <br />
+      <br />
 
-<button
-  className="btn"
-  onClick={() => setPage("login")}
->
-  رجوع
-</button>
+      <button
+        className="btn"
+        onClick={() => setPage("notifications")}
+      >
+        🔔 الإشعارات
+      </button>
+
+      <br />
+      <br />
+
+      <button
+        className="btn"
+        onClick={() => setPage("login")}
+      >
+        رجوع
+      </button>
     </div>
   );
 }
