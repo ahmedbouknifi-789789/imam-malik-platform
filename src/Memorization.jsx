@@ -4,6 +4,7 @@ import {
   addDoc,
   getDocs,
 } from "firebase/firestore";
+
 import { db } from "./Firebase";
 
 export default function Memorization({
@@ -12,6 +13,10 @@ export default function Memorization({
   loggedTeacher,
 }) {
   const [records, setRecords] = useState({});
+
+  // =========================
+  // تحميل النتائج السابقة
+  // =========================
 
   useEffect(() => {
     loadResults();
@@ -25,11 +30,10 @@ export default function Memorization({
 
       const data = {};
 
-      snapshot.forEach((doc) => {
-        const item = doc.data();
+      snapshot.forEach((docItem) => {
+        const item = docItem.data();
 
         data[item.studentId] = {
-          surah: item.surah || "",
           new: item.new || "",
           review: item.review || "",
           rate: item.rate || "ممتاز",
@@ -39,9 +43,13 @@ export default function Memorization({
 
       setRecords(data);
     } catch (error) {
-      console.log(error);
+      console.log("خطأ في تحميل النتائج:", error);
     }
   }
+
+  // =========================
+  // تغيير بيانات الطالب
+  // =========================
 
   function handleChange(id, field, value) {
     setRecords((prev) => ({
@@ -53,21 +61,33 @@ export default function Memorization({
     }));
   }
 
+  // =========================
+  // الطلاب الظاهرون
+  // =========================
+
   const visibleStudents = loggedTeacher
     ? students.filter(
-        (s) => s.halaqa === loggedTeacher.halaqa
+        (student) =>
+          student.halaqa === loggedTeacher.halaqa
       )
     : students;
 
+  // =========================
+  // حفظ النتائج
+  // =========================
+
   async function saveResults() {
     try {
-      const today = new Date().toLocaleDateString("fr-CA");
+      const today =
+        new Date().toLocaleDateString("fr-CA");
 
       for (const student of visibleStudents) {
-        const result = records[student.id] || {};
+        const result =
+          records[student.id] || {};
 
-        // إذا لم يختر الأستاذ شيئًا
-        // يتم تسجيل الطالب غائبًا تلقائيًا
+        // إذا لم يتم إدخال أي نتيجة
+        // يسجل الطالب غائبًا تلقائيًا
+
         const isAbsent =
           !result.new &&
           !result.review &&
@@ -75,26 +95,40 @@ export default function Memorization({
 
         const finalResult = {
           studentId: student.id,
+
           date: today,
+
           new: isAbsent
             ? "غائب"
             : result.new || "",
+
           review: result.review || "",
-          rate: result.rate || "ممتاز",
-          notes: result.notes || "",
+
+          rate:
+            result.rate || "ممتاز",
+
+          notes:
+            result.notes || "",
         };
 
-        // حفظ نتيجة الطالب
+        // =========================
+        // حفظ نتيجة الحفظ
+        // =========================
+
         await addDoc(
           collection(db, "memorization"),
           finalResult
         );
 
+        // =========================
         // إنشاء إشعار للطالب
+        // =========================
+
         await addDoc(
           collection(db, "notifications"),
           {
             studentId: student.id,
+
             title: isAbsent
               ? "⚠️ تسجيل الغياب"
               : "📖 نتيجة الحفظ",
@@ -102,27 +136,57 @@ export default function Memorization({
             message: isAbsent
               ? "تم تسجيل غيابك اليوم."
               : `تم تسجيل نتيجة الحفظ الخاصة بك: ${
-                  result.new || "لم يتم تسجيل محفوظ جديد"
+                  result.new ||
+                  "لم يتم تسجيل محفوظ جديد"
                 }.`,
 
             date: today,
+
             read: false,
           }
         );
       }
 
-      alert("✅ تم حفظ نتائج جميع الطلاب وإرسال الإشعارات");
+      alert(
+        "✅ تم حفظ نتائج جميع الطلاب وإرسال الإشعارات"
+      );
 
     } catch (error) {
-      console.log(error);
-      alert("❌ حدث خطأ أثناء حفظ النتائج");
+      console.log(
+        "خطأ أثناء حفظ النتائج:",
+        error
+      );
+
+      alert(
+        "❌ حدث خطأ أثناء حفظ النتائج"
+      );
     }
   }
+
+  // =========================
+  // الرجوع الصحيح
+  // =========================
+
+  function handleBack() {
+    if (loggedTeacher) {
+      // إذا دخل الأستاذ إلى صفحة الحفظ
+      setPage("teacherPanel");
+    } else {
+      // إذا دخل المدير إلى صفحة الحفظ
+      setPage("admin");
+    }
+  }
+
+  // =========================
+  // واجهة الصفحة
+  // =========================
 
   return (
     <div className="card">
 
-      <h2>📖 نتائج الحفظ اليومية</h2>
+      <h2>
+        📖 نتائج الحفظ اليومية
+      </h2>
 
       <table
         border="1"
@@ -132,162 +196,224 @@ export default function Memorization({
           textAlign: "center",
         }}
       >
+
         <thead>
           <tr>
-            <th>الطالب</th>
-            <th>المحفوظ الجديد</th>
-            <th>المراجعة</th>
-            <th>التقدير</th>
-            <th>ملاحظة</th>
+
+            <th>
+              الطالب
+            </th>
+
+            <th>
+              المحفوظ الجديد
+            </th>
+
+            <th>
+              المراجعة
+            </th>
+
+            <th>
+              التقدير
+            </th>
+
+            <th>
+              ملاحظة
+            </th>
+
           </tr>
         </thead>
 
         <tbody>
-          {visibleStudents.map((student) => (
 
-            <tr key={student.id}>
+          {visibleStudents.map(
+            (student) => (
 
-              <td>
-                {student.name}
-              </td>
+              <tr
+                key={student.id}
+              >
 
-              <td>
-                <select
-                  value={
-                    records[student.id]?.new || ""
-                  }
-                  onChange={(e) =>
-                    handleChange(
-                      student.id,
-                      "new",
-                      e.target.value
-                    )
-                  }
-                >
-                  <option value="">
-                    اختر
-                  </option>
+                {/* اسم الطالب */}
 
-                  <option value="نصف حزب">
-                    نصف حزب
-                  </option>
+                <td>
+                  {student.name}
+                </td>
 
-                  <option value="ربع">
-                    ربع
-                  </option>
+                {/* المحفوظ الجديد */}
 
-                  <option value="ثمن">
-                    ثمن
-                  </option>
+                <td>
 
-                  <option value="نصف ثمن">
-                    نصف ثمن
-                  </option>
+                  <select
+                    value={
+                      records[
+                        student.id
+                      ]?.new || ""
+                    }
 
-                  <option value="ربع ثمن">
-                    ربع ثمن
-                  </option>
+                    onChange={(e) =>
+                      handleChange(
+                        student.id,
+                        "new",
+                        e.target.value
+                      )
+                    }
+                  >
 
-                  <option value="حضر ولم يحفظ">
-                    حضر ولم يحفظ
-                  </option>
-                </select>
-              </td>
+                    <option value="">
+                      اختر
+                    </option>
 
-              <td>
-                <select
-                  value={
-                    records[student.id]?.review || ""
-                  }
-                  onChange={(e) =>
-                    handleChange(
-                      student.id,
-                      "review",
-                      e.target.value
-                    )
-                  }
-                >
-                  <option value="">
-                    اختر
-                  </option>
+                    <option value="نصف حزب">
+                      نصف حزب
+                    </option>
 
-                  <option value="خمسة أحزاب">
-                    خمسة أحزاب
-                  </option>
+                    <option value="ربع">
+                      ربع
+                    </option>
 
-                  <option value="نصف خمسة">
-                    نصف خمسة
-                  </option>
+                    <option value="ثمن">
+                      ثمن
+                    </option>
 
-                  <option value="حزب واحد">
-                    حزب واحد
-                  </option>
+                    <option value="نصف ثمن">
+                      نصف ثمن
+                    </option>
 
-                  <option value="نصف حزب">
-                    نصف حزب
-                  </option>
-                </select>
-              </td>
+                    <option value="ربع ثمن">
+                      ربع ثمن
+                    </option>
 
-              <td>
-                <select
-                  value={
-                    records[student.id]?.rate ||
-                    "ممتاز"
-                  }
-                  onChange={(e) =>
-                    handleChange(
-                      student.id,
-                      "rate",
-                      e.target.value
-                    )
-                  }
-                >
-                  <option value="ممتاز">
-                    ممتاز
-                  </option>
+                    <option value="حضر ولم يحفظ">
+                      حضر ولم يحفظ
+                    </option>
 
-                  <option value="جيد جدًا">
-                    جيد جدًا
-                  </option>
+                  </select>
 
-                  <option value="جيد">
-                    جيد
-                  </option>
+                </td>
 
-                  <option value="متوسط">
-                    متوسط
-                  </option>
+                {/* المراجعة */}
 
-                  <option value="ضعيف">
-                    ضعيف
-                  </option>
-                </select>
-              </td>
+                <td>
 
-              <td>
-                <input
-                  type="text"
-                  value={
-                    records[student.id]?.notes || ""
-                  }
-                  onChange={(e) =>
-                    handleChange(
-                      student.id,
-                      "notes",
-                      e.target.value
-                    )
-                  }
-                />
-              </td>
+                  <select
+                    value={
+                      records[
+                        student.id
+                      ]?.review || ""
+                    }
 
-            </tr>
+                    onChange={(e) =>
+                      handleChange(
+                        student.id,
+                        "review",
+                        e.target.value
+                      )
+                    }
+                  >
 
-          ))}
+                    <option value="">
+                      اختر
+                    </option>
+
+                    <option value="خمسة أحزاب">
+                      خمسة أحزاب
+                    </option>
+
+                    <option value="نصف خمسة">
+                      نصف خمسة
+                    </option>
+
+                    <option value="حزب واحد">
+                      حزب واحد
+                    </option>
+
+                    <option value="نصف حزب">
+                      نصف حزب
+                    </option>
+
+                  </select>
+
+                </td>
+
+                {/* التقدير */}
+
+                <td>
+
+                  <select
+                    value={
+                      records[
+                        student.id
+                      ]?.rate ||
+                      "ممتاز"
+                    }
+
+                    onChange={(e) =>
+                      handleChange(
+                        student.id,
+                        "rate",
+                        e.target.value
+                      )
+                    }
+                  >
+
+                    <option value="ممتاز">
+                      ممتاز
+                    </option>
+
+                    <option value="جيد جدًا">
+                      جيد جدًا
+                    </option>
+
+                    <option value="جيد">
+                      جيد
+                    </option>
+
+                    <option value="متوسط">
+                      متوسط
+                    </option>
+
+                    <option value="ضعيف">
+                      ضعيف
+                    </option>
+
+                  </select>
+
+                </td>
+
+                {/* الملاحظات */}
+
+                <td>
+
+                  <input
+                    type="text"
+                    value={
+                      records[
+                        student.id
+                      ]?.notes || ""
+                    }
+
+                    onChange={(e) =>
+                      handleChange(
+                        student.id,
+                        "notes",
+                        e.target.value
+                      )
+                    }
+                  />
+
+                </td>
+
+              </tr>
+
+            )
+          )}
+
         </tbody>
+
       </table>
 
       <br />
+
+      {/* زر الحفظ */}
 
       <button
         className="btn"
@@ -299,15 +425,11 @@ export default function Memorization({
       <br />
       <br />
 
+      {/* زر الرجوع */}
+
       <button
         className="btn"
-        onClick={() =>
-          setPage(
-            loggedTeacher
-              ? "teacherPanel"
-              : "admin"
-          )
-        }
+        onClick={handleBack}
       >
         ⬅️ الرجوع
       </button>

@@ -15,107 +15,177 @@ export default function Halaqas({
   );
 
   return (
-    <div className="card">
-      <h2>📖 إدارة الحلقات</h2>
+    <div className="halaqas-page">
 
-      <button
-        className="btn"
-        onClick={() => setPage("addHalaqa")}
-      >
-        ➕ إضافة حلقة
-      </button>
+      {/* رأس الصفحة */}
+      <div className="halaqas-header">
+        <div>
+          <h2>📖 إدارة الحلقات</h2>
+          <p>إدارة الحلقات والأساتذة والطلاب</p>
+        </div>
 
-      <br />
-      <br />
+        <button
+          className="add-halaqa-btn"
+          onClick={() => setPage("addHalaqa")}
+        >
+          ➕ إضافة حلقة
+        </button>
+      </div>
 
-      <input
-        type="text"
-        placeholder="🔍 البحث عن حلقة..."
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        style={{
-          width: "100%",
-          padding: "10px",
-          marginBottom: "20px",
-        }}
-      />
+      {/* البحث */}
+      <div className="halaqa-search">
+        <span>🔍</span>
 
-      <table
-        border="1"
-        style={{
-          width: "100%",
-          borderCollapse: "collapse",
-          textAlign: "center",
-        }}
-      >
-        <thead>
-          <tr>
-            <th>اسم الحلقة</th>
-            <th>الأستاذ</th>
-            <th>عدد الطلاب</th>
-            <th>العمليات</th>
-          </tr>
-        </thead>
+        <input
+          type="text"
+          placeholder="البحث عن حلقة..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+      </div>
 
-        <tbody>
-          {filteredHalaqas.length === 0 ? (
-            <tr>
-              <td colSpan="4">لا توجد حلقات</td>
-            </tr>
-          ) : (
-            filteredHalaqas.map((halaqa) => (
-              <tr key={halaqa.id}>
-                <td>{halaqa.name}</td>
-                <td>{halaqa.teacher}</td>
+      {/* عدد الحلقات */}
+      <div className="halaqa-stat">
+        <span>📚</span>
 
-                <td>
-                  {
-                    students.filter(
-                      (student) => student.halaqa === halaqa.name
-                    ).length
-                  }
-                </td>
+        <div>
+          <strong>{filteredHalaqas.length}</strong>
+          <small>عدد الحلقات</small>
+        </div>
+      </div>
 
-                <td>
+      {/* الحلقات */}
+      {filteredHalaqas.length === 0 ? (
+
+        <div className="empty-halaqas">
+          📭
+          <h3>لا توجد حلقات</h3>
+          <p>قم بإضافة حلقة جديدة للبدء</p>
+        </div>
+
+      ) : (
+
+        <div className="halaqas-grid">
+
+          {filteredHalaqas.map((halaqa) => {
+
+            const studentCount = students.filter(
+              (student) => student.halaqa === halaqa.name
+            ).length;
+
+            return (
+
+              <div
+                className="halaqa-card"
+                key={halaqa.id}
+              >
+
+                {/* رأس البطاقة */}
+                <div className="halaqa-card-header">
+
+                  <div className="halaqa-icon">
+                    📖
+                  </div>
+
+                  <div>
+                    <h3>
+                      {halaqa.name}
+                    </h3>
+
+                    <p>
+                      👨‍🏫 {halaqa.teacher || "غير محدد"}
+                    </p>
+                  </div>
+
+                </div>
+
+                {/* معلومات الحلقة */}
+                <div className="halaqa-info">
+
+                  <div>
+                    <span>👨‍🎓</span>
+
+                    <strong>
+                      {studentCount}
+                    </strong>
+
+                    <small>
+                      طالب
+                    </small>
+                  </div>
+
+                  <div>
+                    <span>📚</span>
+
+                    <strong>
+                      حلقة
+                    </strong>
+
+                    <small>
+                      قرآنية
+                    </small>
+                  </div>
+
+                </div>
+
+                {/* الأزرار */}
+                <div className="halaqa-actions">
+
                   <button
-                    className="btn"
-                    onClick={() => editHalaqa(halaqa)}
-                  >
-                    ✏️ تعديل
-                  </button>
-
-                  <button
-                    className="btn"
-                    onClick={() => openHalaqaStudents(halaqa)}
+                    className="halaqa-students-btn"
+                    onClick={() =>
+                      openHalaqaStudents(halaqa)
+                    }
                   >
                     👨‍🎓 الطلاب
                   </button>
 
                   <button
-                    className="btn"
+                    className="halaqa-edit-btn"
+                    onClick={() =>
+                      editHalaqa(halaqa)
+                    }
+                  >
+                    ✏️ تعديل
+                  </button>
+
+                  <button
+                    className="halaqa-delete-btn"
                     onClick={() => {
-                      if (window.confirm("هل تريد حذف هذه الحلقة؟")) {
+
+                      if (
+                        window.confirm(
+                          "هل تريد حذف هذه الحلقة؟"
+                        )
+                      ) {
                         deleteHalaqa(halaqa.id);
                       }
+
                     }}
                   >
                     🗑️ حذف
                   </button>
-                </td>
-              </tr>
-            ))
-          )}
-        </tbody>
-      </table>
 
-      <br />
+                </div>
 
+              </div>
+
+            );
+
+          })}
+
+        </div>
+
+      )}
+
+      {/* الرجوع */}
       <button
-        className="btn"
+        className="back-admin-btn"
         onClick={() => setPage("admin")}
       >
-        ⬅️ الرجوع
+        ⬅️ الرجوع إلى لوحة الإدارة
       </button>
+
     </div>
   );
 }

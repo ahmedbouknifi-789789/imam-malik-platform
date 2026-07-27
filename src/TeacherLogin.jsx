@@ -1,115 +1,194 @@
 import { useState } from "react";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { collection, getDocs } from "firebase/firestore";
-import { auth, db } from "./Firebase";
+
+import {
+  signInWithEmailAndPassword,
+  setPersistence,
+  browserLocalPersistence,
+  browserSessionPersistence,
+} from "firebase/auth";
+
+import {
+  collection,
+  getDocs,
+} from "firebase/firestore";
+
+import {
+  db,
+  auth,
+} from "./Firebase";
 
 export default function TeacherLogin({
   setPage,
   setLoggedTeacher,
 }) {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] =
+    useState("");
 
-  async function handleLogin(e) {
-    e.preventDefault();
+  const [password, setPassword] =
+    useState("");
+
+  const [rememberMe, setRememberMe] =
+    useState(true);
+
+  const [loading, setLoading] =
+    useState(false);
+
+  async function loginTeacher() {
+    if (!email || !password) {
+      alert(
+        "المرجو إدخال البريد الإلكتروني وكلمة المرور"
+      );
+
+      return;
+    }
 
     try {
+      setLoading(true);
+
+      // حفظ جلسة الدخول
+      await setPersistence(
+        auth,
+        rememberMe
+          ? browserLocalPersistence
+          : browserSessionPersistence
+      );
+
+      // تسجيل الدخول في Firebase
       await signInWithEmailAndPassword(
         auth,
         email,
         password
       );
 
-      const snapshot = await getDocs(
-        collection(db, "teachers")
-      );
+      // البحث عن بيانات الأستاذ
+      const snapshot =
+        await getDocs(
+          collection(db, "teachers")
+        );
 
-      let teacher = null;
+      let teacherFound = null;
 
-      snapshot.forEach((teacherDoc) => {
-        const data = teacherDoc.data();
+      snapshot.forEach((docItem) => {
+        const teacher = {
+          id: docItem.id,
+          ...docItem.data(),
+        };
 
-        if (data.email === email) {
-          teacher = {
-            id: teacherDoc.id,
-            ...data,
-          };
+        if (
+          teacher.email === email
+        ) {
+          teacherFound = teacher;
         }
       });
 
-      if (!teacher) {
-        alert("هذا الحساب غير مربوط بأي أستاذ.");
+      if (!teacherFound) {
+        alert(
+          "تم الدخول، لكن لم يتم العثور على بيانات الأستاذ"
+        );
+
         return;
       }
 
-      setLoggedTeacher(teacher);
+      // حفظ الأستاذ
+      setLoggedTeacher(
+        teacherFound
+      );
 
-      alert("✅ تم تسجيل الدخول بنجاح");
-
-      setPage("teacherPanel");
+      // الذهاب إلى لوحة الأستاذ
+      setPage(
+        "teacherPanel"
+      );
 
     } catch (error) {
       console.log(error);
-      alert("❌ البريد الإلكتروني أو كلمة المرور غير صحيحة");
+
+      alert(
+        "❌ البريد الإلكتروني أو كلمة المرور غير صحيحة"
+      );
+
+    } finally {
+      setLoading(false);
     }
   }
 
   return (
     <div className="card">
+
       <h2>👨‍🏫 دخول الأستاذ</h2>
 
-      <form onSubmit={handleLogin}>
+      <input
+        type="email"
+        placeholder="البريد الإلكتروني"
+        value={email}
+        onChange={(e) =>
+          setEmail(e.target.value)
+        }
+      />
+
+      <br />
+      <br />
+
+      <input
+        type="password"
+        placeholder="كلمة المرور"
+        value={password}
+        onChange={(e) =>
+          setPassword(e.target.value)
+        }
+      />
+
+      <br />
+      <br />
+
+      {/* البقاء متصلًا */}
+
+      <label
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "8px",
+          cursor: "pointer",
+        }}
+      >
 
         <input
-          type="email"
-          placeholder="البريد الإلكتروني"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
+          type="checkbox"
+          checked={rememberMe}
+          onChange={(e) =>
+            setRememberMe(
+              e.target.checked
+            )
+          }
         />
 
-        <br />
-        <br />
+        🔒 البقاء متصلًا
 
-        <input
-          type="password"
-          placeholder="كلمة المرور"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
+      </label>
 
-        <br />
-        <br />
+      <br />
 
-        <button className="btn" type="submit">
-          تسجيل الدخول
-        </button>
+      <button
+        className="btn"
+        onClick={loginTeacher}
+        disabled={loading}
+      >
+        {loading
+          ? "جاري الدخول..."
+          : "دخول الأستاذ"}
+      </button>
 
-        <br />
-        <br />
+      <br />
+      <br />
 
-        <button
-          className="btn"
-          style={{ background: "#2563eb" }}
-          type="button"
-          onClick={() => setPage("forgotTeacherPassword")}
-        >
-          🔑 نسيت كلمة المرور؟
-        </button>
+      <button
+        className="btn"
+        onClick={() =>
+          setPage("login")
+        }
+      >
+        ⬅️ رجوع
+      </button>
 
-        <br />
-        <br />
-
-        <button
-          type="button"
-          className="btn"
-          onClick={() => setPage("login")}
-        >
-          ⬅️ رجوع
-        </button>
-
-      </form>
     </div>
   );
 }

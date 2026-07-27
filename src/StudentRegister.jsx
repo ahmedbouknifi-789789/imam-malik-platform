@@ -2,7 +2,10 @@ import { useState } from "react";
 import { collection, addDoc } from "firebase/firestore";
 import { db } from "./Firebase";
 
-export default function StudentRegister({ setPage }) {
+export default function StudentRegister({
+  setPage,
+  halaqas = [],
+}) {
   const [student, setStudent] = useState({
     name: "",
     birth: "",
@@ -27,30 +30,42 @@ export default function StudentRegister({ setPage }) {
     e.preventDefault();
 
     try {
-      await addDoc(collection(db, "registrationRequests"), {
-        ...student,
-        status: "pending",
-        createdAt: new Date(),
-      });
+      await addDoc(
+        collection(db, "registrationRequests"),
+        {
+          ...student,
+          status: "pending",
+          createdAt: new Date(),
+        }
+      );
 
       alert(
         "✅ تم إرسال طلب التسجيل بنجاح، وسيتم مراجعته من طرف الإدارة."
       );
 
       setPage("login");
+
     } catch (error) {
-      alert("حدث خطأ أثناء إرسال الطلب");
       console.log(error);
+
+      alert(
+        "❌ حدث خطأ أثناء إرسال الطلب"
+      );
     }
   }
 
   return (
     <div className="card student-register">
 
+      {/* ========================= */}
       {/* رأس الاستمارة */}
+      {/* ========================= */}
+
       <div className="registration-header">
 
-        <h2>📝 جمعية الإمام مالك الثقافية</h2>
+        <h2>
+          📝 جمعية الإمام مالك الثقافية
+        </h2>
 
         <h3>
           استمارة تسجيل طالب جديد
@@ -64,7 +79,9 @@ export default function StudentRegister({ setPage }) {
 
       <form onSubmit={handleSubmit}>
 
+        {/* ========================= */}
         {/* معلومات الطالب */}
+        {/* ========================= */}
 
         <h3 className="section-title">
           👨‍🎓 معلومات الطالب
@@ -106,7 +123,9 @@ export default function StudentRegister({ setPage }) {
           </option>
         </select>
 
+        {/* ========================= */}
         {/* معلومات ولي الأمر */}
+        {/* ========================= */}
 
         <h3 className="section-title">
           👨‍👩‍👦 معلومات ولي الأمر
@@ -130,38 +149,100 @@ export default function StudentRegister({ setPage }) {
           required
         />
 
+        {/* البريد الإلكتروني اختياري */}
+
         <input
           type="email"
           name="parentEmail"
-          placeholder="البريد الإلكتروني لولي الأمر"
+          placeholder="البريد الإلكتروني لولي الأمر (اختياري)"
           value={student.parentEmail}
           onChange={handleChange}
-          required
         />
 
+        {/* ========================= */}
         {/* معلومات الحلقة */}
+        {/* ========================= */}
 
         <h3 className="section-title">
           📖 معلومات الحلقة
         </h3>
 
-        <input
-          type="text"
+        {/* الحلقات الموجودة في Firebase */}
+
+        <select
           name="halaqa"
-          placeholder="الحلقة المطلوبة"
           value={student.halaqa}
           onChange={handleChange}
-        />
+          required
+        >
+          <option value="">
+            اختر الحلقة
+          </option>
 
-        <input
-          type="text"
+          {halaqas.length === 0 ? (
+
+            <option value="" disabled>
+              لا توجد حلقات متاحة حاليا
+            </option>
+
+          ) : (
+
+            halaqas.map((halaqa) => (
+
+              <option
+                key={halaqa.id}
+                value={halaqa.name}
+              >
+                {halaqa.name}
+              </option>
+
+            ))
+
+          )}
+
+        </select>
+
+        {/* المستوى */}
+
+        <select
           name="level"
-          placeholder="المستوى"
           value={student.level}
           onChange={handleChange}
-        />
+          required
+        >
+          <option value="">
+            اختر المستوى
+          </option>
 
+          <option value="أقل من مبتدئ">
+            أقل من مبتدئ
+          </option>
+
+          <option value="مبتدئ">
+            مبتدئ
+          </option>
+
+          <option value="متوسط">
+            متوسط
+          </option>
+
+          <option value="متقدم">
+            متقدم
+          </option>
+
+          <option value="حافظ">
+            حافظ
+          </option>
+
+          <option value="إجازة">
+            إجازة
+          </option>
+
+        </select>
+
+        {/* ========================= */}
         {/* الملاحظات */}
+        {/* ========================= */}
 
         <h3 className="section-title">
           📝 ملاحظات
@@ -175,7 +256,9 @@ export default function StudentRegister({ setPage }) {
           rows="4"
         />
 
-        {/* نوع الحلقة في آخر الصفحة */}
+        {/* ========================= */}
+        {/* نوع الحلقة */}
+        {/* ========================= */}
 
         <h3 className="section-title">
           🏫 نوع الحلقة
@@ -198,11 +281,15 @@ export default function StudentRegister({ setPage }) {
           <option value="عن بعد">
             💻 عن بعد
           </option>
+
         </select>
 
+        {/* ========================= */}
         {/* التعهد */}
+        {/* ========================= */}
 
         <div className="declaration">
+
           <h3>
             📜 تعهد ولي الأمر
           </h3>
@@ -211,11 +298,14 @@ export default function StudentRegister({ setPage }) {
             أتعهد بصحة المعلومات المقدمة في هذه الاستمارة،
             والحرص على متابعة الطالب والالتزام بنظام الحلقة.
           </p>
+
         </div>
 
         <br />
 
+        {/* ========================= */}
         {/* الأزرار */}
+        {/* ========================= */}
 
         <div className="no-print">
 
@@ -244,7 +334,9 @@ export default function StudentRegister({ setPage }) {
 
         </div>
 
+        {/* ========================= */}
         {/* التوقيعات */}
+        {/* ========================= */}
 
         <div className="signatures">
 

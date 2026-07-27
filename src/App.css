@@ -1,9 +1,23 @@
+/* =========================
+   الخطوط والإعدادات العامة
+========================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;600;700&display=swap');
+
+* {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
   background: #eef4ef;
   font-family: Tahoma, Arial, sans-serif;
   direction: rtl;
 }
+
+/* =========================
+   رأس التطبيق
+========================= */
 
 .header {
   background: linear-gradient(135deg, #1b5e20, #2e7d32);
@@ -18,43 +32,65 @@ body {
   color: #f5c542;
 }
 
-.login-container,
-.card {
+/* =========================
+   صفحة تسجيل الدخول
+========================= */
+
+.login-container {
+  width: calc(100% - 30px);
   max-width: 420px;
-  margin: 35px auto;
-  background: #fff;
-  padding: 30px;
+  margin: 22px auto;
+  background: #ffffff;
+  padding: 20px 22px 24px;
   border-radius: 20px;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
   text-align: center;
 }
 
-.logo {
-  width: 140px;
+/* الشعار */
+
+.login-container .logo {
+  width: 190px;
+  max-width: 80%;
+  height: auto;
   display: block;
-  margin: 0 auto 20px;
+  margin: 0 auto 8px;
+  object-fit: contain;
 }
 
-h1,
-h2 {
+/* عنوان الجمعية */
+
+.login-container h1 {
   color: #1b5e20;
-  margin-bottom: 10px;
+  font-family: "Amiri", serif;
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0 0 3px;
+  line-height: 1.5;
 }
 
-.subtitle {
+/* العنوان الفرعي */
+
+.login-container .subtitle {
   color: #777;
-  margin-bottom: 25px;
+  font-family: "Cairo", Tahoma, sans-serif;
+  font-size: 14px;
+  margin: 0 0 15px;
 }
+
+/* =========================
+   الأزرار
+========================= */
 
 .btn {
   width: 100%;
-  padding: 14px;
-  margin: 8px 0;
+  padding: 13px;
+  margin: 6px 0;
   border: none;
   border-radius: 12px;
   background: #2e7d32;
   color: white;
-  font-size: 18px;
+  font-size: 17px;
   font-weight: bold;
   cursor: pointer;
   transition: 0.3s;
@@ -62,6 +98,7 @@ h2 {
 
 .btn:hover {
   background: #1b5e20;
+  transform: translateY(-1px);
 }
 
 .admin-btn {
@@ -76,16 +113,40 @@ h2 {
   background: none;
   border: none;
   color: #1b5e20;
-  margin-top: 15px;
+  margin-top: 10px;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: bold;
 }
 
 .link-btn:hover {
   text-decoration: underline;
 }
-/* رأس استمارة التسجيل */
+
+/* =========================
+   البطاقات العامة
+========================= */
+
+.card {
+  width: calc(100% - 30px);
+  max-width: 900px;
+  margin: 25px auto;
+  background: #fff;
+  padding: 25px;
+  border-radius: 20px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  text-align: center;
+}
+
+h1,
+h2 {
+  color: #1b5e20;
+  margin-bottom: 10px;
+}
+
+/* =========================
+   رأس استمارة التسجيل
+========================= */
 
 .print-header {
   text-align: center;
@@ -148,8 +209,333 @@ h2 {
   line-height: 1.8;
 }
 
+/* =========================
+   صفحة الطالب
+========================= */
 
-/* إعدادات الطباعة */
+.student-dashboard {
+  max-width: 900px;
+  margin: 20px auto;
+  padding: 15px;
+  direction: rtl;
+}
+
+.student-header {
+  background: linear-gradient(135deg, #1976d2, #42a5f5);
+  color: white;
+  padding: 30px 20px;
+  border-radius: 25px;
+  text-align: center;
+  margin-bottom: 20px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.student-avatar {
+  width: 100px;
+  height: 100px;
+  background: white;
+  border-radius: 50%;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 55px;
+  overflow: hidden;
+}
+
+.student-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.student-header h2 {
+  color: white;
+  margin: 15px 0 5px;
+}
+
+.student-header p {
+  margin: 0;
+  font-size: 17px;
+}
+
+/* =========================
+   معلومات الطالب
+========================= */
+
+.student-info-card {
+  background: white;
+  border-radius: 20px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.student-info-card h3 {
+  color: #1976d2;
+  margin-top: 0;
+}
+
+.student-info-card p {
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+/* =========================
+   الإحصائيات
+========================= */
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.stat-card {
+  padding: 20px 10px;
+  border-radius: 18px;
+  text-align: center;
+  background: white;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.stat-card span {
+  font-size: 35px;
+}
+
+.stat-card h3 {
+  font-size: 30px;
+  margin: 8px 0;
+}
+
+.stat-card p {
+  margin: 0;
+  color: #777;
+}
+
+.stat-card.blue {
+  background: #e3f2fd;
+  color: #1565c0;
+}
+
+.stat-card.green {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.stat-card.orange {
+  background: #fff3e0;
+  color: #ef6c00;
+}
+
+.stat-card.red {
+  background: #ffebee;
+  color: #c62828;
+}
+
+/* =========================
+   الحلقة عن بعد
+========================= */
+
+.online-card {
+  background: linear-gradient(135deg, #6a1b9a, #ab47bc);
+  color: white;
+  padding: 25px;
+  border-radius: 22px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.online-card h3 {
+  font-size: 25px;
+  margin: 10px 0;
+}
+
+.online-icon {
+  font-size: 45px;
+}
+
+.online-btn {
+  display: block;
+  background: white;
+  color: #6a1b9a;
+  padding: 14px;
+  border-radius: 12px;
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: bold;
+  margin-top: 15px;
+}
+
+/* =========================
+   النتائج
+========================= */
+
+.last-result-card,
+.notifications-card {
+  background: white;
+  border-radius: 20px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.last-result-card h3,
+.notifications-card h3 {
+  color: #1976d2;
+}
+
+.result-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 14px 5px;
+  border-bottom: 1px solid #eee;
+}
+
+.result-row strong {
+  color: #1976d2;
+}
+
+.result-date {
+  margin-top: 15px;
+  color: #777;
+}
+
+/* =========================
+   الإشعارات
+========================= */
+
+.notification-item {
+  background: #f5f9ff;
+  border-right: 5px solid #1976d2;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+.notification-item strong {
+  color: #1976d2;
+}
+
+.notification-item p {
+  margin: 8px 0;
+}
+
+.notification-item small {
+  color: #777;
+}
+
+.empty-message {
+  text-align: center;
+  color: #888;
+  padding: 20px;
+}
+
+/* =========================
+   تسجيل الخروج
+========================= */
+
+.logout-btn {
+  background: #c62828;
+}
+
+.logout-btn:hover {
+  background: #8e0000;
+}
+
+/* =========================
+   النقاط
+========================= */
+
+.points-card {
+  background: linear-gradient(135deg, #fff8e1, #ffe082);
+  border-radius: 22px;
+  padding: 25px;
+  text-align: center;
+  margin-bottom: 20px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.12);
+}
+
+.points-icon {
+  font-size: 50px;
+}
+
+.points-card h3 {
+  font-size: 32px;
+  color: #8d6e00;
+  margin: 10px 0;
+}
+
+.points-card p {
+  margin: 5px;
+  color: #665500;
+}
+
+.student-level {
+  display: inline-block;
+  background: white;
+  color: #8d6e00;
+  padding: 10px 20px;
+  border-radius: 20px;
+  font-weight: bold;
+  margin: 10px 0;
+}
+
+/* =========================
+   شريط التقدم
+========================= */
+
+.progress-container {
+  height: 14px;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 20px;
+  overflow: hidden;
+  margin: 15px 0;
+}
+
+.progress-bar {
+  height: 100%;
+  background: #8d6e00;
+  border-radius: 20px;
+  transition: width 0.5s ease;
+}
+
+/* =========================
+   الإنجازات
+========================= */
+
+.achievements-card {
+  background: white;
+  border-radius: 20px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.achievements-card h3 {
+  color: #8d6e00;
+  margin-top: 0;
+}
+
+.achievements-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.achievement-item {
+  background: #fff8e1;
+  border: 1px solid #ffe082;
+  color: #8d6e00;
+  padding: 12px 15px;
+  border-radius: 15px;
+  font-weight: bold;
+}
+
+/* =========================
+   إعدادات الطباعة
+========================= */
 
 @media print {
 
@@ -207,403 +593,37 @@ h2 {
   .signatures {
     display: flex;
   }
-
-}
-.student-dashboard {
-  max-width: 600px;
-  margin: auto;
-  padding: 15px;
-  direction: rtl;
 }
 
-.student-header {
-  background: linear-gradient(135deg, #315bdc, #5b7bea);
-  color: white;
-  border-radius: 25px;
-  padding: 30px 20px;
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.student-avatar {
-  width: 100px;
-  height: 100px;
-  margin: auto;
-  border-radius: 50%;
-  background: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 55px;
-  overflow: hidden;
-}
-
-.student-avatar img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.student-header h2 {
-  color: white;
-  margin-bottom: 5px;
-}
-
-.student-header p {
-  margin: 0;
-  opacity: .9;
-}
-
-.student-info-card,
-.last-result-card,
-.notifications-card,
-.online-card {
-  background: white;
-  border-radius: 20px;
-  padding: 20px;
-  margin-bottom: 18px;
-  box-shadow: 0 5px 18px rgba(0,0,0,.08);
-}
-
-.student-info-card h3,
-.last-result-card h3,
-.notifications-card h3,
-.online-card h3 {
-  color: #315bdc;
-  margin-top: 0;
-}
-
-.stats-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin-bottom: 18px;
-}
-
-.stat-card {
-  padding: 18px;
-  border-radius: 18px;
-  text-align: center;
-}
-
-.stat-card span {
-  font-size: 30px;
-}
-
-.stat-card h3 {
-  font-size: 32px;
-  margin: 5px 0;
-}
-
-.stat-card p {
-  margin: 0;
-}
-
-.blue {
-  background: #e4ebff;
-  color: #315bdc;
-}
-
-.green {
-  background: #e2f7eb;
-  color: #16834a;
-}
-
-.orange {
-  background: #fff0d7;
-  color: #c97900;
-}
-
-.red {
-  background: #ffe5e5;
-  color: #c62828;
-}
-
-.online-card {
-  background: linear-gradient(135deg, #e2f4ff, #d3eaff);
-  text-align: center;
-}
-
-.online-btn {
-  display: block;
-  background: #287be8;
-  color: white;
-  padding: 14px;
-  border-radius: 14px;
-  text-decoration: none;
-  font-size: 18px;
-  font-weight: bold;
-  margin-top: 15px;
-}
-
-.result-row {
-  display: flex;
-  justify-content: space-between;
-  padding: 13px 0;
-  border-bottom: 1px solid #eee;
-}
-
-.result-row strong {
-  color: #315bdc;
-}
-
-.result-date {
-  margin-top: 15px;
-  color: #777;
-}
-
-.notification-item {
-  background: #f3f6ff;
-  padding: 14px;
-  border-radius: 14px;
-  margin-bottom: 10px;
-}
-
-.notification-item strong {
-  color: #315bdc;
-}
-
-.notification-item p {
-  margin: 8px 0;
-}
-
-.notification-item small {
-  color: #777;
-}
-
-.logout-btn {
-  background: #b3261e;
-}
-
-.logout-btn:hover {
-  background: #8d1d18;
-}
-/* ================= صفحة الطالب ================= */
-
-.student-dashboard {
-  max-width: 900px;
-  margin: 20px auto;
-  padding: 15px;
-  direction: rtl;
-}
-
-/* الرأس */
-
-.student-header {
-  background: linear-gradient(135deg, #1976d2, #42a5f5);
-  color: white;
-  padding: 30px 20px;
-  border-radius: 25px;
-  text-align: center;
-  margin-bottom: 20px;
-  box-shadow: 0 8px 20px rgba(0,0,0,.15);
-}
-
-.student-avatar {
-  width: 100px;
-  height: 100px;
-  background: white;
-  border-radius: 50%;
-  margin: auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 55px;
-  overflow: hidden;
-}
-
-.student-avatar img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.student-header h2 {
-  color: white;
-  margin: 15px 0 5px;
-}
-
-.student-header p {
-  margin: 0;
-  font-size: 17px;
-}
-
-/* معلومات الطالب */
-
-.student-info-card {
-  background: white;
-  border-radius: 20px;
-  padding: 20px;
-  margin-bottom: 20px;
-  box-shadow: 0 5px 15px rgba(0,0,0,.1);
-}
-
-.student-info-card h3 {
-  color: #1976d2;
-  margin-top: 0;
-}
-
-.student-info-card p {
-  padding: 10px;
-  border-bottom: 1px solid #eee;
-}
-
-/* الإحصائيات */
-
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 15px;
-  margin-bottom: 20px;
-}
-
-.stat-card {
-  padding: 20px 10px;
-  border-radius: 18px;
-  text-align: center;
-  background: white;
-  box-shadow: 0 5px 15px rgba(0,0,0,.1);
-}
-
-.stat-card span {
-  font-size: 35px;
-}
-
-.stat-card h3 {
-  font-size: 30px;
-  margin: 8px 0;
-}
-
-.stat-card p {
-  margin: 0;
-  color: #777;
-}
-
-.stat-card.blue {
-  background: #e3f2fd;
-  color: #1565c0;
-}
-
-.stat-card.green {
-  background: #e8f5e9;
-  color: #2e7d32;
-}
-
-.stat-card.orange {
-  background: #fff3e0;
-  color: #ef6c00;
-}
-
-.stat-card.red {
-  background: #ffebee;
-  color: #c62828;
-}
-
-/* الحلقة عن بعد */
-
-.online-card {
-  background: linear-gradient(135deg, #6a1b9a, #ab47bc);
-  color: white;
-  padding: 25px;
-  border-radius: 22px;
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.online-card h3 {
-  font-size: 25px;
-  margin: 10px 0;
-}
-
-.online-icon {
-  font-size: 45px;
-}
-
-.online-btn {
-  display: block;
-  background: white;
-  color: #6a1b9a;
-  padding: 14px;
-  border-radius: 12px;
-  text-decoration: none;
-  font-size: 18px;
-  font-weight: bold;
-  margin-top: 15px;
-}
-
-/* آخر نتيجة */
-
-.last-result-card,
-.notifications-card {
-  background: white;
-  border-radius: 20px;
-  padding: 20px;
-  margin-bottom: 20px;
-  box-shadow: 0 5px 15px rgba(0,0,0,.1);
-}
-
-.last-result-card h3,
-.notifications-card h3 {
-  color: #1976d2;
-}
-
-.result-row {
-  display: flex;
-  justify-content: space-between;
-  padding: 14px 5px;
-  border-bottom: 1px solid #eee;
-}
-
-.result-row strong {
-  color: #1976d2;
-}
-
-.result-date {
-  margin-top: 15px;
-  color: #777;
-}
-
-/* الإشعارات */
-
-.notification-item {
-  background: #f5f9ff;
-  border-right: 5px solid #1976d2;
-  padding: 15px;
-  border-radius: 10px;
-  margin-bottom: 10px;
-}
-
-.notification-item strong {
-  color: #1976d2;
-}
-
-.notification-item p {
-  margin: 8px 0;
-}
-
-.notification-item small {
-  color: #777;
-}
-
-.empty-message {
-  text-align: center;
-  color: #888;
-  padding: 20px;
-}
-
-/* تسجيل الخروج */
-
-.logout-btn {
-  background: #c62828;
-}
-
-.logout-btn:hover {
-  background: #8e0000;
-}
-
-/* الهاتف */
+/* =========================
+   الهاتف
+========================= */
 
 @media (max-width: 700px) {
+
+  .login-container {
+    margin: 15px auto;
+    padding: 16px 18px 20px;
+  }
+
+  .login-container .logo {
+    width: 165px;
+    margin-bottom: 5px;
+  }
+
+  .login-container h1 {
+    font-size: 24px;
+  }
+
+  .login-container .subtitle {
+    font-size: 13px;
+    margin-bottom: 12px;
+  }
+
+  .btn {
+    padding: 12px;
+    font-size: 16px;
+  }
 
   .stats-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -622,9 +642,32 @@ h2 {
     gap: 5px;
   }
 
+  .card {
+    width: calc(100% - 20px);
+    padding: 18px;
+  }
+}
+
+@media (max-width: 600px) {
+
+  .achievements-list {
+    flex-direction: column;
+  }
+
+  .achievement-item {
+    text-align: center;
+  }
 }
 
 @media (max-width: 400px) {
+
+  .login-container .logo {
+    width: 145px;
+  }
+
+  .login-container h1 {
+    font-size: 22px;
+  }
 
   .stats-grid {
     gap: 8px;
@@ -637,99 +680,738 @@ h2 {
   .stat-card h3 {
     font-size: 25px;
   }
-
 }
-/* ================= النقاط ================= */
+/* ================================= */
+/* صفحة إدارة الحلقات الاحترافية */
+/* ================================= */
 
-.points-card {
-  background: linear-gradient(135deg, #fff8e1, #ffe082);
-  border-radius: 22px;
+.halaqas-page {
+  max-width: 1100px;
+  margin: 25px auto;
+  padding: 20px;
+  direction: rtl;
+}
+
+/* رأس الصفحة */
+
+.halaqas-header {
+  background: linear-gradient(
+    135deg,
+    #1b5e20,
+    #43a047
+  );
+
+  color: white;
+
   padding: 25px;
-  text-align: center;
+
+  border-radius: 22px;
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  gap: 15px;
+
   margin-bottom: 20px;
-  box-shadow: 0 5px 15px rgba(0,0,0,.12);
+
+  box-shadow: 0 8px 25px rgba(0,0,0,.15);
 }
 
-.points-icon {
+.halaqas-header h2 {
+  color: white;
+
+  margin: 0 0 8px;
+
+  font-size: 28px;
+}
+
+.halaqas-header p {
+  margin: 0;
+
+  opacity: .9;
+}
+
+/* زر إضافة حلقة */
+
+.add-halaqa-btn {
+  border: none;
+
+  background: #f5c542;
+
+  color: #333;
+
+  padding: 14px 22px;
+
+  border-radius: 14px;
+
+  font-size: 17px;
+
+  font-weight: bold;
+
+  cursor: pointer;
+
+  transition: .3s;
+}
+
+.add-halaqa-btn:hover {
+  transform: translateY(-3px);
+
+  background: #ffd95a;
+}
+
+/* البحث */
+
+.halaqa-search {
+  background: white;
+
+  border-radius: 16px;
+
+  padding: 12px 18px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  margin-bottom: 20px;
+
+  box-shadow: 0 4px 15px rgba(0,0,0,.08);
+}
+
+.halaqa-search span {
+  font-size: 22px;
+}
+
+.halaqa-search input {
+  width: 100%;
+
+  border: none;
+
+  outline: none;
+
+  font-size: 17px;
+
+  background: transparent;
+
+  padding: 8px;
+}
+
+/* الإحصائيات */
+
+.halaqa-stat {
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 15px;
+
+  background: white;
+
+  padding: 15px 25px;
+
+  border-radius: 18px;
+
+  margin-bottom: 20px;
+
+  box-shadow: 0 4px 15px rgba(0,0,0,.08);
+}
+
+.halaqa-stat span {
+  font-size: 35px;
+}
+
+.halaqa-stat strong {
+  display: block;
+
+  color: #1b5e20;
+
+  font-size: 28px;
+}
+
+.halaqa-stat small {
+  color: #777;
+}
+
+/* شبكة الحلقات */
+
+.halaqas-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(auto-fit, minmax(300px, 1fr));
+
+  gap: 20px;
+}
+
+/* بطاقة الحلقة */
+
+.halaqa-card {
+  background: white;
+
+  border-radius: 22px;
+
+  padding: 20px;
+
+  box-shadow: 0 6px 20px rgba(0,0,0,.1);
+
+  transition: .3s;
+
+  border-top: 5px solid #2e7d32;
+}
+
+.halaqa-card:hover {
+  transform: translateY(-5px);
+
+  box-shadow: 0 12px 28px rgba(0,0,0,.15);
+}
+
+/* رأس البطاقة */
+
+.halaqa-card-header {
+  display: flex;
+
+  align-items: center;
+
+  gap: 15px;
+
+  margin-bottom: 20px;
+}
+
+.halaqa-icon {
+  width: 60px;
+
+  height: 60px;
+
+  background: #e8f5e9;
+
+  border-radius: 18px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  font-size: 32px;
+}
+
+.halaqa-card-header h3 {
+  margin: 0 0 6px;
+
+  color: #1b5e20;
+
+  font-size: 21px;
+}
+
+.halaqa-card-header p {
+  margin: 0;
+
+  color: #777;
+}
+
+/* معلومات الحلقة */
+
+.halaqa-info {
+  display: grid;
+
+  grid-template-columns: 1fr 1fr;
+
+  gap: 12px;
+
+  margin-bottom: 20px;
+}
+
+.halaqa-info > div {
+  background: #f5f7f5;
+
+  border-radius: 15px;
+
+  padding: 15px;
+
+  text-align: center;
+}
+
+.halaqa-info span {
+  display: block;
+
+  font-size: 25px;
+
+  margin-bottom: 5px;
+}
+
+.halaqa-info strong {
+  display: block;
+
+  color: #1b5e20;
+
+  font-size: 20px;
+}
+
+.halaqa-info small {
+  color: #777;
+}
+
+/* الأزرار */
+
+.halaqa-actions {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 8px;
+}
+
+.halaqa-actions button {
+  border: none;
+
+  padding: 12px;
+
+  border-radius: 12px;
+
+  font-size: 15px;
+
+  font-weight: bold;
+
+  cursor: pointer;
+
+  transition: .3s;
+}
+
+.halaqa-students-btn {
+  background: #e3f2fd;
+
+  color: #1565c0;
+}
+
+.halaqa-students-btn:hover {
+  background: #bbdefb;
+}
+
+.halaqa-edit-btn {
+  background: #fff3e0;
+
+  color: #ef6c00;
+}
+
+.halaqa-edit-btn:hover {
+  background: #ffe0b2;
+}
+
+.halaqa-delete-btn {
+  background: #ffebee;
+
+  color: #c62828;
+}
+
+.halaqa-delete-btn:hover {
+  background: #ffcdd2;
+}
+
+/* لا توجد حلقات */
+
+.empty-halaqas {
+  background: white;
+
+  border-radius: 22px;
+
+  padding: 50px 20px;
+
+  text-align: center;
+
+  box-shadow: 0 6px 20px rgba(0,0,0,.08);
+}
+
+.empty-halaqas:first-line {
   font-size: 50px;
 }
 
-.points-card h3 {
-  font-size: 32px;
-  color: #8d6e00;
-  margin: 10px 0;
+.empty-halaqas h3 {
+  color: #1b5e20;
 }
 
-.points-card p {
-  margin: 5px;
-  color: #665500;
+.empty-halaqas p {
+  color: #777;
 }
 
-.student-level {
-  display: inline-block;
-  background: white;
-  color: #8d6e00;
-  padding: 10px 20px;
-  border-radius: 20px;
+/* زر الرجوع */
+
+.back-admin-btn {
+  display: block;
+
+  width: 100%;
+
+  margin-top: 25px;
+
+  padding: 14px;
+
+  border: none;
+
+  border-radius: 14px;
+
+  background: #37474f;
+
+  color: white;
+
+  font-size: 17px;
+
   font-weight: bold;
-  margin: 10px 0;
+
+  cursor: pointer;
+
+  transition: .3s;
 }
 
-/* شريط التقدم */
-
-.progress-container {
-  height: 14px;
-  background: rgba(255,255,255,.7);
-  border-radius: 20px;
-  overflow: hidden;
-  margin: 15px 0;
+.back-admin-btn:hover {
+  background: #263238;
 }
 
-.progress-bar {
-  height: 100%;
-  background: #8d6e00;
-  border-radius: 20px;
-  transition: width .5s ease;
-}
-
-/* ================= الإنجازات ================= */
-
-.achievements-card {
-  background: white;
-  border-radius: 20px;
-  padding: 20px;
-  margin-bottom: 20px;
-  box-shadow: 0 5px 15px rgba(0,0,0,.1);
-}
-
-.achievements-card h3 {
-  color: #8d6e00;
-  margin-top: 0;
-}
-
-.achievements-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.achievement-item {
-  background: #fff8e1;
-  border: 1px solid #ffe082;
-  color: #8d6e00;
-  padding: 12px 15px;
-  border-radius: 15px;
-  font-weight: bold;
-}
+/* الهاتف */
 
 @media (max-width: 600px) {
 
-  .achievements-list {
-    flex-direction: column;
+  .halaqas-page {
+    padding: 10px;
   }
 
-  .achievement-item {
+  .halaqas-header {
+    flex-direction: column;
+
     text-align: center;
+  }
+
+  .add-halaqa-btn {
+    width: 100%;
+  }
+
+  .halaqas-grid {
+    grid-template-columns: 1fr;
+  }
+
+}
+/* =========================
+   واجهة الدخول الاحترافية
+========================= */
+
+.login-page {
+  min-height: 100vh;
+  background:
+    linear-gradient(
+      135deg,
+      rgba(27, 94, 32, 0.95),
+      rgba(46, 125, 50, 0.85)
+    ),
+    radial-gradient(
+      circle at top right,
+      #f5c542,
+      transparent 35%
+    );
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 30px 15px;
+}
+
+/* الصندوق الرئيسي */
+
+.login-container {
+  width: 100%;
+  max-width: 560px;
+
+  background: rgba(255, 255, 255, 0.97);
+
+  padding: 35px 30px;
+
+  border-radius: 30px;
+
+  box-shadow:
+    0 25px 60px rgba(0, 0, 0, 0.25);
+
+  text-align: center;
+
+  animation: loginAppear 0.7s ease;
+}
+
+/* حركة الظهور */
+
+@keyframes loginAppear {
+
+  from {
+    opacity: 0;
+    transform: translateY(25px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+}
+
+/* الشعار */
+
+.logo-wrapper {
+  width: 125px;
+  height: 125px;
+
+  margin: 0 auto 18px;
+
+  background: white;
+
+  border-radius: 50%;
+
+  padding: 8px;
+
+  box-shadow:
+    0 8px 25px rgba(0, 0, 0, 0.15);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo {
+  width: 100%;
+  height: 100%;
+
+  object-fit: contain;
+
+  border-radius: 50%;
+}
+
+/* العنوان */
+
+.login-container h1 {
+  color: #1b5e20;
+
+  font-size: 27px;
+
+  margin: 10px 0;
+
+  font-weight: bold;
+}
+
+.subtitle {
+  color: #777;
+
+  font-size: 17px;
+
+  margin-bottom: 28px;
+}
+
+/* شبكة البطاقات */
+
+.login-options {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 14px;
+}
+
+/* البطاقة */
+
+.login-card {
+  width: 100%;
+
+  border: none;
+
+  border-radius: 18px;
+
+  padding: 16px 18px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 15px;
+
+  text-align: right;
+
+  cursor: pointer;
+
+  color: white;
+
+  transition: all 0.3s ease;
+
+  box-shadow:
+    0 6px 15px rgba(0, 0, 0, 0.12);
+}
+
+.login-card:hover {
+  transform: translateY(-4px) scale(1.01);
+
+  box-shadow:
+    0 12px 25px rgba(0, 0, 0, 0.2);
+}
+
+.login-card:active {
+  transform: scale(0.98);
+}
+
+/* الأيقونة */
+
+.login-icon {
+  width: 55px;
+  height: 55px;
+
+  border-radius: 15px;
+
+  background: rgba(255, 255, 255, 0.2);
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  font-size: 30px;
+
+  flex-shrink: 0;
+}
+
+/* النص */
+
+.login-card div {
+  flex: 1;
+}
+
+.login-card strong {
+  display: block;
+
+  font-size: 19px;
+
+  margin-bottom: 4px;
+}
+
+.login-card small {
+  display: block;
+
+  font-size: 13px;
+
+  opacity: 0.85;
+}
+
+/* السهم */
+
+.arrow {
+  font-size: 24px;
+
+  opacity: 0.8;
+}
+
+/* ألوان البطاقات */
+
+.student-card {
+  background:
+    linear-gradient(135deg, #1976d2, #42a5f5);
+}
+
+.register-card {
+  background:
+    linear-gradient(135deg, #00897b, #26a69a);
+}
+
+.parent-card {
+  background:
+    linear-gradient(135deg, #8e24aa, #ba68c8);
+}
+
+.teacher-card {
+  background:
+    linear-gradient(135deg, #ef6c00, #ff9800);
+}
+
+.admin-card {
+  background:
+    linear-gradient(135deg, #455a64, #78909c);
+}
+
+/* نسيت كلمة المرور */
+
+.link-btn {
+  background: none;
+
+  border: none;
+
+  color: #1b5e20;
+
+  margin-top: 25px;
+
+  cursor: pointer;
+
+  font-size: 16px;
+
+  font-weight: bold;
+
+  transition: 0.3s;
+}
+
+.link-btn:hover {
+  color: #8d6e00;
+
+  text-decoration: underline;
+}
+
+/* أسفل الصفحة */
+
+.login-footer {
+  margin-top: 25px;
+
+  padding-top: 15px;
+
+  border-top: 1px solid #eee;
+
+  color: #999;
+
+  font-size: 13px;
+}
+
+/* =========================
+   الهاتف
+========================= */
+
+@media (max-width: 600px) {
+
+  .login-page {
+    padding: 15px;
+  }
+
+  .login-container {
+    padding: 25px 18px;
+
+    border-radius: 24px;
+  }
+
+  .login-container h1 {
+    font-size: 22px;
+  }
+
+  .subtitle {
+    font-size: 15px;
+  }
+
+  .login-card {
+    padding: 14px;
+  }
+
+  .login-icon {
+    width: 48px;
+    height: 48px;
+
+    font-size: 25px;
+  }
+
+  .login-card strong {
+    font-size: 17px;
+  }
+
+  .login-card small {
+    font-size: 12px;
   }
 
 }
