@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
-import logo from "./assets/malik.PNG";
-
+import logo from "./assets/Malik.png";
 export default function AddStudent({
   setPage,
   addStudent,
