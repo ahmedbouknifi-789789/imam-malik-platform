@@ -1,0 +1,359 @@
+/* =========================================
+   صفحة بطاقة الطالب
+========================================= */
+
+.student-card-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 25px;
+  background: #f4f7fb;
+  min-height: 100vh;
+  direction: rtl;
+}
+
+/* =========================================
+   البطاقة
+========================================= */
+
+.student-card {
+  width: 390px;
+  max-width: 100%;
+  background: #fff;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* =========================================
+   رأس البطاقة
+========================================= */
+
+.card-header {
+  background: linear-gradient(135deg, #0b7d45, #19a35a);
+  color: #fff;
+  text-align: center;
+  padding: 22px 15px 70px;
+  position: relative;
+  z-index: 1;
+}
+
+.card-header h2 {
+  margin: 5px 0 8px;
+  font-size: 22px;
+  line-height: 1.5;
+  position: relative;
+  z-index: 2;
+}
+
+.card-header p {
+  margin: 0;
+  opacity: 0.95;
+  font-size: 14px;
+  line-height: 1.6;
+  position: relative;
+  z-index: 2;
+}
+
+/* =========================================
+   الصورة
+========================================= */
+
+.card-photo {
+  position: relative;
+  z-index: 5;
+  margin-top: -60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.card-photo img,
+.photo-placeholder {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: 5px solid #fff;
+  background: #eee;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  font-size: 55px;
+  object-fit: cover;
+
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+}
+
+/* =========================================
+   معلومات الطالب
+========================================= */
+
+.card-info {
+  padding: 20px;
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 10px 0;
+
+  border-bottom: 1px solid #ececec;
+
+  gap: 10px;
+}
+
+.info-row:last-child {
+  border-bottom: none;
+}
+
+.info-row strong {
+  color: #0b7d45;
+  white-space: nowrap;
+}
+
+.info-row span {
+  color: #333;
+  font-weight: 600;
+  text-align: left;
+}
+
+/* =========================================
+   جدول أداء الرسوم
+========================================= */
+
+.fees-section {
+  margin: 5px 20px 20px;
+  padding: 15px;
+
+  background: #f8fafc;
+
+  border-radius: 15px;
+  border: 1px solid #e2e8f0;
+}
+
+.fees-title {
+  text-align: center;
+  margin: 0 0 12px;
+
+  color: #0b7d45;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.fees-subtitle {
+  text-align: center;
+  margin: -5px 0 15px;
+
+  color: #64748b;
+  font-size: 12px;
+}
+
+/* الجدول */
+
+.fees-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+
+  font-size: 12px;
+}
+
+.fees-table th {
+  background: #0b7d45;
+  color: white;
+
+  padding: 8px 4px;
+  text-align: center;
+
+  font-weight: bold;
+}
+
+.fees-table td {
+  border: 1px solid #e2e8f0;
+
+  padding: 8px 4px;
+
+  text-align: center;
+  vertical-align: middle;
+}
+
+.fees-table tr:nth-child(even) {
+  background: #f8fafc;
+}
+
+/* خانة الشهر */
+
+.fee-month {
+  font-weight: 600;
+  color: #334155;
+}
+
+/* علامة الأداء */
+
+.fee-check {
+  width: 24px;
+  height: 24px;
+
+  margin: auto;
+
+  border-radius: 6px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  font-size: 16px;
+  font-weight: bold;
+}
+
+/* الشهر المؤدى */
+
+.fee-check.paid {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+/* الشهر غير المؤدى */
+
+.fee-check.unpaid {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+/* =========================================
+   QR
+========================================= */
+
+.qr-box {
+  margin: 20px auto 5px;
+  padding: 15px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+
+  border: 2px dashed #0b7d45;
+  border-radius: 12px;
+
+  width: calc(100% - 40px);
+  box-sizing: border-box;
+}
+
+.qr-box canvas {
+  width: 120px !important;
+  height: 120px !important;
+
+  display: block;
+  margin: 0 auto 8px;
+}
+
+.qr-box strong {
+  font-size: 15px;
+  color: #1e293b;
+  direction: ltr;
+}
+
+.qr-box small {
+  margin-top: 5px;
+  color: #64748b;
+  font-size: 11px;
+}
+
+/* =========================================
+   الأزرار
+========================================= */
+
+.card-buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin: 20px;
+}
+
+.card-buttons .btn {
+  flex: 1;
+  max-width: 180px;
+}
+
+/* =========================================
+   الهاتف
+========================================= */
+
+@media (max-width: 480px) {
+
+  .student-card-page {
+    padding: 10px;
+  }
+
+  .student-card {
+    width: 100%;
+  }
+
+  .card-header {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .card-header h2 {
+    font-size: 20px;
+  }
+
+  .fees-section {
+    margin-left: 12px;
+    margin-right: 12px;
+    padding: 10px;
+  }
+
+  .fees-table {
+    font-size: 11px;
+  }
+
+  .fees-table th,
+  .fees-table td {
+    padding: 7px 2px;
+  }
+
+  .fee-check {
+    width: 22px;
+    height: 22px;
+  }
+}
+
+/* =========================================
+   الطباعة
+========================================= */
+
+@media print {
+
+  body {
+    background: white;
+  }
+
+  .student-card-page {
+    padding: 0;
+    background: white;
+  }
+
+  .student-card {
+    box-shadow: none;
+    width: 100%;
+  }
+
+  .card-buttons {
+    display: none;
+  }
+
+  .qr-box {
+    border: 1px solid #0b7d45;
+  }
+}

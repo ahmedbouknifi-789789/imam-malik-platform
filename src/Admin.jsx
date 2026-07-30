@@ -34,6 +34,15 @@ export default function Admin({
         📥 طلبات التسجيل
       </button>
 
+<button
+  className="btn"
+  onClick={() =>
+    setPage("teacherRegistrationRequests")
+  }
+>
+  👨‍🏫 طلبات تسجيل الأساتذة
+</button>
+
       <button
         className="btn"
         onClick={() => setPage("createAccounts")}
@@ -75,6 +84,15 @@ export default function Admin({
       >
         📖 إدارة الحلقات
       </button>
+
+<button
+  className="btn"
+  onClick={() =>
+    setPage("adminResults")
+  }
+>
+  🗑️ إدارة نتائج الطلاب
+</button>
 
       <button className="btn">
         📢 الإعلانات

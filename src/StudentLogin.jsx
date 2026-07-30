@@ -1,24 +1,17 @@
 import { useState, useEffect } from "react";
 import { collection, getDocs } from "firebase/firestore";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { db, auth } from "./Firebase";
+import { db } from "./Firebase";
 
 export default function StudentLogin({
   setPage,
   setSelectedStudent,
 }) {
   const [number, setNumber] = useState("");
-  const [password, setPassword] = useState("");
-
   const [rememberMe, setRememberMe] = useState(false);
 
-  // تحميل رقم التسجيل المحفوظ سابقًا
   useEffect(() => {
-    const savedNumber =
-      localStorage.getItem("studentNumber");
-
-    const savedRemember =
-      localStorage.getItem("studentRemember");
+    const savedNumber = localStorage.getItem("studentNumber");
+    const savedRemember = localStorage.getItem("studentRemember");
 
     if (savedNumber) {
       setNumber(savedNumber);
@@ -31,24 +24,25 @@ export default function StudentLogin({
 
   async function loginStudent() {
     try {
-      if (!number || !password) {
-        alert("الرجاء إدخال رقم التسجيل وكلمة المرور");
+      if (!number) {
+        alert("الرجاء إدخال رقم التسجيل");
         return;
       }
 
-      const snapshot = await getDocs(
-        collection(db, "students")
-      );
+      const snapshot = await getDocs(collection(db, "students"));
+      snapshot.forEach((item) => {
+  console.log(item.data().number);
+});
 
       let found = null;
 
-      snapshot.forEach((doc) => {
+      snapshot.forEach((item) => {
         const student = {
-          id: doc.id,
-          ...doc.data(),
+          id: item.id,
+          ...item.data(),
         };
 
-        if (student.number === number) {
+        if (student.number === number.trim()) {
           found = student;
         }
       });
@@ -58,32 +52,12 @@ export default function StudentLogin({
         return;
       }
 
-      // تسجيل الدخول عبر Firebase
-      await signInWithEmailAndPassword(
-        auth,
-        found.email,
-        password
-      );
-
-      // حفظ رقم التسجيل إذا اختار البقاء متصلًا
       if (rememberMe) {
-        localStorage.setItem(
-          "studentNumber",
-          number
-        );
-
-        localStorage.setItem(
-          "studentRemember",
-          "true"
-        );
+        localStorage.setItem("studentNumber", number);
+        localStorage.setItem("studentRemember", "true");
       } else {
-        localStorage.removeItem(
-          "studentNumber"
-        );
-
-        localStorage.removeItem(
-          "studentRemember"
-        );
+        localStorage.removeItem("studentNumber");
+        localStorage.removeItem("studentRemember");
       }
 
       setSelectedStudent(found);
@@ -91,45 +65,24 @@ export default function StudentLogin({
 
     } catch (error) {
       console.log(error);
-
-      alert(
-        "كلمة المرور أو رقم التسجيل غير صحيح"
-      );
+      alert("حدث خطأ أثناء تسجيل الدخول");
     }
   }
 
   return (
     <div className="card">
 
-      <h2>
-        👨‍🎓 دخول الطالب
-      </h2>
+      <h2>👨‍🎓 دخول الطالب</h2>
 
       <input
         type="text"
         placeholder="رقم التسجيل"
         value={number}
-        onChange={(e) =>
-          setNumber(e.target.value)
-        }
+        onChange={(e) => setNumber(e.target.value)}
       />
 
       <br />
       <br />
-
-      <input
-        type="password"
-        placeholder="كلمة المرور"
-        value={password}
-        onChange={(e) =>
-          setPassword(e.target.value)
-        }
-      />
-
-      <br />
-      <br />
-
-      {/* البقاء متصلًا */}
 
       <label
         style={{
@@ -142,21 +95,13 @@ export default function StudentLogin({
           fontSize: "16px",
         }}
       >
-
         <input
           type="checkbox"
           checked={rememberMe}
-          onChange={(e) =>
-            setRememberMe(e.target.checked)
-          }
-          style={{
-            width: "18px",
-            height: "18px",
-          }}
+          onChange={(e) => setRememberMe(e.target.checked)}
         />
 
-        ☑️ البقاء متصلًا
-
+        ☑️ البقاء متصلاً
       </label>
 
       <button
@@ -171,21 +116,7 @@ export default function StudentLogin({
 
       <button
         className="btn"
-        style={{
-          background: "#2563eb",
-        }}
-        onClick={() =>
-          setPage("forgotPassword")
-        }
-      >
-        🔒 نسيت كلمة المرور؟
-      </button>
-
-      <button
-        className="btn"
-        onClick={() =>
-          setPage("login")
-        }
+        onClick={() => setPage("login")}
       >
         ⬅️ رجوع
       </button>

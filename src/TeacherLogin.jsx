@@ -5,6 +5,7 @@ import {
   setPersistence,
   browserLocalPersistence,
   browserSessionPersistence,
+  sendPasswordResetEmail,
 } from "firebase/auth";
 
 import {
@@ -32,6 +33,10 @@ export default function TeacherLogin({
 
   const [loading, setLoading] =
     useState(false);
+
+  // =========================
+  // تسجيل دخول الأستاذ
+  // =========================
 
   async function loginTeacher() {
     if (!email || !password) {
@@ -89,7 +94,7 @@ export default function TeacherLogin({
         return;
       }
 
-      // حفظ الأستاذ
+      // حفظ بيانات الأستاذ
       setLoggedTeacher(
         teacherFound
       );
@@ -100,7 +105,10 @@ export default function TeacherLogin({
       );
 
     } catch (error) {
-      console.log(error);
+      console.log(
+        "خطأ في تسجيل الدخول:",
+        error
+      );
 
       alert(
         "❌ البريد الإلكتروني أو كلمة المرور غير صحيحة"
@@ -111,10 +119,87 @@ export default function TeacherLogin({
     }
   }
 
+  // =========================
+  // نسيت كلمة السر
+  // =========================
+
+  async function forgotPassword() {
+
+    if (!email) {
+
+      alert(
+        "⚠️ أدخل البريد الإلكتروني أولاً"
+      );
+
+      return;
+    }
+
+    try {
+
+      setLoading(true);
+
+      await sendPasswordResetEmail(
+        auth,
+        email
+      );
+
+      alert(
+        "✅ تم إرسال رابط إعادة تعيين كلمة المرور إلى بريدك الإلكتروني. تحقق من البريد الوارد أو الرسائل غير المرغوب فيها."
+      );
+
+    } catch (error) {
+
+      console.log(
+        "خطأ في إعادة تعيين كلمة المرور:",
+        error
+      );
+
+      if (
+        error.code ===
+        "auth/user-not-found"
+      ) {
+
+        alert(
+          "❌ هذا البريد الإلكتروني غير مسجل"
+        );
+
+      } else if (
+        error.code ===
+        "auth/invalid-email"
+      ) {
+
+        alert(
+          "❌ البريد الإلكتروني غير صحيح"
+        );
+
+      } else {
+
+        alert(
+          "❌ حدث خطأ. حاول مرة أخرى."
+        );
+
+      }
+
+    } finally {
+
+      setLoading(false);
+
+    }
+  }
+
+  // =========================
+  // واجهة تسجيل الدخول
+  // =========================
+
   return (
+
     <div className="card">
 
-      <h2>👨‍🏫 دخول الأستاذ</h2>
+      <h2>
+        👨‍🏫 دخول الأستاذ
+      </h2>
+
+      {/* البريد الإلكتروني */}
 
       <input
         type="email"
@@ -127,6 +212,8 @@ export default function TeacherLogin({
 
       <br />
       <br />
+
+      {/* كلمة المرور */}
 
       <input
         type="password"
@@ -167,6 +254,8 @@ export default function TeacherLogin({
 
       <br />
 
+      {/* دخول الأستاذ */}
+
       <button
         className="btn"
         onClick={loginTeacher}
@@ -180,6 +269,24 @@ export default function TeacherLogin({
       <br />
       <br />
 
+      {/* نسيت كلمة السر */}
+
+      <button
+        className="btn"
+        onClick={forgotPassword}
+        disabled={loading}
+        style={{
+          background: "#2563eb",
+        }}
+      >
+        🔑 نسيت كلمة السر؟
+      </button>
+
+      <br />
+      <br />
+
+      {/* الرجوع */}
+
       <button
         className="btn"
         onClick={() =>
@@ -190,5 +297,6 @@ export default function TeacherLogin({
       </button>
 
     </div>
+
   );
 }

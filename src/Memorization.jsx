@@ -1,8 +1,13 @@
 import { useState, useEffect } from "react";
+
 import {
   collection,
   addDoc,
   getDocs,
+  updateDoc,
+  doc,
+  query,
+  where,
 } from "firebase/firestore";
 
 import { db } from "./Firebase";
@@ -14,95 +19,161 @@ export default function Memorization({
 }) {
   const [records, setRecords] = useState({});
 
-  // =========================
-  // تحميل النتائج السابقة
-  // =========================
+  // ==========================================
+  // حساب يوم الحلقة
+  // بداية اليوم الدراسي: 04:00 صباحًا
+  // الجمعة: إجازة
+  // ==========================================
 
-  useEffect(() => {
-    loadResults();
-  }, []);
+  function getHalaqaDate() {
+    const now = new Date();
 
-  async function loadResults() {
-    try {
-      const snapshot = await getDocs(
-        collection(db, "memorization")
-      );
-
-      const data = {};
-
-      snapshot.forEach((docItem) => {
-        const item = docItem.data();
-
-        data[item.studentId] = {
-          new: item.new || "",
-          review: item.review || "",
-          rate: item.rate || "ممتاز",
-          notes: item.notes || "",
-        };
-      });
-
-      setRecords(data);
-    } catch (error) {
-      console.log("خطأ في تحميل النتائج:", error);
+    // إذا كان الوقت قبل 04:00 صباحًا
+    // نعتبره تابعًا لليوم السابق
+    if (now.getHours() < 4) {
+      now.setDate(now.getDate() - 1);
     }
+
+    const year = now.getFullYear();
+    const month = String(
+      now.getMonth() + 1
+    ).padStart(2, "0");
+
+    const day = String(
+      now.getDate()
+    ).padStart(2, "0");
+
+    return `${year}-${month}-${day}`;
   }
 
-  // =========================
-  // تغيير بيانات الطالب
-  // =========================
+  // ==========================================
+  // هل اليوم جمعة؟
+  // ==========================================
 
-  function handleChange(id, field, value) {
+  function isFriday() {
+    const now = new Date();
+
+    // قبل 04:00 نحسب اليوم السابق
+    if (now.getHours() < 4) {
+      now.setDate(now.getDate() - 1);
+    }
+
+    return now.getDay() === 5;
+  }
+
+  // ==========================================
+  // تحميل الصفحة
+  // ==========================================
+
+  useEffect(() => {
+    // مهم:
+    // لا نقوم بتحميل النتائج القديمة داخل الخانات.
+    // عند دخول الأستاذ تبدأ الخانات فارغة.
+
+    setRecords({});
+  }, [loggedTeacher]);
+
+  // ==========================================
+  // تغيير نتيجة الطالب
+  // ==========================================
+
+  function handleChange(
+    id,
+    field,
+    value
+  ) {
     setRecords((prev) => ({
       ...prev,
+
       [id]: {
         ...prev[id],
+
         [field]: value,
       },
     }));
   }
 
-  // =========================
+  // ==========================================
   // الطلاب الظاهرون
-  // =========================
+  // ==========================================
 
-  const visibleStudents = loggedTeacher
-    ? students.filter(
-        (student) =>
-          student.halaqa === loggedTeacher.halaqa
-      )
-    : students;
+  const visibleStudents =
+    loggedTeacher
+      ? students.filter(
+          (student) =>
+            student.halaqa ===
+            loggedTeacher.halaqa
+        )
+      : students;
 
-  // =========================
+  // ==========================================
   // حفظ النتائج
-  // =========================
+  // ==========================================
 
   async function saveResults() {
     try {
-      const today =
-        new Date().toLocaleDateString("fr-CA");
+      // ======================================
+      // الجمعة إجازة
+      // ======================================
 
-      for (const student of visibleStudents) {
+      if (isFriday()) {
+        alert(
+          "🕌 اليوم الجمعة إجازة، لا توجد حلقة اليوم."
+        );
+
+        return;
+      }
+
+      const today = getHalaqaDate();
+
+      let savedCount = 0;
+
+      // ======================================
+      // المرور على الطلاب
+      // ======================================
+
+      for (
+        const student of visibleStudents
+      ) {
         const result =
           records[student.id] || {};
 
-        // إذا لم يتم إدخال أي نتيجة
-        // يسجل الطالب غائبًا تلقائيًا
+        // ====================================
+        // هل الأستاذ سجل شيئًا للطالب؟
+        // ====================================
 
-        const isAbsent =
-          !result.new &&
-          !result.review &&
-          !result.notes;
+        const hasResult =
+          Boolean(
+            result.new ||
+            result.review ||
+            result.notes
+          );
+
+        // ====================================
+        // إذا لم يسجل الأستاذ شيئًا
+        // لا نحفظ الطالب إطلاقًا
+        // ====================================
+
+        if (!hasResult) {
+          continue;
+        }
+
+        // ====================================
+        // النتيجة النهائية
+        // ====================================
 
         const finalResult = {
-          studentId: student.id,
+          studentId:
+            student.id,
 
-          date: today,
+          date:
+            today,
 
-          new: isAbsent
-            ? "غائب"
-            : result.new || "",
+          new:
+            result.new || "",
 
-          review: result.review || "",
+          review:
+            result.review || "",
 
           rate:
             result.rate || "ممتاز",
@@ -111,45 +182,157 @@ export default function Memorization({
             result.notes || "",
         };
 
-        // =========================
-        // حفظ نتيجة الحفظ
-        // =========================
+        // ====================================
+        // البحث عن نتيجة الطالب في نفس
+        // يوم الحلقة
+        // ====================================
 
-        await addDoc(
-          collection(db, "memorization"),
-          finalResult
-        );
+        const resultQuery =
+          query(
+            collection(
+              db,
+              "memorization"
+            ),
 
-        // =========================
-        // إنشاء إشعار للطالب
-        // =========================
+            where(
+              "studentId",
+              "==",
+              student.id
+            ),
 
-        await addDoc(
-          collection(db, "notifications"),
-          {
-            studentId: student.id,
+            where(
+              "date",
+              "==",
+              today
+            )
+          );
 
-            title: isAbsent
-              ? "⚠️ تسجيل الغياب"
-              : "📖 نتيجة الحفظ",
+        const resultSnapshot =
+          await getDocs(
+            resultQuery
+          );
 
-            message: isAbsent
-              ? "تم تسجيل غيابك اليوم."
-              : `تم تسجيل نتيجة الحفظ الخاصة بك: ${
+        // ====================================
+        // إذا كانت موجودة
+        // نقوم بالتحديث بدل التكرار
+        // ====================================
+
+        if (
+          !resultSnapshot.empty
+        ) {
+          const existingDoc =
+            resultSnapshot.docs[0];
+
+          await updateDoc(
+            doc(
+              db,
+              "memorization",
+              existingDoc.id
+            ),
+            finalResult
+          );
+        }
+
+        // ====================================
+        // إذا لم تكن موجودة
+        // ننشئ واحدة فقط
+        // ====================================
+
+        else {
+          await addDoc(
+            collection(
+              db,
+              "memorization"
+            ),
+            finalResult
+          );
+        }
+
+        savedCount++;
+
+        // ====================================
+        // الإشعار
+        // ====================================
+
+        const notificationQuery =
+          query(
+            collection(
+              db,
+              "notifications"
+            ),
+
+            where(
+              "studentId",
+              "==",
+              student.id
+            ),
+
+            where(
+              "date",
+              "==",
+              today
+            )
+          );
+
+        const notificationSnapshot =
+          await getDocs(
+            notificationQuery
+          );
+
+        // ====================================
+        // إنشاء إشعار واحد فقط
+        // ====================================
+
+        if (
+          notificationSnapshot.empty
+        ) {
+          await addDoc(
+            collection(
+              db,
+              "notifications"
+            ),
+            {
+              studentId:
+                student.id,
+
+              title:
+                "📖 نتيجة الحفظ",
+
+              message:
+                `تم تسجيل نتيجة الحفظ الخاصة بك: ${
                   result.new ||
                   "لم يتم تسجيل محفوظ جديد"
                 }.`,
 
-            date: today,
+              date:
+                today,
 
-            read: false,
-          }
-        );
+              read:
+                false,
+            }
+          );
+        }
       }
 
-      alert(
-        "✅ تم حفظ نتائج جميع الطلاب وإرسال الإشعارات"
-      );
+      // ======================================
+      // مسح الخانات بعد الحفظ
+      // ======================================
+
+      setRecords({});
+
+      // ======================================
+      // الرسالة
+      // ======================================
+
+      if (savedCount === 0) {
+        alert(
+          "⚠️ لم يتم تسجيل أي نتيجة."
+        );
+      } else {
+        alert(
+          `✅ تم حفظ نتائج ${savedCount} طالب بنجاح.`
+        );
+      }
 
     } catch (error) {
       console.log(
@@ -158,28 +341,57 @@ export default function Memorization({
       );
 
       alert(
-        "❌ حدث خطأ أثناء حفظ النتائج"
+        "❌ حدث خطأ أثناء حفظ النتائج."
       );
     }
   }
 
-  // =========================
+  // ==========================================
   // الرجوع الصحيح
-  // =========================
+  // ==========================================
 
   function handleBack() {
     if (loggedTeacher) {
-      // إذا دخل الأستاذ إلى صفحة الحفظ
-      setPage("teacherPanel");
+      setPage(
+        "teacherPanel"
+      );
     } else {
-      // إذا دخل المدير إلى صفحة الحفظ
-      setPage("admin");
+      setPage(
+        "admin"
+      );
     }
   }
 
-  // =========================
+  // ==========================================
+  // إذا كان الجمعة
+  // ==========================================
+
+  if (isFriday()) {
+    return (
+      <div className="card">
+
+        <h2>
+          🕌 يوم الجمعة
+        </h2>
+
+        <p>
+          اليوم إجازة ولا توجد حلقة.
+        </p>
+
+        <button
+          className="btn"
+          onClick={handleBack}
+        >
+          ⬅️ الرجوع
+        </button>
+
+      </div>
+    );
+  }
+
+  // ==========================================
   // واجهة الصفحة
-  // =========================
+  // ==========================================
 
   return (
     <div className="card">
@@ -188,12 +400,18 @@ export default function Memorization({
         📖 نتائج الحفظ اليومية
       </h2>
 
+      <p>
+        🕓 يوم الحلقة يبدأ من الساعة 04:00 صباحًا
+      </p>
+
       <table
         border="1"
         style={{
           width: "100%",
-          borderCollapse: "collapse",
-          textAlign: "center",
+          borderCollapse:
+            "collapse",
+          textAlign:
+            "center",
         }}
       >
 
@@ -227,18 +445,19 @@ export default function Memorization({
 
           {visibleStudents.map(
             (student) => (
-
               <tr
-                key={student.id}
+                key={
+                  student.id
+                }
               >
 
-                {/* اسم الطالب */}
+                {/* الطالب */}
 
                 <td>
                   {student.name}
                 </td>
 
-                {/* المحفوظ الجديد */}
+                {/* الجديد */}
 
                 <td>
 
@@ -342,8 +561,7 @@ export default function Memorization({
                     value={
                       records[
                         student.id
-                      ]?.rate ||
-                      "ممتاز"
+                      ]?.rate || ""
                     }
 
                     onChange={(e) =>
@@ -354,6 +572,10 @@ export default function Memorization({
                       )
                     }
                   >
+
+                    <option value="">
+                      اختر
+                    </option>
 
                     <option value="ممتاز">
                       ممتاز
@@ -403,7 +625,6 @@ export default function Memorization({
                 </td>
 
               </tr>
-
             )
           )}
 
@@ -413,11 +634,11 @@ export default function Memorization({
 
       <br />
 
-      {/* زر الحفظ */}
-
       <button
         className="btn"
-        onClick={saveResults}
+        onClick={
+          saveResults
+        }
       >
         💾 حفظ النتائج
       </button>
@@ -425,11 +646,11 @@ export default function Memorization({
       <br />
       <br />
 
-      {/* زر الرجوع */}
-
       <button
         className="btn"
-        onClick={handleBack}
+        onClick={
+          handleBack
+        }
       >
         ⬅️ الرجوع
       </button>

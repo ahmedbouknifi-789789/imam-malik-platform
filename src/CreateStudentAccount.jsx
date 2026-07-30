@@ -3,10 +3,15 @@ import { auth } from "./Firebase";
 
 export async function createStudentAccount(student) {
   try {
-    const email =
-      student.email ||
-      `${student.number}@imam-malik.com`;
+    // البريد الإلكتروني الذي أدخله الطالب أو ولي الأمر
+    const email = student.email?.trim();
 
+    if (!email) {
+      console.error("لا يوجد بريد إلكتروني للطالب");
+      return null;
+    }
+
+    // كلمة المرور الأولية
     const password = "123456";
 
     const userCredential =
@@ -18,12 +23,17 @@ export async function createStudentAccount(student) {
 
     return {
       uid: userCredential.user.uid,
-      email,
+      email: userCredential.user.email,
       password,
     };
 
   } catch (error) {
-    console.log(error);
+
+    console.error(
+      "خطأ في إنشاء حساب الطالب:",
+      error
+    );
+
     return null;
   }
 }

@@ -14,8 +14,11 @@
     "@capacitor/cli": "^8.4.2",
     "@capacitor/core": "^8.4.2",
     "firebase": "^12.16.0",
+    "jspdf": "^4.2.1",
+    "qrcode.react": "^4.2.0",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
+    "react-qr-code": "^2.2.0",
     "react-router-dom": "^7.18.1"
   },
   "devDependencies": {

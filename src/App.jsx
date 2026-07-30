@@ -9,9 +9,7 @@ import {
   updateDoc,
 } from "firebase/firestore";
 
-import {
-  onAuthStateChanged,
-} from "firebase/auth";
+import { onAuthStateChanged } from "firebase/auth";
 
 import { db, auth } from "./Firebase";
 
@@ -40,8 +38,13 @@ import ForgotPassword from "./ForgotPassword";
 import CreateAccounts from "./CreateAccounts";
 import HalaqaStudents from "./HalaqaStudents";
 import TeacherLogin from "./TeacherLogin";
+import TeacherRegister from "./TeacherRegister";
 import CreateTeacherAccounts from "./CreateTeacherAccounts";
 import Notifications from "./Notifications";
+import StudentCard from "./StudentCard";
+import StudentReport from "./StudentReport";
+import AdminResults from "./AdminResults";
+import TeacherRegistrationRequests from "./TeacherRegistrationRequests";
 
 import "./App.css";
 
@@ -50,7 +53,6 @@ import "./App.css";
 // البريد الإلكتروني الخاص بالإدارة
 // ==================================================
 
-// ⚠️ غيّر هذا البريد إلى البريد الحقيقي للإدارة
 const ADMIN_EMAIL = "admin@example.com";
 
 
@@ -85,6 +87,12 @@ export default function App() {
 
   const [selectedStudent, setSelectedStudent] =
     useState(null);
+
+  const [studentPoints, setStudentPoints] =
+    useState(0);
+
+  const [studentLevel, setStudentLevel] =
+    useState("🥉 مبتدئ");
 
 
   // ==================================================
@@ -749,29 +757,38 @@ export default function App() {
           number:
             updatedStudent.number,
 
-          birth:
-            updatedStudent.birth,
+          age:
+            updatedStudent.age,
 
           gender:
             updatedStudent.gender,
 
-          parent:
-            updatedStudent.parent,
+          city:
+            updatedStudent.city,
 
           phone:
             updatedStudent.phone,
 
-          parentEmail:
-            updatedStudent.parentEmail,
+          email:
+            updatedStudent.email,
+
+          riwaya:
+            updatedStudent.riwaya,
+
+          educationType:
+            updatedStudent.educationType,
+
+          onlineDays:
+            updatedStudent.onlineDays || [],
 
           halaqa:
             updatedStudent.halaqa,
 
-          level:
-            updatedStudent.level,
+          canPayFees:
+            updatedStudent.canPayFees,
 
-          date:
-            updatedStudent.date,
+          feesReason:
+            updatedStudent.feesReason,
 
           notes:
             updatedStudent.notes,
@@ -779,8 +796,8 @@ export default function App() {
           photo:
             updatedStudent.photo,
 
-          halaqaType:
-            updatedStudent.halaqaType,
+          status:
+            updatedStudent.status || "active",
 
         }
 
@@ -994,6 +1011,142 @@ export default function App() {
 
 
   // ==================================================
+  // فتح سجل الحفظ من QR
+  // ==================================================
+
+  async function openStudentHistoryByNumber(
+    studentNumber
+  ) {
+
+    try {
+
+      if (!studentNumber) {
+        return;
+      }
+
+
+      const snapshot =
+        await getDocs(
+          collection(
+            db,
+            "students"
+          )
+        );
+
+
+      let foundStudent = null;
+
+
+      snapshot.forEach(
+        (docItem) => {
+
+          const data =
+            docItem.data();
+
+
+          if (
+            String(data.number || "")
+              .trim()
+              .toLowerCase() ===
+            String(studentNumber)
+              .trim()
+              .toLowerCase()
+          ) {
+
+            foundStudent = {
+
+              id: docItem.id,
+
+              ...data,
+
+            };
+
+          }
+
+        }
+      );
+
+
+      if (!foundStudent) {
+
+        alert(
+          "❌ لم يتم العثور على الطالب بهذا الرقم"
+        );
+
+        setPage("login");
+
+        return;
+
+      }
+
+
+      setSelectedStudent(
+        foundStudent
+      );
+
+
+      setPage(
+        "studentHistory"
+      );
+
+
+    } catch (error) {
+
+      console.error(
+        "خطأ في فتح سجل الحفظ:",
+        error
+      );
+
+      alert(
+        "❌ تعذر فتح سجل الحفظ"
+      );
+
+    }
+
+  }
+
+
+  // ==================================================
+  // فحص رابط QR
+  // ==================================================
+
+  useEffect(() => {
+
+    const path =
+      window.location.pathname;
+
+
+    if (
+      path.startsWith(
+        "/memorization/"
+      )
+    ) {
+
+      const studentNumber =
+        decodeURIComponent(
+          path
+            .split(
+              "/memorization/"
+            )[1] || ""
+        );
+
+
+      if (
+        studentNumber
+      ) {
+
+        openStudentHistoryByNumber(
+          studentNumber
+        );
+
+      }
+
+    }
+
+  }, []);
+
+
+  // ==================================================
   // انتظار التحقق من تسجيل الدخول
   // ==================================================
 
@@ -1032,7 +1185,6 @@ export default function App() {
       className="app"
     >
 
-
       <header
         className="header"
       >
@@ -1059,27 +1211,51 @@ export default function App() {
 
       {/* تسجيل طالب جديد */}
 
-{page === "studentRegister" && (
+      {page === "studentRegister" && (
 
-  <StudentRegister
-    setPage={navigateTo}
-    halaqas={halaqas}
-  />
+        <StudentRegister
+          setPage={
+            navigateTo
+          }
+          halaqas={
+            halaqas
+          }
+        />
 
-)}
+      )}
 
-{/* دخول الطالب */}
 
-{page === "studentLogin" && (
+      {/* طلب تسجيل أستاذ */}
 
-  <StudentLogin
-    setPage={navigateTo}
-    setSelectedStudent={
-      setSelectedStudent
-    }
-  />
+      {page === "teacherRegister" && (
 
-)}
+        <TeacherRegister
+          setPage={
+            navigateTo
+          }
+          halaqas={
+            halaqas
+          }
+        />
+
+      )}
+
+
+      {/* دخول الطالب */}
+
+      {page === "studentLogin" && (
+
+        <StudentLogin
+          setPage={
+            navigateTo
+          }
+          setSelectedStudent={
+            setSelectedStudent
+          }
+        />
+
+      )}
+
 
       {/* صفحة الطالب */}
 
@@ -1089,15 +1265,34 @@ export default function App() {
           setPage={
             navigateTo
           }
-
           student={
             selectedStudent
           }
-
           returnPage={
             previousPage
           }
+          setStudentPoints={
+            setStudentPoints
+          }
+          setStudentLevel={
+            setStudentLevel
+          }
+        />
 
+      )}
+
+
+      {/* تقرير الطالب */}
+
+      {page === "studentReport" && (
+
+        <StudentReport
+          setPage={
+            navigateTo
+          }
+          student={
+            selectedStudent
+          }
         />
 
       )}
@@ -1111,13 +1306,12 @@ export default function App() {
           setPage={
             navigateTo
           }
-
         />
 
       )}
 
 
-      {/* صفحة ولي الأمر */}
+      {/* ولي الأمر */}
 
       {page === "parent" && (
 
@@ -1125,11 +1319,9 @@ export default function App() {
           setPage={
             navigateTo
           }
-
           student={
             selectedStudent
           }
-
         />
 
       )}
@@ -1143,11 +1335,9 @@ export default function App() {
           setPage={
             navigateTo
           }
-
           setLoggedTeacher={
             setLoggedTeacher
           }
-
         />
 
       )}
@@ -1161,11 +1351,9 @@ export default function App() {
           setPage={
             navigateTo
           }
-
           loggedTeacher={
             loggedTeacher
           }
-
         />
 
       )}
@@ -1179,19 +1367,15 @@ export default function App() {
           setPage={
             navigateTo
           }
-
           teachers={
             teachers
           }
-
           editTeacher={
             editTeacher
           }
-
           deleteTeacher={
             deleteTeacher
           }
-
         />
 
       )}
@@ -1205,25 +1389,21 @@ export default function App() {
           setPage={
             navigateTo
           }
-
           students={
             students
           }
-
           teachers={
             teachers
           }
-
           halaqas={
             halaqas
           }
-
         />
 
       )}
 
 
-      {/* طلبات التسجيل */}
+      {/* طلبات تسجيل الطلاب */}
 
       {page === "registrationRequests" && (
 
@@ -1231,7 +1411,6 @@ export default function App() {
           setPage={
             navigateTo
           }
-
         />
 
       )}
@@ -1245,23 +1424,18 @@ export default function App() {
           setPage={
             navigateTo
           }
-
           students={
             students
           }
-
           deleteStudent={
             deleteStudent
           }
-
           editStudent={
             editStudent
           }
-
           openStudentRecord={
             openStudentRecord
           }
-
         />
 
       )}
@@ -1275,27 +1449,21 @@ export default function App() {
           setPage={
             navigateTo
           }
-
           halaqas={
             halaqas
           }
-
           students={
             students
           }
-
           editHalaqa={
             editHalaqa
           }
-
           deleteHalaqa={
             deleteHalaqa
           }
-
           openHalaqaStudents={
             openHalaqaStudents
           }
-
         />
 
       )}
@@ -1304,13 +1472,23 @@ export default function App() {
       {/* طلاب الحلقة */}
 
       {page === "halaqaStudents" && (
-  <HalaqaStudents
-    setPage={navigateTo}
-    selectedHalaqa={selectedHalaqa}
-    students={students}
-    loadStudents={loadStudents}
-  />
-)}
+
+        <HalaqaStudents
+          setPage={
+            navigateTo
+          }
+          selectedHalaqa={
+            selectedHalaqa
+          }
+          students={
+            students
+          }
+          loadStudents={
+            loadStudents
+          }
+        />
+
+      )}
 
 
       {/* إضافة أو تعديل طالب */}
@@ -1321,23 +1499,18 @@ export default function App() {
           setPage={
             navigateTo
           }
-
           addStudent={
             addStudent
           }
-
           editingStudent={
             editingStudent
           }
-
           updateStudent={
             updateStudent
           }
-
           halaqas={
             halaqas
           }
-
         />
 
       )}
@@ -1351,19 +1524,15 @@ export default function App() {
           setPage={
             navigateTo
           }
-
           addTeacher={
             addTeacher
           }
-
           editingTeacher={
             editingTeacher
           }
-
           updateTeacher={
             updateTeacher
           }
-
         />
 
       )}
@@ -1377,7 +1546,6 @@ export default function App() {
           setPage={
             navigateTo
           }
-
         />
 
       )}
@@ -1391,23 +1559,18 @@ export default function App() {
           setPage={
             navigateTo
           }
-
           addHalaqa={
             addHalaqa
           }
-
           editingHalaqa={
             editingHalaqa
           }
-
           updateHalaqa={
             updateHalaqa
           }
-
           teachers={
             teachers
           }
-
         />
 
       )}
@@ -1421,19 +1584,15 @@ export default function App() {
           setPage={
             navigateTo
           }
-
           students={
             students
           }
-
           loggedTeacher={
             loggedTeacher
           }
-
           returnPage={
             previousPage
           }
-
         />
 
       )}
@@ -1447,11 +1606,9 @@ export default function App() {
           setPage={
             navigateTo
           }
-
           students={
             students
           }
-
         />
 
       )}
@@ -1465,11 +1622,9 @@ export default function App() {
           setPage={
             navigateTo
           }
-
           setSelectedStudent={
             setSelectedStudent
           }
-
         />
 
       )}
@@ -1483,21 +1638,18 @@ export default function App() {
           setPage={
             navigateTo
           }
-
           students={
             students
           }
-
           loggedTeacher={
             loggedTeacher
           }
-
         />
 
       )}
 
 
-      {/* سجل الطالب */}
+      {/* سجل الحفظ */}
 
       {page === "studentHistory" && (
 
@@ -1505,11 +1657,25 @@ export default function App() {
           setPage={
             navigateTo
           }
-
           student={
             selectedStudent
           }
+        />
 
+      )}
+
+
+      {/* نتائج الإدارة */}
+
+      {page === "adminResults" && (
+
+        <AdminResults
+          setPage={
+            navigateTo
+          }
+          students={
+            students
+          }
         />
 
       )}
@@ -1523,7 +1689,6 @@ export default function App() {
           setPage={
             navigateTo
           }
-
         />
 
       )}
@@ -1537,7 +1702,19 @@ export default function App() {
           setPage={
             navigateTo
           }
+        />
 
+      )}
+
+
+      {/* طلبات تسجيل الأساتذة */}
+
+      {page === "teacherRegistrationRequests" && (
+
+        <TeacherRegistrationRequests
+          setPage={
+            navigateTo
+          }
         />
 
       )}
@@ -1551,11 +1728,31 @@ export default function App() {
           setPage={
             navigateTo
           }
-
           student={
             selectedStudent
           }
+        />
 
+      )}
+
+
+      {/* بطاقة الطالب */}
+
+      {page === "studentCard" && (
+
+        <StudentCard
+          student={
+            selectedStudent
+          }
+          points={
+            studentPoints
+          }
+          level={
+            studentLevel
+          }
+          setPage={
+            navigateTo
+          }
         />
 
       )}
@@ -1569,11 +1766,9 @@ export default function App() {
           setPage={
             navigateTo
           }
-
           student={
             selectedStudent
           }
-
         />
 
       )}

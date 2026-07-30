@@ -2,116 +2,282 @@ import logo from "./assets/Malik.png";
 
 export default function Login({ setPage }) {
   return (
-    <div className="login-page">
+    <div className="home-page">
 
-      <div className="login-container">
+      {/* =========================
+          الشريط العلوي
+      ========================= */}
+      <header className="home-navbar">
 
-        {/* الشعار */}
-        <div className="logo-wrapper">
-          <img
-            src={logo}
-            alt="شعار جمعية الإمام مالك"
-            className="logo"
-          />
+        <div className="home-logo">
+          <img src={logo} alt="جمعية الإمام مالك" />
+
+          <div>
+            <strong>جمعية الإمام مالك</strong>
+            <span>الثقافية</span>
+          </div>
         </div>
 
-        {/* العنوان */}
-        <h1>
-          منصة جمعية الإمام مالك الثقافية
-        </h1>
+        <button
+          className="join-btn"
+          onClick={() => setPage("studentRegister")}
+        >
+          انضم إلينا
+        </button>
 
-        <p className="subtitle">
-          نظام إدارة الحلقات القرآنية
-        </p>
+      </header>
 
-        {/* الخيارات */}
-        <div className="login-options">
+
+      {/* =========================
+          القسم الرئيسي
+      ========================= */}
+      <main className="home-hero">
+
+        <div className="hero-text">
+
+          <div className="hero-badge">
+            ✨ مرحباً بكم في منصتنا
+          </div>
+
+          <h1>
+            منصة جمعية الإمام مالك
+            <br />
+            <span>الثقافية</span>
+          </h1>
+
+          <p>
+            نظام متكامل لإدارة الحلقات القرآنية،
+            ومتابعة حفظ الطلاب وتقدمهم بسهولة.
+          </p>
 
           <button
-            className="login-card student-card"
+            className="start-btn"
+            onClick={() => setPage("studentRegister")}
+          >
+            ابدأ الآن مجاناً
+            <span>←</span>
+          </button>
+
+        </div>
+
+
+        {/* الشعار */}
+        <div className="hero-logo-area">
+
+          <div className="hero-circle">
+
+            <div className="hero-circle-inner">
+
+              <img
+                src={logo}
+                alt="شعار جمعية الإمام مالك"
+              />
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </main>
+
+
+      {/* =========================
+          خيارات الدخول
+      ========================= */}
+      <section className="access-section">
+
+        <h2>اختر طريقة الدخول</h2>
+
+        <p className="access-subtitle">
+          الوصول إلى حسابك حسب نوع المستخدم
+        </p>
+
+
+        <div className="access-grid">
+
+          {/* =========================
+              الطالب
+          ========================= */}
+          <button
+            className="access-card student-access"
             onClick={() => setPage("studentLogin")}
           >
-            <span className="login-icon">🎓</span>
+            <div className="access-icon">
+              🎓
+            </div>
 
             <div>
               <strong>دخول الطالب</strong>
-              <small>الوصول إلى ملفك الدراسي</small>
+              <span>متابعة الحفظ والنتائج</span>
             </div>
 
-            <span className="arrow">←</span>
+            <b>←</b>
           </button>
 
+
+          {/* =========================
+              ولي الأمر
+          ========================= */}
           <button
-            className="login-card register-card"
-            onClick={() => setPage("studentRegister")}
-          >
-            <span className="login-icon">📝</span>
-
-            <div>
-              <strong>تسجيل طالب جديد</strong>
-              <small>إنشاء طلب تسجيل جديد</small>
-            </div>
-
-            <span className="arrow">←</span>
-          </button>
-
-          <button
-            className="login-card parent-card"
+            className="access-card parent-access"
             onClick={() => setPage("parentLogin")}
           >
-            <span className="login-icon">👨‍👩‍👦</span>
+            <div className="access-icon">
+              👨‍👩‍👦
+            </div>
 
             <div>
               <strong>دخول ولي الأمر</strong>
-              <small>متابعة مستوى الطالب</small>
+              <span>متابعة مستوى الطالب</span>
             </div>
 
-            <span className="arrow">←</span>
+            <b>←</b>
           </button>
 
+
+          {/* =========================
+              الأستاذ
+          ========================= */}
           <button
-            className="login-card teacher-card"
+            className="access-card teacher-access"
             onClick={() => setPage("teacherLogin")}
           >
-            <span className="login-icon">👨‍🏫</span>
+            <div className="access-icon">
+              👨‍🏫
+            </div>
 
             <div>
               <strong>دخول الأستاذ</strong>
-              <small>إدارة الطلاب والحلقات</small>
+              <span>إدارة الطلاب والحفظ</span>
             </div>
 
-            <span className="arrow">←</span>
+            <b>←</b>
           </button>
 
+
+          {/* =========================
+              الإدارة
+          ========================= */}
           <button
-            className="login-card admin-card"
+            className="access-card admin-access"
             onClick={() => setPage("adminLogin")}
           >
-            <span className="login-icon">🛡️</span>
+            <div className="access-icon">
+              🛡️
+            </div>
 
             <div>
               <strong>دخول الإدارة</strong>
-              <small>إدارة المنصة بالكامل</small>
+              <span>إدارة المنصة بالكامل</span>
             </div>
 
-            <span className="arrow">←</span>
+            <b>←</b>
           </button>
 
         </div>
 
-        {/* نسيت كلمة المرور */}
+
+        {/* =========================
+            تسجيل طالب
+        ========================= */}
         <button
-          className="link-btn"
-          onClick={() => setPage("forgotPassword")}
+  className="student-register-home-btn"
+  onClick={() => setPage("studentRegister")}
+>
+  <span className="register-icon">📝</span>
+
+  <span className="register-text">
+    <strong>تسجيل طالب جديد</strong>
+    <small>اضغط هنا لطلب التسجيل في الجمعية</small>
+  </span>
+
+  <span className="register-arrow">←</span>
+</button>
+
+
+        {/* =========================
+            طلب تسجيل أستاذ
+        ========================= */}
+        <button
+          className="register-teacher-btn"
+          onClick={() => setPage("teacherRegister")}
         >
-          🔑 نسيت كلمة المرور؟
+          👨‍🏫 طلب تسجيل أستاذ
         </button>
 
-        <div className="login-footer">
-          © جمعية الإمام مالك الثقافية
+      </section>
+
+<button
+  type="button"
+  className="app-download-home-btn"
+  disabled
+>
+  <span className="app-download-icon">📱</span>
+
+  <span className="app-download-text">
+    <strong>تحميل التطبيق</strong>
+    <small>متوفر قريبًا بإذن الله</small>
+  </span>
+
+  <span className="coming-soon-badge">
+    قريبًا
+  </span>
+</button>
+      {/* =========================
+          المزايا
+      ========================= */}
+      <section className="features-section">
+
+        <div className="feature">
+          <span>📖</span>
+          <strong>متابعة الحفظ</strong>
+          <small>تسجيل ومتابعة المحفوظ اليومي</small>
         </div>
 
-      </div>
+        <div className="feature">
+          <span>📊</span>
+          <strong>تقارير دقيقة</strong>
+          <small>معرفة مستوى الطالب وتطوره</small>
+        </div>
+
+        <div className="feature">
+          <span>👨‍🏫</span>
+          <strong>إدارة الحلقات</strong>
+          <small>تنظيم الطلاب والأساتذة</small>
+        </div>
+
+        <div className="feature">
+          <span>🔔</span>
+          <strong>الإشعارات</strong>
+          <small>التواصل ومتابعة النتائج</small>
+        </div>
+
+      </section>
+
+
+      {/* =========================
+          التذييل
+      ========================= */}
+      <footer className="home-footer">
+
+        <img src={logo} alt="" />
+
+        <div>
+          <strong>
+            جمعية الإمام مالك الثقافية
+          </strong>
+
+          <p>
+            نظام إدارة الحلقات القرآنية
+          </p>
+        </div>
+
+        <small>
+          © جميع الحقوق محفوظة
+        </small>
+
+      </footer>
 
     </div>
   );

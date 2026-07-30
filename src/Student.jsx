@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
-import {
-  collection,
-  getDocs,
-} from "firebase/firestore";
+import { collection, getDocs } from "firebase/firestore";
 import { db } from "./Firebase";
 
-export default function Student({ setPage, student }) {
+export default function Student({
+  setPage,
+  student,
+  setStudentPoints,
+  setStudentLevel,
+}) {
   const [record, setRecord] = useState(null);
   const [notifications, setNotifications] = useState([]);
 
@@ -20,6 +22,10 @@ export default function Student({ setPage, student }) {
   const [level, setLevel] = useState("🥉 مبتدئ");
   const [achievements, setAchievements] = useState([]);
 
+  // ==========================================
+  // تحميل بيانات الطالب
+  // ==========================================
+
   useEffect(() => {
     if (student) {
       loadData();
@@ -28,7 +34,9 @@ export default function Student({ setPage, student }) {
 
   async function loadData() {
     try {
-      // ================= نتائج الحفظ =================
+      // ========================================
+      // نتائج الحفظ
+      // ========================================
 
       const recordsSnapshot = await getDocs(
         collection(db, "memorization")
@@ -36,20 +44,22 @@ export default function Student({ setPage, student }) {
 
       const studentRecords = [];
 
-      recordsSnapshot.forEach((doc) => {
-        const item = doc.data();
+      recordsSnapshot.forEach((docItem) => {
+        const item = docItem.data();
 
         if (item.studentId === student.id) {
           studentRecords.push({
-            id: doc.id,
+            id: docItem.id,
             ...item,
           });
         }
       });
 
-      // ترتيب النتائج من الأحدث إلى الأقدم
       studentRecords.sort((a, b) => {
-        return new Date(b.date) - new Date(a.date);
+        const dateA = new Date(a.date);
+        const dateB = new Date(b.date);
+
+        return dateB - dateA;
       });
 
       const lastRecord =
@@ -59,7 +69,9 @@ export default function Student({ setPage, student }) {
 
       setRecord(lastRecord);
 
-      // ================= الإحصائيات =================
+      // ========================================
+      // الإحصائيات
+      // ========================================
 
       const excellent = studentRecords.filter(
         (item) => item.rate === "ممتاز"
@@ -86,13 +98,13 @@ export default function Student({ setPage, student }) {
         memorized,
       });
 
-      // ================= حساب النقاط =================
+      // ========================================
+      // حساب النقاط
+      // ========================================
 
       let totalPoints = 0;
 
       studentRecords.forEach((item) => {
-
-        // نقاط التقييم
         if (item.rate === "ممتاز") {
           totalPoints += 10;
         } else if (item.rate === "جيد جدًا") {
@@ -105,7 +117,6 @@ export default function Student({ setPage, student }) {
           totalPoints += 1;
         }
 
-        // نقاط المحفوظ الجديد
         if (
           item.new &&
           item.new !== "غائب" &&
@@ -115,16 +126,16 @@ export default function Student({ setPage, student }) {
           totalPoints += 5;
         }
 
-        // نقاط المراجعة
         if (item.review && item.review !== "") {
           totalPoints += 3;
         }
-
       });
 
       setPoints(totalPoints);
 
-      // ================= مستوى الطالب =================
+      // ========================================
+      // مستوى الطالب
+      // ========================================
 
       let studentLevel = "🥉 مبتدئ";
 
@@ -140,7 +151,17 @@ export default function Student({ setPage, student }) {
 
       setLevel(studentLevel);
 
-      // ================= الإنجازات =================
+      if (setStudentPoints) {
+        setStudentPoints(totalPoints);
+      }
+
+      if (setStudentLevel) {
+        setStudentLevel(studentLevel);
+      }
+
+      // ========================================
+      // الإنجازات
+      // ========================================
 
       const newAchievements = [];
 
@@ -174,7 +195,9 @@ export default function Student({ setPage, student }) {
 
       setAchievements(newAchievements);
 
-      // ================= الإشعارات =================
+      // ========================================
+      // الإشعارات
+      // ========================================
 
       const notificationsSnapshot = await getDocs(
         collection(db, "notifications")
@@ -182,25 +205,30 @@ export default function Student({ setPage, student }) {
 
       const studentNotifications = [];
 
-      notificationsSnapshot.forEach((doc) => {
-        const item = doc.data();
+      notificationsSnapshot.forEach((docItem) => {
+        const item = docItem.data();
 
         if (item.studentId === student.id) {
           studentNotifications.push({
-            id: doc.id,
+            id: docItem.id,
             ...item,
           });
         }
       });
 
       setNotifications(
-        studentNotifications.reverse().slice(0, 5)
+        studentNotifications
+          .reverse()
+          .slice(0, 5)
       );
-
     } catch (error) {
       console.log("حدث خطأ:", error);
     }
   }
+
+  // ==========================================
+  // لا يوجد طالب
+  // ==========================================
 
   if (!student) {
     return (
@@ -217,15 +245,29 @@ export default function Student({ setPage, student }) {
     );
   }
 
+  // ==========================================
+  // الأيام المناسبة
+  // ==========================================
+
+  const onlineDays =
+    Array.isArray(student.onlineDays)
+      ? student.onlineDays
+      : [];
+
+  // ==========================================
+  // واجهة الطالب
+  // ==========================================
+
   return (
     <div className="student-dashboard">
 
-      {/* ================= الرأس ================= */}
+      {/* ======================================
+          الرأس
+      ====================================== */}
 
       <div className="student-header">
 
         <div className="student-avatar">
-
           {student.photo ? (
             <img
               src={student.photo}
@@ -234,7 +276,6 @@ export default function Student({ setPage, student }) {
           ) : (
             "👨‍🎓"
           )}
-
         </div>
 
         <h2>
@@ -247,151 +288,148 @@ export default function Student({ setPage, student }) {
 
       </div>
 
-
-      {/* ================= معلومات الطالب ================= */}
+      {/* ======================================
+          معلومات الطالب الجديدة
+      ====================================== */}
 
       <div className="student-info-card">
 
-        <h3>👨‍🎓 معلومات الطالب</h3>
+        <h3>
+          👨‍🎓 معلومات الطالب
+        </h3>
 
         <p>
-          <strong>رقم التسجيل:</strong>
+          <strong>🆔 رقم التسجيل:</strong>
           <br />
           {student.number || "غير متوفر"}
         </p>
 
         <p>
-          <strong>الحلقة:</strong>
+          <strong>🎂 العمر:</strong>
+          <br />
+          {student.age || "غير محدد"}
+        </p>
+
+        <p>
+          <strong>⚧ الجنس:</strong>
+          <br />
+          {student.gender || "غير محدد"}
+        </p>
+
+        <p>
+          <strong>🌍 الدولة / المدينة:</strong>
+          <br />
+          {student.city || "غير محددة"}
+        </p>
+
+        <p>
+          <strong>📱 رقم الهاتف:</strong>
+          <br />
+          {student.phone || "غير متوفر"}
+        </p>
+
+        <p>
+          <strong>📧 البريد الإلكتروني:</strong>
+          <br />
+          {student.email || "غير متوفر"}
+        </p>
+
+      </div>
+
+      {/* ======================================
+          معلومات القرآن والحلقة
+      ====================================== */}
+
+      <div className="student-info-card">
+
+        <h3>
+          📖 معلومات القرآن والحلقة
+        </h3>
+
+        <p>
+          <strong>📖 الرواية:</strong>
+          <br />
+          {student.riwaya || "غير محددة"}
+        </p>
+
+        <p>
+          <strong>📚 الحلقة:</strong>
           <br />
           {student.halaqa || "غير محددة"}
         </p>
 
         <p>
-          <strong>المستوى:</strong>
+          <strong>🏫 نوع التعليم:</strong>
           <br />
-          {student.level || "غير محدد"}
+          {student.educationType || "غير محدد"}
         </p>
 
-        <p>
-          <strong>نوع الحلقة:</strong>
-          <br />
-          {student.halaqaType || "حضوري"}
-        </p>
+        {/* الأيام عن بعد */}
 
-      </div>
+        {(student.educationType === "عن بعد" ||
+          student.educationType ===
+            "حضوري وعن بعد") && (
 
+          <p>
+            <strong>
+              📅 الأيام المناسبة عن بعد:
+            </strong>
 
-      {/* ================= النقاط والمستوى ================= */}
+            <br />
 
-      <div className="points-card">
-
-        <div className="points-icon">
-          🏆
-        </div>
-
-        <h3>
-          {points} نقطة
-        </h3>
-
-        <p>
-          مستواك الحالي
-        </p>
-
-        <div className="student-level">
-          {level}
-        </div>
-
-        <div className="progress-container">
-
-          <div
-            className="progress-bar"
-            style={{
-              width: `${Math.min(
-                (points % 100) || (points > 0 ? 100 : 0),
-                100
-              )}%`,
-            }}
-          />
-
-        </div>
-
-        <small>
-          استمر في الحفظ والمراجعة لتحصل على المزيد من النقاط 🚀
-        </small>
-
-      </div>
-
-
-      {/* ================= الإنجازات ================= */}
-
-      <div className="achievements-card">
-
-        <h3>
-          🏅 إنجازاتي
-        </h3>
-
-        {achievements.length === 0 ? (
-
-          <p className="empty-message">
-            واصل التعلم لتحصل على أول إنجاز لك 🎯
+            {onlineDays.length > 0
+              ? onlineDays.join("، ")
+              : "لم يتم تحديد الأيام"}
           </p>
-
-        ) : (
-
-          <div className="achievements-list">
-
-            {achievements.map((achievement, index) => (
-
-              <div
-                className="achievement-item"
-                key={index}
-              >
-                {achievement}
-              </div>
-
-            ))}
-
-          </div>
 
         )}
 
       </div>
 
+      {/* ======================================
+          الرسوم
+      ====================================== */}
 
-      {/* ================= الإحصائيات ================= */}
+      <div className="student-info-card">
 
-      <div className="stats-grid">
+        <h3>
+          💰 معلومات الرسوم
+        </h3>
 
-        <div className="stat-card blue">
-          <span>📖</span>
-          <h3>{stats.memorized}</h3>
-          <p>مرات الحفظ</p>
-        </div>
+        <p>
+          <strong>
+            يستطيع دفع الرسوم:
+          </strong>
 
-        <div className="stat-card green">
-          <span>⭐</span>
-          <h3>{stats.excellent}</h3>
-          <p>تقييم ممتاز</p>
-        </div>
+          <br />
 
-        <div className="stat-card orange">
-          <span>📊</span>
-          <h3>{stats.total}</h3>
-          <p>إجمالي النتائج</p>
-        </div>
+          {student.canPayFees || "غير محدد"}
+        </p>
 
-        <div className="stat-card red">
-          <span>⚠️</span>
-          <h3>{stats.absent}</h3>
-          <p>أيام الغياب</p>
-        </div>
+        {student.canPayFees === "لا" &&
+          student.feesReason && (
+
+          <p>
+            <strong>
+              📝 سبب عدم القدرة على الدفع:
+            </strong>
+
+            <br />
+
+            {student.feesReason}
+          </p>
+
+        )}
 
       </div>
 
+      {/* ======================================
+          الحلقة عن بعد
+      ====================================== */}
 
-      {/* ================= الحلقة عن بعد ================= */}
-
-      {student.halaqaType === "عن بعد" && (
+      {(student.educationType === "عن بعد" ||
+        student.educationType ===
+          "حضوري وعن بعد") && (
 
         <div className="online-card">
 
@@ -417,11 +455,158 @@ export default function Student({ setPage, student }) {
           </a>
 
         </div>
-
       )}
 
+      {/* ======================================
+          النقاط
+      ====================================== */}
 
-      {/* ================= آخر نتيجة ================= */}
+      <div className="points-card">
+
+        <div className="points-icon">
+          🏆
+        </div>
+
+        <h3>
+          {points} نقطة
+        </h3>
+
+        <p>
+          مستواك الحالي
+        </p>
+
+        <div className="student-level">
+          {level}
+        </div>
+
+        <div className="progress-container">
+
+          <div
+            className="progress-bar"
+            style={{
+              width: `${Math.min(
+                (points % 100) ||
+                  (points > 0 ? 100 : 0),
+                100
+              )}%`,
+            }}
+          />
+
+        </div>
+
+        <small>
+          استمر في الحفظ والمراجعة
+          لتحصل على المزيد من النقاط 🚀
+        </small>
+
+      </div>
+
+      {/* ======================================
+          الإنجازات
+      ====================================== */}
+
+      <div className="achievements-card">
+
+        <h3>
+          🏅 إنجازاتي
+        </h3>
+
+        {achievements.length === 0 ? (
+
+          <p className="empty-message">
+            واصل التعلم لتحصل على أول إنجاز لك 🎯
+          </p>
+
+        ) : (
+
+          <div className="achievements-list">
+
+            {achievements.map(
+              (achievement, index) => (
+
+                <div
+                  className="achievement-item"
+                  key={index}
+                >
+                  {achievement}
+                </div>
+
+              )
+            )}
+
+          </div>
+
+        )}
+
+      </div>
+
+      {/* ======================================
+          الإحصائيات
+      ====================================== */}
+
+      <div className="stats-grid">
+
+        <div className="stat-card blue">
+
+          <span>📖</span>
+
+          <h3>
+            {stats.memorized}
+          </h3>
+
+          <p>
+            مرات الحفظ
+          </p>
+
+        </div>
+
+        <div className="stat-card green">
+
+          <span>⭐</span>
+
+          <h3>
+            {stats.excellent}
+          </h3>
+
+          <p>
+            تقييم ممتاز
+          </p>
+
+        </div>
+
+        <div className="stat-card orange">
+
+          <span>📊</span>
+
+          <h3>
+            {stats.total}
+          </h3>
+
+          <p>
+            إجمالي النتائج
+          </p>
+
+        </div>
+
+        <div className="stat-card red">
+
+          <span>⚠️</span>
+
+          <h3>
+            {stats.absent}
+          </h3>
+
+          <p>
+            أيام الغياب
+          </p>
+
+        </div>
+
+      </div>
+
+      {/* ======================================
+          آخر نتيجة
+      ====================================== */}
 
       <div className="last-result-card">
 
@@ -430,39 +615,53 @@ export default function Student({ setPage, student }) {
         </h3>
 
         {record ? (
-
           <>
-
             <div className="result-row">
-              <span>📚 المحفوظ الجديد</span>
+
+              <span>
+                📚 المحفوظ الجديد
+              </span>
 
               <strong>
                 {record.new || "لا يوجد"}
               </strong>
+
             </div>
 
             <div className="result-row">
-              <span>🔄 المراجعة</span>
+
+              <span>
+                🔄 المراجعة
+              </span>
 
               <strong>
                 {record.review || "لا يوجد"}
               </strong>
+
             </div>
 
             <div className="result-row">
-              <span>⭐ التقييم</span>
+
+              <span>
+                ⭐ التقييم
+              </span>
 
               <strong>
                 {record.rate || "لا يوجد"}
               </strong>
+
             </div>
 
             <div className="result-row">
-              <span>📝 الملاحظات</span>
+
+              <span>
+                📝 الملاحظات
+              </span>
 
               <strong>
                 {record.notes || "لا توجد"}
               </strong>
+
             </div>
 
             <div className="result-date">
@@ -470,7 +669,6 @@ export default function Student({ setPage, student }) {
             </div>
 
           </>
-
         ) : (
 
           <p className="empty-message">
@@ -481,8 +679,9 @@ export default function Student({ setPage, student }) {
 
       </div>
 
-
-      {/* ================= الإشعارات ================= */}
+      {/* ======================================
+          الإشعارات
+      ====================================== */}
 
       <div className="notifications-card">
 
@@ -498,35 +697,38 @@ export default function Student({ setPage, student }) {
 
         ) : (
 
-          notifications.map((notification) => (
+          notifications.map(
+            (notification) => (
 
-            <div
-              className="notification-item"
-              key={notification.id}
-            >
+              <div
+                className="notification-item"
+                key={notification.id}
+              >
 
-              <strong>
-                {notification.title}
-              </strong>
+                <strong>
+                  {notification.title}
+                </strong>
 
-              <p>
-                {notification.message}
-              </p>
+                <p>
+                  {notification.message}
+                </p>
 
-              <small>
-                📅 {notification.date}
-              </small>
+                <small>
+                  📅 {notification.date}
+                </small>
 
-            </div>
+              </div>
 
-          ))
+            )
+          )
 
         )}
 
       </div>
 
-
-      {/* ================= سجل الحفظ ================= */}
+      {/* ======================================
+          الأزرار
+      ====================================== */}
 
       <button
         className="btn"
@@ -537,14 +739,43 @@ export default function Student({ setPage, student }) {
         📚 سجل الحفظ الكامل
       </button>
 
+      <button
+        className="btn"
+        onClick={() =>
+          setPage("studentReport")
+        }
+      >
+        📄 تحميل تقريري
+      </button>
 
-      {/* ================= تسجيل الخروج ================= */}
+      <button
+        className="btn"
+        onClick={() =>
+          setPage("studentCard")
+        }
+      >
+        🎫 بطاقة الطالب
+      </button>
+
+      {/* ======================================
+          تسجيل الخروج
+      ====================================== */}
 
       <button
         className="btn logout-btn"
-        onClick={() =>
-          setPage("login")
-        }
+        onClick={() => {
+
+          localStorage.removeItem(
+            "studentNumber"
+          );
+
+          localStorage.removeItem(
+            "studentRemember"
+          );
+
+          setPage("login");
+
+        }}
       >
         🚪 تسجيل الخروج
       </button>
