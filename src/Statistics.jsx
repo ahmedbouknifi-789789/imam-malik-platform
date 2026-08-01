@@ -13,7 +13,6 @@ export default function Statistics({
   loggedTeacher,
   selectedHalaqa,
 }) {
-
   const [attendance, setAttendance] = useState([]);
   const [memorization, setMemorization] = useState([]);
 
@@ -27,7 +26,7 @@ export default function Statistics({
     if (!loggedTeacher) return students;
 
     return students.filter(
-      student => student.halaqa === currentHalaqa
+      (student) => student.halaqa === currentHalaqa
     );
   }, [students, currentHalaqa, loggedTeacher]);
 
@@ -46,73 +45,93 @@ export default function Statistics({
   }
 
   useEffect(() => {
-    loadStatistics();
-  }, [visibleStudents, currentHalaqa]);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
+    if (currentHalaqa && visibleStudents.length > 0) {
       loadStatistics();
-    }, 2000);
-
-    return () => clearInterval(timer);
-  }, [currentHalaqa]);
-
-  async function loadStatistics() {
-    const today = getToday();
-
-    const ids = visibleStudents.map(s => s.id);
-
-    if (ids.length === 0) {
+    } else {
       setAttendance([]);
       setMemorization([]);
-      return;
     }
+  }, [currentHalaqa, visibleStudents]);
 
-    const attendanceSnapshot = await getDocs(
-      query(
-        collection(db, "attendance"),
-        where("date", "==", today)
-      )
-    );
+  async function loadStatistics() {
+    try {
+      const today = getToday();
 
-    const memorizationSnapshot = await getDocs(
-      query(
-        collection(db, "memorization"),
-        where("date", "==", today)
-      )
-    );
+      const ids = visibleStudents.map((s) => s.id);
 
-    const attendanceData =
-      attendanceSnapshot.docs
-        .map(doc => doc.data())
-        .filter(item => ids.includes(item.studentId));
+      if (ids.length === 0) {
+        setAttendance([]);
+        setMemorization([]);
+        return;
+      }
 
-    const memorizationData =
-      memorizationSnapshot.docs
-        .map(doc => doc.data())
-        .filter(item => ids.includes(item.studentId));
+      const attendanceSnapshot = await getDocs(
+        query(
+          collection(db, "attendance"),
+          where("date", "==", today)
+        )
+      );
 
-    setAttendance(attendanceData);
-    setMemorization(memorizationData);
+      const memorizationSnapshot = await getDocs(
+        query(
+          collection(db, "memorization"),
+          where("date", "==", today)
+        )
+      );
+
+      const attendanceData = attendanceSnapshot.docs
+        .map((doc) => doc.data())
+        .filter((item) => ids.includes(item.studentId));
+
+      const memorizationData = memorizationSnapshot.docs
+        .map((doc) => doc.data())
+        .filter((item) => ids.includes(item.studentId));
+
+      setAttendance(attendanceData);
+      setMemorization(memorizationData);
+
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   const total = visibleStudents.length;
 
-  const males = visibleStudents.filter(s => s.gender === "ذكر").length;
-  const females = visibleStudents.filter(s => s.gender === "أنثى").length;
+  const males = visibleStudents.filter(
+    (s) => s.gender === "ذكر"
+  ).length;
 
-  const present = attendance.filter(a => a.status === "حاضر").length;
-  const absent = attendance.filter(a => a.status === "غائب").length;
-  const late = attendance.filter(a => a.status === "متأخر").length;
+  const females = visibleStudents.filter(
+    (s) => s.gender === "أنثى"
+  ).length;
 
-  const memorized = memorization.filter(m => m.new && m.new !== "").length;
-  const reviewed = memorization.filter(m => m.review && m.review !== "").length;
+  const present = attendance.filter(
+    (a) => a.status === "حاضر"
+  ).length;
+
+  const absent = attendance.filter(
+    (a) => a.status === "غائب"
+  ).length;
+
+  const late = attendance.filter(
+    (a) => a.status === "متأخر"
+  ).length;
+
+  const memorized = memorization.filter(
+    (m) => m.new && m.new !== ""
+  ).length;
+
+  const reviewed = memorization.filter(
+    (m) => m.review && m.review !== ""
+  ).length;
 
   return (
     <div className="card">
       <h2>📊 إحصائيات الحلقة</h2>
 
-      <p><strong>الحلقة:</strong> {currentHalaqa}</p>
+      <p>
+        <strong>الحلقة:</strong> {currentHalaqa || "غير محددة"}
+      </p>
 
       <hr />
 

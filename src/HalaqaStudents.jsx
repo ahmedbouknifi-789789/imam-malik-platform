@@ -1,9 +1,5 @@
 import { useState } from "react";
-import {
-  doc,
-  updateDoc,
-} from "firebase/firestore";
-
+import { doc, updateDoc } from "firebase/firestore";
 import { db } from "./Firebase";
 
 export default function HalaqaStudents({
@@ -29,93 +25,70 @@ export default function HalaqaStudents({
     );
   }
 
+  const halaqaName = (selectedHalaqa.name || "").trim();
+
   // الطلاب الموجودون في الحلقة
   const halaqaStudents = students.filter(
     (student) =>
-      student.halaqa === selectedHalaqa.name
+      (student.halaqa || "").trim() === halaqaName
   );
 
-  // الطلاب الذين يمكن إضافتهم
+  // باقي الطلاب
   const otherStudents = students.filter(
     (student) =>
-      student.halaqa !== selectedHalaqa.name
+      (student.halaqa || "").trim() !== halaqaName
   );
-
-  // =========================
-  // إضافة طالب إلى الحلقة
-  // =========================
 
   async function addStudentToHalaqa(student) {
     try {
       setLoading(true);
 
-      const studentRef = doc(
-        db,
-        "students",
-        student.id
+      await updateDoc(
+        doc(db, "students", student.id),
+        {
+          halaqa: halaqaName,
+        }
       );
-
-      await updateDoc(studentRef, {
-        halaqa: selectedHalaqa.name,
-      });
 
       await loadStudents();
 
-      alert(
-        `✅ تمت إضافة ${student.name} إلى الحلقة`
-      );
+      alert(`✅ تمت إضافة ${student.name}`);
 
     } catch (error) {
-      console.log(error);
-
-      alert(
-        "❌ حدث خطأ أثناء إضافة الطالب"
-      );
-
+      console.error(error);
+      alert("❌ حدث خطأ أثناء الإضافة");
     } finally {
       setLoading(false);
     }
   }
 
-  // =========================
-  // إزالة طالب من الحلقة
-  // =========================
-
   async function removeStudentFromHalaqa(student) {
-    const confirmRemove = window.confirm(
-      `هل تريد إزالة الطالب ${student.name} من الحلقة؟`
-    );
 
-    if (!confirmRemove) {
+    if (
+      !window.confirm(
+        `هل تريد إزالة ${student.name} من الحلقة؟`
+      )
+    ) {
       return;
     }
 
     try {
       setLoading(true);
 
-      const studentRef = doc(
-        db,
-        "students",
-        student.id
+      await updateDoc(
+        doc(db, "students", student.id),
+        {
+          halaqa: "",
+        }
       );
-
-      await updateDoc(studentRef, {
-        halaqa: "",
-      });
 
       await loadStudents();
 
-      alert(
-        `✅ تمت إزالة ${student.name} من الحلقة`
-      );
+      alert(`✅ تمت إزالة ${student.name}`);
 
     } catch (error) {
-      console.log(error);
-
-      alert(
-        "❌ حدث خطأ أثناء إزالة الطالب"
-      );
-
+      console.error(error);
+      alert("❌ حدث خطأ أثناء الحذف");
     } finally {
       setLoading(false);
     }
@@ -124,35 +97,14 @@ export default function HalaqaStudents({
   return (
     <div className="card">
 
-      <h2>
-        📖 {selectedHalaqa.name}
-      </h2>
+      <h2>📖 {halaqaName}</h2>
 
-      {/* ========================= */}
-      {/* طلاب الحلقة */}
-      {/* ========================= */}
-
-      <h3>
-        👨‍🎓 طلاب الحلقة
-      </h3>
+      <h3>👨‍🎓 طلاب الحلقة</h3>
 
       {halaqaStudents.length === 0 ? (
-
-        <p>
-          لا يوجد طلاب في هذه الحلقة.
-        </p>
-
+        <p>لا يوجد طلاب في هذه الحلقة.</p>
       ) : (
-
-        <table
-          border="1"
-          style={{
-            width: "100%",
-            borderCollapse: "collapse",
-            textAlign: "center",
-          }}
-        >
-
+        <table border="1" style={{width:"100%",textAlign:"center"}}>
           <thead>
             <tr>
               <th>الاسم</th>
@@ -168,26 +120,16 @@ export default function HalaqaStudents({
 
               <tr key={student.id}>
 
-                <td>
-                  {student.name}
-                </td>
+                <td>{student.name}</td>
 
-                <td>
-                  {student.level || "غير محدد"}
-                </td>
+                <td>{student.level || "غير محدد"}</td>
 
-                <td>
-                  {student.phone || "غير متوفر"}
-                </td>
+                <td>{student.phone || "-"}</td>
 
                 <td>
 
                   <button
                     className="btn"
-                    style={{
-                      background: "#b91c1c",
-                      fontSize: "14px",
-                    }}
                     disabled={loading}
                     onClick={() =>
                       removeStudentFromHalaqa(student)
@@ -203,43 +145,21 @@ export default function HalaqaStudents({
             ))}
 
           </tbody>
-
         </table>
-
       )}
 
       <br />
 
-      {/* ========================= */}
-      {/* إضافة طلاب */}
-      {/* ========================= */}
-
-      <h3>
-        ➕ إضافة طالب إلى الحلقة
-      </h3>
+      <h3>➕ إضافة طالب</h3>
 
       {otherStudents.length === 0 ? (
-
-        <p>
-          لا يوجد طلاب آخرون لإضافتهم.
-        </p>
-
+        <p>لا يوجد طلاب لإضافتهم.</p>
       ) : (
-
-        <table
-          border="1"
-          style={{
-            width: "100%",
-            borderCollapse: "collapse",
-            textAlign: "center",
-          }}
-        >
-
+        <table border="1" style={{width:"100%",textAlign:"center"}}>
           <thead>
             <tr>
               <th>الاسم</th>
               <th>الحلقة الحالية</th>
-              <th>المستوى</th>
               <th>الإجراء</th>
             </tr>
           </thead>
@@ -250,26 +170,14 @@ export default function HalaqaStudents({
 
               <tr key={student.id}>
 
-                <td>
-                  {student.name}
-                </td>
+                <td>{student.name}</td>
 
-                <td>
-                  {student.halaqa || "بدون حلقة"}
-                </td>
-
-                <td>
-                  {student.level || "غير محدد"}
-                </td>
+                <td>{student.halaqa || "بدون حلقة"}</td>
 
                 <td>
 
                   <button
                     className="btn"
-                    style={{
-                      background: "#15803d",
-                      fontSize: "14px",
-                    }}
                     disabled={loading}
                     onClick={() =>
                       addStudentToHalaqa(student)
@@ -285,20 +193,16 @@ export default function HalaqaStudents({
             ))}
 
           </tbody>
-
         </table>
-
       )}
 
       <br />
 
       <button
         className="btn"
-        onClick={() =>
-          setPage("halaqas")
-        }
+        onClick={() => setPage("halaqas")}
       >
-        ⬅️ الرجوع إلى الحلقات
+        ⬅️ الرجوع
       </button>
 
     </div>

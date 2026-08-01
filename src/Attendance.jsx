@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   collection,
   addDoc,
@@ -18,17 +18,6 @@ export default function Attendance({
 }) {
   const [attendance, setAttendance] = useState({});
 
-  useEffect(() => {
-    setAttendance({});
-  }, [selectedHalaqa]);
-
-  const handleChange = (id, value) => {
-    setAttendance((prev) => ({
-      ...prev,
-      [id]: value,
-    }));
-  };
-
   const currentHalaqa =
     selectedHalaqa ||
     localStorage.getItem("teacherSelectedHalaqa") ||
@@ -38,7 +27,9 @@ export default function Attendance({
 
   const visibleStudents = loggedTeacher
     ? students.filter(
-        (student) => student.halaqa === currentHalaqa
+        (student) =>
+          (student.halaqa || "").trim() ===
+          (currentHalaqa || "").trim()
       )
     : students;
 
@@ -54,6 +45,13 @@ export default function Attendance({
     const d = String(now.getDate()).padStart(2, "0");
 
     return `${y}-${m}-${d}`;
+  }
+
+  function handleChange(id, value) {
+    setAttendance((prev) => ({
+      ...prev,
+      [id]: value,
+    }));
   }
 
   async function saveAttendance() {
@@ -81,14 +79,18 @@ export default function Attendance({
               attendanceSnapshot.docs[0].id
             ),
             {
+              studentName: student.name,
+              studentId,
               status: attendance[studentId],
               halaqa: currentHalaqa,
+              date: today,
             }
           );
         } else {
           await addDoc(
             collection(db, "attendance"),
             {
+              studentName: student.name,
               studentId,
               status: attendance[studentId],
               halaqa: currentHalaqa,
@@ -111,7 +113,8 @@ export default function Attendance({
 
       {loggedTeacher && (
         <p>
-          <strong>الحلقة الحالية:</strong> {currentHalaqa || "غير محددة"}
+          <strong>الحلقة الحالية:</strong>{" "}
+          {currentHalaqa || "غير محددة"}
         </p>
       )}
 
@@ -155,13 +158,22 @@ export default function Attendance({
                   <select
                     value={attendance[student.id] || ""}
                     onChange={(e) =>
-                      handleChange(student.id, e.target.value)
+                      handleChange(
+                        student.id,
+                        e.target.value
+                      )
                     }
                   >
                     <option value="">اختر</option>
-                    <option value="حاضر">✅ حاضر</option>
-                    <option value="غائب">❌ غائب</option>
-                    <option value="متأخر">⏰ متأخر</option>
+                    <option value="حاضر">
+                      ✅ حاضر
+                    </option>
+                    <option value="غائب">
+                      ❌ غائب
+                    </option>
+                    <option value="متأخر">
+                      ⏰ متأخر
+                    </option>
                   </select>
                 </td>
               </tr>
@@ -173,7 +185,10 @@ export default function Attendance({
       <br />
 
       {visibleStudents.length > 0 && (
-        <button className="btn" onClick={saveAttendance}>
+        <button
+          className="btn"
+          onClick={saveAttendance}
+        >
           💾 حفظ الحضور
         </button>
       )}
@@ -184,7 +199,11 @@ export default function Attendance({
       <button
         className="btn"
         onClick={() =>
-          setPage(loggedTeacher ? "teacherPanel" : "admin")
+          setPage(
+            loggedTeacher
+              ? "teacherPanel"
+              : "admin"
+          )
         }
       >
         ⬅️ الرجوع

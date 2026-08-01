@@ -11,13 +11,14 @@ export default function Halaqas({
   const [search, setSearch] = useState("");
 
   const filteredHalaqas = halaqas.filter((halaqa) =>
-    halaqa.name.toLowerCase().includes(search.toLowerCase())
+    (halaqa.name || "")
+      .toLowerCase()
+      .includes(search.toLowerCase())
   );
 
   return (
     <div className="halaqas-page">
 
-      {/* رأس الصفحة */}
       <div className="halaqas-header">
         <div>
           <h2>📖 إدارة الحلقات</h2>
@@ -32,7 +33,6 @@ export default function Halaqas({
         </button>
       </div>
 
-      {/* البحث */}
       <div className="halaqa-search">
         <span>🔍</span>
 
@@ -44,7 +44,6 @@ export default function Halaqas({
         />
       </div>
 
-      {/* عدد الحلقات */}
       <div className="halaqa-stat">
         <span>📚</span>
 
@@ -54,7 +53,6 @@ export default function Halaqas({
         </div>
       </div>
 
-      {/* الحلقات */}
       {filteredHalaqas.length === 0 ? (
 
         <div className="empty-halaqas">
@@ -70,7 +68,9 @@ export default function Halaqas({
           {filteredHalaqas.map((halaqa) => {
 
             const studentCount = students.filter(
-              (student) => student.halaqa === halaqa.name
+              (student) =>
+                (student.halaqa || "").trim() ===
+                (halaqa.name || "").trim()
             ).length;
 
             return (
@@ -80,7 +80,6 @@ export default function Halaqas({
                 key={halaqa.id}
               >
 
-                {/* رأس البطاقة */}
                 <div className="halaqa-card-header">
 
                   <div className="halaqa-icon">
@@ -88,9 +87,7 @@ export default function Halaqas({
                   </div>
 
                   <div>
-                    <h3>
-                      {halaqa.name}
-                    </h3>
+                    <h3>{halaqa.name}</h3>
 
                     <p>
                       👨‍🏫 {halaqa.teacher || "غير محدد"}
@@ -99,36 +96,22 @@ export default function Halaqas({
 
                 </div>
 
-                {/* معلومات الحلقة */}
                 <div className="halaqa-info">
 
                   <div>
                     <span>👨‍🎓</span>
-
-                    <strong>
-                      {studentCount}
-                    </strong>
-
-                    <small>
-                      طالب
-                    </small>
+                    <strong>{studentCount}</strong>
+                    <small>طالب</small>
                   </div>
 
                   <div>
                     <span>📚</span>
-
-                    <strong>
-                      حلقة
-                    </strong>
-
-                    <small>
-                      قرآنية
-                    </small>
+                    <strong>حلقة</strong>
+                    <small>قرآنية</small>
                   </div>
 
                 </div>
 
-                {/* الأزرار */}
                 <div className="halaqa-actions">
 
                   <button
@@ -152,7 +135,6 @@ export default function Halaqas({
                   <button
                     className="halaqa-delete-btn"
                     onClick={() => {
-
                       if (
                         window.confirm(
                           "هل تريد حذف هذه الحلقة؟"
@@ -160,7 +142,6 @@ export default function Halaqas({
                       ) {
                         deleteHalaqa(halaqa.id);
                       }
-
                     }}
                   >
                     🗑️ حذف
@@ -178,7 +159,6 @@ export default function Halaqas({
 
       )}
 
-      {/* الرجوع */}
       <button
         className="back-admin-btn"
         onClick={() => setPage("admin")}

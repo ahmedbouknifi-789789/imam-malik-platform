@@ -21,6 +21,7 @@ import {
 export default function TeacherLogin({
   setPage,
   setLoggedTeacher,
+  setSelectedHalaqa,
 }) {
   const [email, setEmail] =
     useState("");
@@ -95,14 +96,24 @@ export default function TeacherLogin({
       }
 
       // حفظ بيانات الأستاذ
-      setLoggedTeacher(
-        teacherFound
-      );
+setLoggedTeacher(teacherFound);
 
-      // الذهاب إلى لوحة الأستاذ
-      setPage(
-        "teacherPanel"
-      );
+// اختيار أول حلقة تلقائياً
+const firstHalaqa =
+  teacherFound.halaqas?.[0] ||
+  teacherFound.halaqa ||
+  "";
+
+localStorage.setItem(
+  "teacherSelectedHalaqa",
+  firstHalaqa
+);
+
+if (setSelectedHalaqa) {
+  setSelectedHalaqa(firstHalaqa);
+}
+// الذهاب إلى لوحة الأستاذ
+setPage("teacherPanel");
 
     } catch (error) {
       console.log(

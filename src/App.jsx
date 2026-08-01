@@ -116,14 +116,16 @@ export default function App() {
   const [halaqas, setHalaqas] =
     useState([]);
 
+const [selectedHalaqa, setSelectedHalaqa] =
+  useState("");
 
-  // ==================================================
-  // الحلقة المحددة
-  // ==================================================
+useEffect(() => {
+  const saved = localStorage.getItem("teacherSelectedHalaqa");
 
-  const [selectedHalaqa, setSelectedHalaqa] =
-    useState(null);
-
+  if (saved) {
+    setSelectedHalaqa(saved);
+  }
+}, []);
 
   // ==================================================
   // التعديل
@@ -142,14 +144,24 @@ export default function App() {
   // ==================================================
   // التنقل بين الصفحات
   // ==================================================
+function navigateTo(newPage) {
+  setPreviousPage(page);
 
-  function navigateTo(newPage) {
-
-    setPreviousPage(page);
-
-    setPage(newPage);
-
+  // لا تمسح الحلقة عند التنقل داخل صفحات الأستاذ
+  if (
+    [
+      "teacherPanel",
+      "attendance",
+      "memorization",
+      "notes",
+      "statistics",
+    ].includes(newPage)
+  ) {
+    // لا شيء
   }
+
+  setPage(newPage);
+}
 
 
   // ==================================================
@@ -1318,16 +1330,13 @@ async function openHalaqaStudents(halaqa) {
 
       {page === "teacherLogin" && (
 
-        <TeacherLogin
-          setPage={
-            navigateTo
-          }
-          setLoggedTeacher={
-            setLoggedTeacher
-          }
-        />
+  <TeacherLogin
+    setPage={navigateTo}
+    setLoggedTeacher={setLoggedTeacher}
+    setSelectedHalaqa={setSelectedHalaqa}
+  />
 
-      )}
+)}
 
 
       {/* لوحة الأستاذ */}

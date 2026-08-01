@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+
 import {
   updatePassword,
   reauthenticateWithCredential,
@@ -22,25 +23,37 @@ export default function TeacherPanel({
     useState("");
 
   // ==========================================
-  // الحلقات الخاصة بالأستاذ
-  // ==========================================
+// الحلقات الخاصة بالأستاذ
+// ==========================================
 
-  const teacherHalaqas =
-    Array.isArray(loggedTeacher?.halaqas)
-      ? loggedTeacher.halaqas
-      : loggedTeacher?.halaqa
-      ? [loggedTeacher.halaqa]
-      : [];
+const teacherHalaqas =
+  Array.isArray(loggedTeacher?.halaqas)
+    ? loggedTeacher.halaqas
+    : loggedTeacher?.halaqa
+    ? [loggedTeacher.halaqa]
+    : [];
 
-  // ==========================================
-  // الحلقة المختارة
-  // ==========================================
+useEffect(() => {
+  if (!selectedHalaqa && teacherHalaqas.length > 0) {
+    localStorage.setItem(
+      "teacherSelectedHalaqa",
+      teacherHalaqas[0]
+    );
 
-  const currentHalaqa =
-    selectedHalaqa ||
-    teacherHalaqas[0] ||
-    "";
+    if (setSelectedHalaqa) {
+      setSelectedHalaqa(teacherHalaqas[0]);
+    }
+  }
+}, []);
 
+// ==========================================
+// الحلقة المختارة
+// ==========================================
+
+const currentHalaqa =
+  selectedHalaqa ||
+  teacherHalaqas[0] ||
+  "";
   // ==========================================
   // تغيير الحلقة
   // ==========================================

@@ -756,6 +756,14 @@ export default function Student({
       >
         🎫 بطاقة الطالب
       </button>
+<button
+  className="btn"
+  onClick={() =>
+    setPage("studentStatistics")
+  }
+>
+  📊 إحصائياتي
+</button>
 
       {/* ======================================
           تسجيل الخروج

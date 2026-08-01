@@ -71,12 +71,11 @@ export default function StudentCard({
   // الرابط الموجود داخل QR
   // ================================
 
-  const historyUrl =
-    `${window.location.origin}/?studentHistory=` +
-    encodeURIComponent(
-      student?.number || student?.id || ""
-    );
-
+  const historyUrl = JSON.stringify({
+  type: "studentHistory",
+  studentId: student?.id,
+  studentNumber: student?.number,
+});
   // ================================
   // لا يوجد طالب
   // ================================
@@ -391,14 +390,17 @@ export default function StudentCard({
           </button>
 
           <button
-            className="card-btn back-btn"
-            onClick={() =>
-              setPage("student")
-            }
-          >
-            ↩️ رجوع
-          </button>
-
+  className="card-btn back-btn"
+  onClick={() => {
+    localStorage.setItem(
+      "studentNumber",
+      student.number
+    );
+    setPage("student");
+  }}
+>
+  ↩️ رجوع
+</button>
         </div>
 
       </div>
