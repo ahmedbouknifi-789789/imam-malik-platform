@@ -16,6 +16,7 @@ export default function Memorization({
   setPage,
   students,
   loggedTeacher,
+  selectedHalaqa,
 }) {
   const [records, setRecords] = useState({});
 
@@ -97,14 +98,19 @@ export default function Memorization({
   // الطلاب الظاهرون
   // ==========================================
 
-  const visibleStudents =
-    loggedTeacher
-      ? students.filter(
-          (student) =>
-            student.halaqa ===
-            loggedTeacher.halaqa
-        )
-      : students;
+ const currentHalaqa =
+  selectedHalaqa ||
+  localStorage.getItem("teacherSelectedHalaqa") ||
+  loggedTeacher?.halaqas?.[0] ||
+  "";
+
+const visibleStudents =
+  loggedTeacher
+    ? students.filter(
+        (student) =>
+          student.halaqa === currentHalaqa
+      )
+    : students;
 
   // ==========================================
   // حفظ النتائج

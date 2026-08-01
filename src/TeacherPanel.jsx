@@ -9,10 +9,60 @@ import { auth } from "./Firebase";
 export default function TeacherPanel({
   setPage,
   loggedTeacher,
+  selectedHalaqa,
+  setSelectedHalaqa,
 }) {
-  const [showPasswordForm, setShowPasswordForm] = useState(false);
-  const [oldPassword, setOldPassword] = useState("");
-  const [newPassword, setNewPassword] = useState("");
+  const [showPasswordForm, setShowPasswordForm] =
+    useState(false);
+
+  const [oldPassword, setOldPassword] =
+    useState("");
+
+  const [newPassword, setNewPassword] =
+    useState("");
+
+  // ==========================================
+  // الحلقات الخاصة بالأستاذ
+  // ==========================================
+
+  const teacherHalaqas =
+    Array.isArray(loggedTeacher?.halaqas)
+      ? loggedTeacher.halaqas
+      : loggedTeacher?.halaqa
+      ? [loggedTeacher.halaqa]
+      : [];
+
+  // ==========================================
+  // الحلقة المختارة
+  // ==========================================
+
+  const currentHalaqa =
+    selectedHalaqa ||
+    teacherHalaqas[0] ||
+    "";
+
+  // ==========================================
+  // تغيير الحلقة
+  // ==========================================
+
+  function handleHalaqaChange(e) {
+    const value = e.target.value;
+
+    if (setSelectedHalaqa) {
+      setSelectedHalaqa(value);
+    }
+
+    // تخزين الحلقة المختارة حتى تستطيع
+    // Attendance و Memorization استعمالها لاحقاً
+    localStorage.setItem(
+      "teacherSelectedHalaqa",
+      value
+    );
+  }
+
+  // ==========================================
+  // تغيير كلمة المرور
+  // ==========================================
 
   async function changePassword(e) {
     e.preventDefault();
@@ -25,16 +75,25 @@ export default function TeacherPanel({
     }
 
     try {
-      const credential = EmailAuthProvider.credential(
-        user.email,
-        oldPassword
+      const credential =
+        EmailAuthProvider.credential(
+          user.email,
+          oldPassword
+        );
+
+      await reauthenticateWithCredential(
+        user,
+        credential
       );
 
-      await reauthenticateWithCredential(user, credential);
+      await updatePassword(
+        user,
+        newPassword
+      );
 
-      await updatePassword(user, newPassword);
-
-      alert("✅ تم تغيير كلمة المرور بنجاح");
+      alert(
+        "✅ تم تغيير كلمة المرور بنجاح"
+      );
 
       setOldPassword("");
       setNewPassword("");
@@ -42,60 +101,216 @@ export default function TeacherPanel({
 
     } catch (error) {
       console.log(error);
-      alert("❌ كلمة المرور الحالية غير صحيحة");
+
+      alert(
+        "❌ كلمة المرور الحالية غير صحيحة"
+      );
     }
   }
+
+  // ==========================================
+  // الواجهة
+  // ==========================================
 
   return (
     <div className="card">
 
-      <h2>👨‍🏫 لوحة الأستاذ</h2>
+      <h2>
+        👨‍🏫 لوحة الأستاذ
+      </h2>
 
       <hr />
 
-      <p><strong>الاسم:</strong> {loggedTeacher?.name}</p>
+      {/* معلومات الأستاذ */}
 
-      <p><strong>الحلقة:</strong> {loggedTeacher?.halaqa}</p>
+      <p>
+        <strong>
+          الاسم:
+        </strong>{" "}
+        {loggedTeacher?.name ||
+          "غير محدد"}
+      </p>
+
+      {/* ======================================
+          اختيار الحلقة
+      ======================================= */}
+
+      <div
+        style={{
+          marginTop: "20px",
+          marginBottom: "20px",
+          padding: "15px",
+          borderRadius: "12px",
+          background: "#f8fafc",
+          border: "1px solid #ddd",
+        }}
+      >
+
+        <h3>
+          📚 الحلقة
+        </h3>
+
+        {teacherHalaqas.length === 0 ? (
+
+          <p>
+            ⚠️ لا توجد حلقة مسندة إليك
+          </p>
+
+        ) : teacherHalaqas.length === 1 ? (
+
+          <div
+            style={{
+              padding: "12px",
+              background: "#dcfce7",
+              borderRadius: "8px",
+              fontWeight: "bold",
+              color: "#166534",
+            }}
+          >
+            📖 {teacherHalaqas[0]}
+          </div>
+
+        ) : (
+
+          <>
+            <p>
+              اختر الحلقة التي تريد العمل
+              معها:
+            </p>
+
+            <select
+              value={currentHalaqa}
+              onChange={
+                handleHalaqaChange
+              }
+              style={{
+                width: "100%",
+                padding: "12px",
+                borderRadius: "8px",
+                border: "1px solid #ccc",
+                fontSize: "16px",
+                background: "#fff",
+              }}
+            >
+
+              {teacherHalaqas.map(
+                (halaqa) => (
+
+                  <option
+                    key={halaqa}
+                    value={halaqa}
+                  >
+                    📖 {halaqa}
+                  </option>
+
+                )
+              )}
+
+            </select>
+
+          </>
+
+        )}
+
+        {currentHalaqa && (
+
+          <p
+            style={{
+              marginTop: "12px",
+              color: "#0b7d45",
+              fontWeight: "bold",
+            }}
+          >
+            ✅ الحلقة الحالية:{" "}
+            {currentHalaqa}
+          </p>
+
+        )}
+
+      </div>
 
       <hr />
+
+      {/* ======================================
+          الحضور
+      ======================================= */}
 
       <button
         className="btn"
-        onClick={() => setPage("attendance")}
+        onClick={() =>
+          setPage("attendance")
+        }
+        disabled={!currentHalaqa}
       >
         📋 حضور طلاب الحلقة
       </button>
 
-      <br /><br />
+      <br />
+      <br />
+
+      {/* ======================================
+          الحفظ
+      ======================================= */}
 
       <button
         className="btn"
-        onClick={() => setPage("memorization")}
+        onClick={() =>
+          setPage("memorization")
+        }
+        disabled={!currentHalaqa}
       >
         📖 حفظ طلاب الحلقة
       </button>
 
-      <br /><br />
+      <br />
+      <br />
+
+      {/* ======================================
+          الملاحظات
+      ======================================= */}
 
       <button
         className="btn"
-        onClick={() => setPage("notes")}
+        onClick={() =>
+          setPage("notes")
+        }
+        disabled={!currentHalaqa}
       >
         📝 ملاحظات طلاب الحلقة
       </button>
 
-      <br /><br />
+      <br />
+      <br />
+<button
+  className="btn"
+  onClick={() => setPage("statistics")}
+  disabled={!currentHalaqa}
+>
+  📊 الإحصائيات
+</button>
+
+<br />
+<br />
+      {/* ======================================
+          تغيير كلمة المرور
+      ======================================= */}
 
       <button
         className="btn"
-        onClick={() => setShowPasswordForm(!showPasswordForm)}
+        onClick={() =>
+          setShowPasswordForm(
+            !showPasswordForm
+          )
+        }
       >
         🔑 تغيير كلمة المرور
       </button>
 
       {showPasswordForm && (
 
-        <form onSubmit={changePassword}>
+        <form
+          onSubmit={changePassword}
+        >
 
           <br />
 
@@ -103,22 +318,32 @@ export default function TeacherPanel({
             type="password"
             placeholder="كلمة المرور الحالية"
             value={oldPassword}
-            onChange={(e) => setOldPassword(e.target.value)}
+            onChange={(e) =>
+              setOldPassword(
+                e.target.value
+              )
+            }
             required
           />
 
-          <br /><br />
+          <br />
+          <br />
 
           <input
             type="password"
             placeholder="كلمة المرور الجديدة"
             value={newPassword}
-            onChange={(e) => setNewPassword(e.target.value)}
+            onChange={(e) =>
+              setNewPassword(
+                e.target.value
+              )
+            }
             required
             minLength={6}
           />
 
-          <br /><br />
+          <br />
+          <br />
 
           <button
             type="submit"
@@ -131,15 +356,28 @@ export default function TeacherPanel({
 
       )}
 
-      <br /><br />
+      <br />
+      <br />
+
+      {/* ======================================
+          تسجيل الخروج
+      ======================================= */}
 
       <button
-  className="btn"
-  onClick={() => setPage("login")}
->
-  🚪 تسجيل الخروج
-</button>
+        className="btn"
+        onClick={() => {
 
-</div>
-);
+          localStorage.removeItem(
+            "teacherSelectedHalaqa"
+          );
+
+          setPage("login");
+
+        }}
+      >
+        🚪 تسجيل الخروج
+      </button>
+
+    </div>
+  );
 }

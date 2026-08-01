@@ -45,7 +45,7 @@ import StudentCard from "./StudentCard";
 import StudentReport from "./StudentReport";
 import AdminResults from "./AdminResults";
 import TeacherRegistrationRequests from "./TeacherRegistrationRequests";
-
+import Statistics from "./Statistics";
 import "./App.css";
 
 
@@ -853,26 +853,24 @@ export default function App() {
         teacherRef,
 
         {
+  name:
+    updatedTeacher.name,
 
-          name:
-            updatedTeacher.name,
+  phone:
+    updatedTeacher.phone,
 
-          phone:
-            updatedTeacher.phone,
+  email:
+    updatedTeacher.email,
 
-          email:
-            updatedTeacher.email,
+  halaqas:
+    updatedTeacher.halaqas || [],
 
-          halaqa:
-            updatedTeacher.halaqa,
+  date:
+    updatedTeacher.date,
 
-          date:
-            updatedTeacher.date,
-
-          notes:
-            updatedTeacher.notes,
-
-        }
+  notes:
+    updatedTeacher.notes,
+}
 
       );
 
@@ -993,22 +991,11 @@ export default function App() {
   // ==================================================
   // فتح طلاب الحلقة
   // ==================================================
-
-  function openHalaqaStudents(
-    halaqa
-  ) {
-
-    setSelectedHalaqa(
-      halaqa
-    );
-
-
-    navigateTo(
-      "halaqaStudents"
-    );
-
-  }
-
+async function openHalaqaStudents(halaqa) {
+  await loadStudents(); // تحديث الطلاب أولاً
+  setSelectedHalaqa(halaqa);
+  navigateTo("halaqaStudents");
+}
 
   // ==================================================
   // فتح سجل الحفظ من QR
@@ -1347,15 +1334,12 @@ export default function App() {
 
       {page === "teacherPanel" && (
 
-        <TeacherPanel
-          setPage={
-            navigateTo
-          }
-          loggedTeacher={
-            loggedTeacher
-          }
-        />
-
+       <TeacherPanel
+  setPage={navigateTo}
+  loggedTeacher={loggedTeacher}
+  selectedHalaqa={selectedHalaqa}
+  setSelectedHalaqa={setSelectedHalaqa}
+/>
       )}
 
 
@@ -1521,20 +1505,12 @@ export default function App() {
       {page === "addTeacher" && (
 
         <AddTeacher
-          setPage={
-            navigateTo
-          }
-          addTeacher={
-            addTeacher
-          }
-          editingTeacher={
-            editingTeacher
-          }
-          updateTeacher={
-            updateTeacher
-          }
-        />
-
+  setPage={navigateTo}
+  addTeacher={addTeacher}
+  editingTeacher={editingTeacher}
+  updateTeacher={updateTeacher}
+  halaqas={halaqas}
+/>
       )}
 
 
@@ -1581,19 +1557,12 @@ export default function App() {
       {page === "memorization" && (
 
         <Memorization
-          setPage={
-            navigateTo
-          }
-          students={
-            students
-          }
-          loggedTeacher={
-            loggedTeacher
-          }
-          returnPage={
-            previousPage
-          }
-        />
+  setPage={navigateTo}
+  students={students}
+  loggedTeacher={loggedTeacher}
+  selectedHalaqa={selectedHalaqa}
+  returnPage={previousPage}
+/>
 
       )}
 
@@ -1612,7 +1581,14 @@ export default function App() {
         />
 
       )}
-
+{page === "statistics" && (
+  <Statistics
+    setPage={navigateTo}
+    students={students}
+    loggedTeacher={loggedTeacher}
+    selectedHalaqa={selectedHalaqa}
+  />
+)}
 
       {/* دخول ولي الأمر */}
 
@@ -1635,16 +1611,11 @@ export default function App() {
       {page === "attendance" && (
 
         <Attendance
-          setPage={
-            navigateTo
-          }
-          students={
-            students
-          }
-          loggedTeacher={
-            loggedTeacher
-          }
-        />
+  setPage={navigateTo}
+  students={students}
+  loggedTeacher={loggedTeacher}
+  selectedHalaqa={selectedHalaqa}
+/>
 
       )}
 

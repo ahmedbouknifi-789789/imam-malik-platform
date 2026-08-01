@@ -5,19 +5,23 @@ export default function AddTeacher({
   addTeacher,
   editingTeacher,
   updateTeacher,
+  halaqas = [],
 }) {
   const [teacher, setTeacher] = useState({
     name: "",
     phone: "",
     email: "",
-    halaqa: "",
+    halaqas: [],
     date: "",
     notes: "",
   });
 
   useEffect(() => {
     if (editingTeacher) {
-      setTeacher(editingTeacher);
+      setTeacher({
+        ...editingTeacher,
+        halaqas: editingTeacher.halaqas || [],
+      });
     }
   }, [editingTeacher]);
 
@@ -28,8 +32,33 @@ export default function AddTeacher({
     });
   }
 
+  function toggleHalaqa(halaqaName) {
+    setTeacher((prev) => {
+      const current = prev.halaqas || [];
+
+      if (current.includes(halaqaName)) {
+        return {
+          ...prev,
+          halaqas: current.filter(
+            (h) => h !== halaqaName
+          ),
+        };
+      }
+
+      return {
+        ...prev,
+        halaqas: [...current, halaqaName],
+      };
+    });
+  }
+
   function handleSubmit(e) {
     e.preventDefault();
+
+    if (teacher.halaqas.length === 0) {
+      alert("⚠️ اختر حلقة واحدة على الأقل");
+      return;
+    }
 
     if (editingTeacher) {
       updateTeacher(teacher);
@@ -40,6 +69,7 @@ export default function AddTeacher({
 
   return (
     <div className="card">
+
       <h2>
         {editingTeacher
           ? "✏️ تعديل بيانات الأستاذ"
@@ -73,13 +103,38 @@ export default function AddTeacher({
           onChange={handleChange}
         />
 
-        <input
-          type="text"
-          name="halaqa"
-          placeholder="الحلقة"
-          value={teacher.halaqa}
-          onChange={handleChange}
-        />
+        <h3>📚 حلقات الأستاذ</h3>
+
+        {halaqas.length === 0 ? (
+          <p>⚠️ لا توجد حلقات مضافة</p>
+        ) : (
+          halaqas.map((halaqa) => (
+            <label
+              key={halaqa.id}
+              style={{
+                display: "block",
+                padding: "10px",
+                marginBottom: "8px",
+                border: "1px solid #ddd",
+                borderRadius: "8px",
+              }}
+            >
+              <input
+                type="checkbox"
+                checked={teacher.halaqas.includes(
+                  halaqa.name
+                )}
+                onChange={() =>
+                  toggleHalaqa(halaqa.name)
+                }
+              />
+
+              {" "}
+
+              {halaqa.name}
+            </label>
+          ))
+        )}
 
         <input
           type="date"
@@ -99,7 +154,10 @@ export default function AddTeacher({
           type="submit"
           className="btn"
         >
-          💾 {editingTeacher ? "حفظ التعديل" : "حفظ الأستاذ"}
+          💾{" "}
+          {editingTeacher
+            ? "حفظ التعديل"
+            : "حفظ الأستاذ"}
         </button>
 
         <button
