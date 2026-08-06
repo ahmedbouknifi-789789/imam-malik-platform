@@ -17,6 +17,7 @@ export default function Memorization({
   students,
   loggedTeacher,
   selectedHalaqa,
+  returnPage,
 }) {
   const [records, setRecords] = useState({});
 
@@ -218,26 +219,18 @@ const visibleStudents =
             resultQuery
           );
 
-        // ====================================
-        // إذا كانت موجودة
-        // نقوم بالتحديث بدل التكرار
-        // ====================================
+// ====================================
+// إذا كانت موجودة مسبقاً
+// لا نسجل مرة ثانية
+// ====================================
 
-        if (
-          !resultSnapshot.empty
-        ) {
-          const existingDoc =
-            resultSnapshot.docs[0];
+if (
+  !resultSnapshot.empty
+) {
 
-          await updateDoc(
-            doc(
-              db,
-              "memorization",
-              existingDoc.id
-            ),
-            finalResult
-          );
-        }
+  continue;
+
+}
 
         // ====================================
         // إذا لم تكن موجودة
@@ -255,6 +248,44 @@ const visibleStudents =
         }
 
         savedCount++;
+        // تحديث إحصائيات خطة الحفظ
+const completedDays = (student.completedDays || 0) + 1;
+
+let memorizedPages = student.memorizedPages || 0;
+
+if (result.new === "ربع ثمن") memorizedPages += 1;
+else if (result.new === "نصف ثمن") memorizedPages += 2;
+else if (result.new === "ثمن") memorizedPages += 4;
+else if (result.new === "ربع") memorizedPages += 5;
+else if (result.new === "نصف حزب") memorizedPages += 10;
+
+const progress = Math.min(
+  Math.round((memorizedPages / 604) * 100),
+  100
+);
+let nextDailyAmount = student.dailyAmount;
+
+if (result.new === "ربع ثمن")
+  nextDailyAmount = "ربع ثمن";
+
+else if (result.new === "نصف ثمن")
+  nextDailyAmount = "نصف ثمن";
+
+else if (result.new === "ثمن")
+  nextDailyAmount = "ثمن";
+
+else if (result.new === "ربع")
+  nextDailyAmount = "ربع";
+
+else if (result.new === "نصف حزب")
+  nextDailyAmount = "نصف حزب";
+
+await updateDoc(doc(db, "students", student.id), {
+  completedDays,
+  memorizedPages,
+  progress,
+  dailyAmount: nextDailyAmount,
+});
 
         // ====================================
         // الإشعار
@@ -357,17 +388,17 @@ const visibleStudents =
   // ==========================================
 
   function handleBack() {
-    if (loggedTeacher) {
-      setPage(
-        "teacherPanel"
-      );
-    } else {
-      setPage(
-        "admin"
-      );
-    }
+  if (returnPage) {
+    setPage(returnPage);
+    return;
   }
 
+  if (loggedTeacher) {
+    setPage("teacherPanel");
+  } else {
+    setPage("admin");
+  }
+}
   // ==========================================
   // إذا كان الجمعة
   // ==========================================
@@ -460,8 +491,16 @@ const visibleStudents =
                 {/* الطالب */}
 
                 <td>
-                  {student.name}
-                </td>
+  <strong>{student.name}</strong>
+  <br />
+  <small>
+    📖 الخطة: {student.plan || "غير محددة"}
+  </small>
+  <br />
+  <small>
+    🎯 الورد: {student.dailyAmount || "-"}
+  </small>
+</td>
 
                 {/* الجديد */}
 
@@ -484,9 +523,10 @@ const visibleStudents =
                   >
 
                     <option value="">
-                      اختر
-                    </option>
-
+  {student.dailyAmount
+    ? `الورد: ${student.dailyAmount}`
+    : "اختر"}
+</option>
                     <option value="نصف حزب">
                       نصف حزب
                     </option>

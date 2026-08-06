@@ -347,17 +347,22 @@ export default function Student({
         </h3>
 
         <p>
-          <strong>📖 الرواية:</strong>
-          <br />
-          {student.riwaya || "غير محددة"}
-        </p>
+  <strong>📖 الرواية:</strong>
+  <br />
+  {student.riwaya || "غير محددة"}
+</p>
 
-        <p>
-          <strong>📚 الحلقة:</strong>
-          <br />
-          {student.halaqa || "غير محددة"}
-        </p>
+<p>
+  <strong>📚 خطة الحفظ:</strong>
+  <br />
+  {student.plan || "غير محددة"}
+</p>
 
+<p>
+  <strong>📚 الحلقة:</strong>
+  <br />
+  {student.halaqa || "غير محددة"}
+</p>
         <p>
           <strong>🏫 نوع التعليم:</strong>
           <br />
@@ -729,6 +734,12 @@ export default function Student({
       {/* ======================================
           الأزرار
       ====================================== */}
+<button
+  className="btn"
+  onClick={() => setPage("ranking")}
+>
+  🥇 رتبتي في الحلقة
+</button>
 
       <button
         className="btn"
@@ -763,6 +774,13 @@ export default function Student({
   }
 >
   📊 إحصائياتي
+</button>
+
+<button
+  className="btn"
+  onClick={() => setPage("studentPlan")}
+>
+  📚 خطة الحفظ
 </button>
 
       {/* ======================================

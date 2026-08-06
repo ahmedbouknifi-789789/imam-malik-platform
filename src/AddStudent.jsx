@@ -18,6 +18,8 @@ export default function AddStudent({
     parentEmail: "",
     halaqa: "",
     level: "",
+    plan: "",
+dailyAmount: "",
     date: "",
     notes: "",
     halaqaType: "",
@@ -36,6 +38,8 @@ export default function AddStudent({
         parentEmail: "",
         halaqa: "",
         level: "",
+        plan: "",
+dailyAmount: "",
         date: "",
         notes: "",
         halaqaType: "",
@@ -178,17 +182,42 @@ export default function AddStudent({
           value={student.level}
           onChange={handleChange}
         />
+<select
+  name="plan"
+  value={student.plan}
+  onChange={handleChange}
+>
+  <option value="">اختر خطة الحفظ</option>
+  <option value="ثمن يومياً">ثمن يومياً</option>
+  <option value="نصف ثمن يومياً">نصف ثمن يومياً</option>
+  <option value="ربع حزب يومياً">ربع حزب يومياً</option>
+  <option value="حزب يومياً">حزب يومياً</option>
+</select>
 
-        <select
-          name="halaqaType"
-          value={student.halaqaType}
-          onChange={handleChange}
-          required
-        >
-          <option value="">اختر نوع الحلقة</option>
-          <option value="حضوري">🏫 حضوري</option>
-          <option value="عن بعد">💻 عن بعد</option>
-        </select>
+<select
+  name="dailyAmount"
+  value={student.dailyAmount}
+  onChange={handleChange}
+>
+  <option value="">اختر الورد اليومي</option>
+
+  <option value="ربع ثمن">ربع ثمن</option>
+  <option value="نصف ثمن">نصف ثمن</option>
+  <option value="ثمن">ثمن</option>
+  <option value="ربع">ربع حزب</option>
+  <option value="نصف حزب">نصف حزب</option>
+  <option value="حزب">حزب كامل</option>
+</select>
+
+<select
+  name="halaqaType"
+  value={student.halaqaType}
+  onChange={handleChange}
+>
+  <option value="">اختر نوع الحلقة</option>
+  <option value="حضوري">🏫 حضوري</option>
+  <option value="عن بعد">💻 عن بعد</option>
+</select>
 
         <h3 className="section-title">
           📅 رابعاً: تاريخ التسجيل

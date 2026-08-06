@@ -110,6 +110,20 @@ export default function RegistrationRequests({ setPage }) {
 
         // القرآن
         riwaya: student.riwaya || "",
+        plan: student.plan || "",
+
+dailyAmount:
+  student.plan === "ثمن يومياً"
+    ? "ثمن"
+    : student.plan === "نصف ثمن يومياً"
+    ? "نصف ثمن"
+    : student.plan === "ربع حزب يومياً"
+    ? "ربع حزب"
+    : "حزب",
+
+completedDays: 0,
+progress: 0,
+memorizedPages: 0,
 
         // التعليم
         educationType:
@@ -174,6 +188,9 @@ ${student.halaqa || "غير محددة"}
 
 📖 الرواية:
 ${student.riwaya || "غير محددة"}
+
+📚 خطة الحفظ:
+${student.plan || "غير محددة"}
 
 🏫 نوع التعليم:
 ${student.educationType || "غير محدد"}
@@ -442,15 +459,21 @@ https://imam-malik-platform.vercel.app/
             {/* معلومات القرآن */}
             {/* ============================= */}
 
-            <h4>
-              📖 معلومات القرآن
-            </h4>
+           <h4>
+  📖 معلومات القرآن
+</h4>
 
-            <p>
-              📖 الرواية:
-              {" "}
-              {student.riwaya || "غير محددة"}
-            </p>
+<p>
+  📖 الرواية:
+  {" "}
+  {student.riwaya || "غير محددة"}
+</p>
+
+<p>
+  📚 خطة الحفظ:
+  {" "}
+  {student.plan || "غير محددة"}
+</p>
 
             {/* ============================= */}
             {/* التعليم */}

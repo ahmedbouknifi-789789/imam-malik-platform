@@ -98,6 +98,14 @@ export default function Admin({
         📢 الإعلانات
       </button>
 
+<button onClick={() => setPage("adminRanking")}>
+🏆 ترتيب الطلاب
+</button>
+
+<button onClick={() => setPage("addPoints")}>
+  ➕ إضافة نقاط
+</button>
+
       <button
         className="btn"
         style={{ background: "#b91c1c" }}

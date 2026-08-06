@@ -14,6 +14,7 @@ export default function StudentRegister({
     phone: "",
     email: "",
     riwaya: "",
+    plan: "",
     educationType: "",
     onlineDays: [],
     halaqa: "",
@@ -84,7 +85,10 @@ export default function StudentRegister({
       alert("المرجو اختيار الرواية");
       return;
     }
-
+if (!student.plan) {
+  alert("المرجو اختيار خطة الحفظ");
+  return;
+}
     if (!student.educationType) {
       alert("المرجو اختيار نوع التعليم");
       return;
@@ -132,9 +136,23 @@ export default function StudentRegister({
           phone: student.phone.trim(),
           email: student.email.trim(),
 
-          riwaya: student.riwaya,
+        riwaya: student.riwaya,
+plan: student.plan,
 
-          educationType: student.educationType,
+dailyAmount:
+  student.plan === "ثمن يومياً"
+    ? "ثمن"
+    : student.plan === "نصف ثمن يومياً"
+    ? "نصف ثمن"
+    : student.plan === "ربع حزب يومياً"
+    ? "ربع حزب"
+    : "حزب",
+
+completedDays: 0,
+progress: 0,
+memorizedPages: 0,
+
+educationType: student.educationType,
 
           onlineDays:
             student.educationType === "حضوري"
@@ -445,7 +463,19 @@ export default function StudentRegister({
           )}
 
         </select>
-
+        
+<select
+  name="plan"
+  value={student.plan}
+  onChange={handleChange}
+  required
+>
+  <option value="">اختر خطة الحفظ</option>
+  <option value="ثمن يومياً">ثمن يومياً</option>
+  <option value="نصف ثمن يومياً">نصف ثمن يومياً</option>
+  <option value="ربع حزب يومياً">ربع حزب يومياً</option>
+  <option value="حزب يومياً">حزب يومياً</option>
+</select>
         {/* ========================= */}
         {/* الرسوم */}
         {/* ========================= */}

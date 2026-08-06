@@ -46,6 +46,10 @@ import StudentReport from "./StudentReport";
 import AdminResults from "./AdminResults";
 import TeacherRegistrationRequests from "./TeacherRegistrationRequests";
 import Statistics from "./Statistics";
+import StudentPlan from "./StudentPlan";
+import Ranking from "./Ranking";
+import AdminRanking from "./AdminRanking";
+import AddPoints from "./AddPoints";
 import "./App.css";
 
 
@@ -470,24 +474,24 @@ function navigateTo(newPage) {
           .slice(-8);
 
 
-      await addDoc(
+    await addDoc(
+  collection(db, "students"),
+  {
+    ...student,
 
-        collection(
-          db,
-          "students"
-        ),
+    number: registrationNumber,
 
-        {
+    plan: student.plan,
 
-          ...student,
+    dailyAmount: student.dailyAmount,
 
-          number:
-            registrationNumber,
-
-        }
-
-      );
-
+    // نظام النقاط
+    points: 0,
+    hifzPoints: 0,
+    attendancePoints: 0,
+    behaviorPoints: 0,
+  }
+);
 
       await loadStudents();
 
@@ -755,65 +759,22 @@ function navigateTo(newPage) {
           "students",
           updatedStudent.id
         );
-
-
-      await updateDoc(
-
-        studentRef,
-
-        {
-
-          name:
-            updatedStudent.name,
-
-          number:
-            updatedStudent.number,
-
-          age:
-            updatedStudent.age,
-
-          gender:
-            updatedStudent.gender,
-
-          city:
-            updatedStudent.city,
-
-          phone:
-            updatedStudent.phone,
-
-          email:
-            updatedStudent.email,
-
-          riwaya:
-            updatedStudent.riwaya,
-
-          educationType:
-            updatedStudent.educationType,
-
-          onlineDays:
-            updatedStudent.onlineDays || [],
-
-          halaqa:
-            updatedStudent.halaqa,
-
-          canPayFees:
-            updatedStudent.canPayFees,
-
-          feesReason:
-            updatedStudent.feesReason,
-
-          notes:
-            updatedStudent.notes,
-
-          photo:
-            updatedStudent.photo,
-
-          status:
-            updatedStudent.status || "active",
-
-        }
-
-      );
+await updateDoc(doc(db, "students", updatedStudent.id), {
+  name: updatedStudent.name,
+  number: updatedStudent.number,
+  birth: updatedStudent.birth,
+  gender: updatedStudent.gender,
+  parent: updatedStudent.parent,
+  phone: updatedStudent.phone,
+  parentEmail: updatedStudent.parentEmail,
+  halaqa: updatedStudent.halaqa,
+  level: updatedStudent.level,
+  plan: updatedStudent.plan,
+  dailyAmount: updatedStudent.dailyAmount,
+  date: updatedStudent.date,
+  notes: updatedStudent.notes,
+  halaqaType: updatedStudent.halaqaType,
+});
 
 
       await loadStudents();
@@ -1295,7 +1256,14 @@ async function openHalaqaStudents(halaqa) {
         />
 
       )}
+{page === "studentPlan" && (
 
+  <StudentPlan
+    setPage={navigateTo}
+    student={selectedStudent}
+  />
+
+)}
 
       {/* دخول الإدارة */}
 
@@ -1599,6 +1567,14 @@ async function openHalaqaStudents(halaqa) {
   />
 )}
 
+{page === "ranking" && (
+  <Ranking
+    setPage={navigateTo}
+    student={selectedStudent}
+    students={students}
+  />
+)}
+
       {/* دخول ولي الأمر */}
 
       {page === "parentLogin" && (
@@ -1644,6 +1620,22 @@ async function openHalaqaStudents(halaqa) {
 
       )}
 
+{page === "adminRanking" && (
+  <AdminRanking
+    students={students}
+    setPage={navigateTo}
+    previousPage={previousPage}
+  />
+)}
+
+{page === "addPoints" && (
+  <AddPoints
+  students={students}
+  loadStudents={loadStudents}
+  setPage={navigateTo}
+  previousPage={previousPage}
+/>
+)}
 
       {/* نتائج الإدارة */}
 
